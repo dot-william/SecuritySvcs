@@ -104,12 +104,15 @@ public class MgmtUser extends javax.swing.JPanel {
         jScrollPane1.setViewportView(table);
         if (table.getColumnModel().getColumnCount() > 0) {
             table.getColumnModel().getColumn(0).setPreferredWidth(160);
+            table.getColumnModel().getColumn(0).setHeaderValue("Username");
             table.getColumnModel().getColumn(1).setPreferredWidth(400);
+            table.getColumnModel().getColumn(1).setHeaderValue("Password");
             table.getColumnModel().getColumn(2).setPreferredWidth(100);
+            table.getColumnModel().getColumn(2).setHeaderValue("Role");
             table.getColumnModel().getColumn(3).setPreferredWidth(100);
+            table.getColumnModel().getColumn(3).setHeaderValue("Locked");
         }
 
-        editRoleBtn.setBackground(new java.awt.Color(255, 255, 255));
         editRoleBtn.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
         editRoleBtn.setText("EDIT ROLE");
         editRoleBtn.addActionListener(new java.awt.event.ActionListener() {
@@ -118,7 +121,6 @@ public class MgmtUser extends javax.swing.JPanel {
             }
         });
 
-        deleteBtn.setBackground(new java.awt.Color(255, 255, 255));
         deleteBtn.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
         deleteBtn.setText("DELETE");
         deleteBtn.addActionListener(new java.awt.event.ActionListener() {
@@ -127,7 +129,6 @@ public class MgmtUser extends javax.swing.JPanel {
             }
         });
 
-        lockBtn.setBackground(new java.awt.Color(255, 255, 255));
         lockBtn.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
         lockBtn.setText("LOCK/UNLOCK");
         lockBtn.setToolTipText("");
@@ -137,7 +138,6 @@ public class MgmtUser extends javax.swing.JPanel {
             }
         });
 
-        chgpassBtn.setBackground(new java.awt.Color(255, 255, 255));
         chgpassBtn.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
         chgpassBtn.setText("CHANGE PASS");
         chgpassBtn.addActionListener(new java.awt.event.ActionListener() {

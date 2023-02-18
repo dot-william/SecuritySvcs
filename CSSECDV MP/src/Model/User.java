@@ -15,13 +15,13 @@ public class User {
     
     public User(String username, String password){
         this.username = username;
-        this.setPasswordHash(password);
+        this.passwordhash = setPasswordHash(password);
     }
     
-    public User(int id, String username, String password, int role, int locked){
+    public User(int id, String username, String passwordhash, int role, int locked){
         this.id = id;
         this.username = username;
-        this.setPasswordHash(password);
+        this.passwordhash = passwordhash;
         this.role = role;
         this.locked = locked;
     }
@@ -46,21 +46,27 @@ public class User {
         return this.passwordhash;
     }
 
-    public void setPasswordHash(String password) {
+    public static String setPasswordHash(String password) {
+        System.out.println(password);
         // create secure RNG
-        SecureRandom random = new SecureRandom(); 
-        // create 16-byte salt
-        byte[] salt = new byte[16];
-        random.nextBytes(salt);
-        System.out.println(salt);
-        // hash the password and the salt
         try {
-            SecretKeyFactory factory = SecretKeyFactory.getInstance("PBKDF2WithHmacSHA512");
-            PBEKeySpec spec = new PBEKeySpec(password.toCharArray(), salt, 65536, 128); 
-            SecretKey key = factory.generateSecret(spec);
-            byte[] hash = key.getEncoded();
-            this.passwordhash = new String(hash);
-        } catch (NoSuchAlgorithmException | InvalidKeySpecException e) {
+            SecureRandom random = SecureRandom.getInstance("SHA1PRNG");     
+            // create 16-byte salt
+            byte[] salt = new byte[7];
+            random.nextBytes(salt);
+            System.out.println("salt = " + new String(salt));
+            // hash the password and the salt
+            try {
+                SecretKeyFactory factory = SecretKeyFactory.getInstance("PBKDF2WithHmacSHA512");
+                PBEKeySpec spec = new PBEKeySpec(password.toCharArray(), salt, 10000, 256); 
+                SecretKey key = factory.generateSecret(spec);
+                byte[] hash = key.getEncoded();
+                return new String(hash);
+    //            System.out.println(hash.equals(this.passwordhash.getBytes()));
+            } catch (NoSuchAlgorithmException | InvalidKeySpecException e) {
+                throw new RuntimeException(e);
+            }
+        } catch (NoSuchAlgorithmException e) {
             throw new RuntimeException(e);
         }
     }
