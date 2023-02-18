@@ -15,14 +15,13 @@ public class User {
     
     public User(String username, String password){
         this.username = username;
-        this.passwordhash = password;
-        
+        this.setPasswordHash(password);
     }
     
     public User(int id, String username, String password, int role, int locked){
         this.id = id;
         this.username = username;
-        this.passwordhash = password;
+        this.setPasswordHash(password);
         this.role = role;
         this.locked = locked;
     }
@@ -47,7 +46,7 @@ public class User {
         return this.passwordhash;
     }
 
-    public void setPassword(String password) {
+    public void setPasswordHash(String password) {
         // create secure RNG
         SecureRandom random = new SecureRandom(); 
         // create 16-byte salt
