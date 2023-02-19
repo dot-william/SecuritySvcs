@@ -1,4 +1,5 @@
 package Model;
+import org.apache.commons.codec.binary.Hex;
 import java.security.SecureRandom;
 import javax.crypto.SecretKey;
 import javax.crypto.SecretKeyFactory;
@@ -52,16 +53,19 @@ public class User {
         try {
             SecureRandom random = SecureRandom.getInstance("SHA1PRNG");     
             // create 16-byte salt
-            byte[] salt = new byte[7];
+            byte[] salt = new byte[16];
             random.nextBytes(salt);
-            System.out.println("salt = " + new String(salt));
+            String saltStr = Hex.encodeHexString(salt);
+            System.out.println("salt = " + saltStr);
             // hash the password and the salt
             try {
                 SecretKeyFactory factory = SecretKeyFactory.getInstance("PBKDF2WithHmacSHA512");
-                PBEKeySpec spec = new PBEKeySpec(password.toCharArray(), salt, 10000, 256); 
+                PBEKeySpec spec = new PBEKeySpec(password.toCharArray(), saltStr, 10000, 256); 
                 SecretKey key = factory.generateSecret(spec);
                 byte[] hash = key.getEncoded();
-                return new String(hash);
+                String hashStr = new String(hash);
+                System.out.println(hashStr);
+                return hashStr;
     //            System.out.println(hash.equals(this.passwordhash.getBytes()));
             } catch (NoSuchAlgorithmException | InvalidKeySpecException e) {
                 throw new RuntimeException(e);
