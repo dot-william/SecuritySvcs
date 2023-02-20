@@ -259,9 +259,9 @@ public class Frame extends javax.swing.JFrame {
     
     public void registerAction(String username, String password, String confpass){
         if (password.equals(confpass)) {
-            User usr = new User();
-            password = Model.User.hashPassword(password);
-            main.sqlite.addUser(username, password);
+            User user = new User(username, password);
+            
+            main.sqlite.addUser(user.getUsername(), password, user.getSalt());
         }
         else {
             System.out.println("password and confpss dont match");

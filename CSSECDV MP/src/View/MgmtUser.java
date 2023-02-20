@@ -82,17 +82,17 @@ public class MgmtUser extends javax.swing.JPanel {
         table.setFont(new java.awt.Font("SansSerif", 0, 14)); // NOI18N
         table.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null}
+                {null, null, null},
+                {null, null, null},
+                {null, null, null},
+                {null, null, null}
             },
             new String [] {
-                "Username", "Password", "Role", "Locked"
+                "Username", "Role", "Locked"
             }
         ) {
             boolean[] canEdit = new boolean [] {
-                false, false, false, false
+                false, false, false
             };
 
             public boolean isCellEditable(int rowIndex, int columnIndex) {
@@ -104,13 +104,8 @@ public class MgmtUser extends javax.swing.JPanel {
         jScrollPane1.setViewportView(table);
         if (table.getColumnModel().getColumnCount() > 0) {
             table.getColumnModel().getColumn(0).setPreferredWidth(160);
-            table.getColumnModel().getColumn(0).setHeaderValue("Username");
-            table.getColumnModel().getColumn(1).setPreferredWidth(400);
-            table.getColumnModel().getColumn(1).setHeaderValue("Password");
+            table.getColumnModel().getColumn(1).setPreferredWidth(100);
             table.getColumnModel().getColumn(2).setPreferredWidth(100);
-            table.getColumnModel().getColumn(2).setHeaderValue("Role");
-            table.getColumnModel().getColumn(3).setPreferredWidth(100);
-            table.getColumnModel().getColumn(3).setHeaderValue("Locked");
         }
 
         editRoleBtn.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N

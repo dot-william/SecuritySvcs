@@ -53,12 +53,12 @@ public class Main {
 //        sqlite.addProduct("Firewall", 3, 1000.0);
 //        sqlite.addProduct("Scanner", 10, 100.0);
 //
-//        // Add sample users
-//        sqlite.addUser("admin", "qwerty1234" , 5);
-//        sqlite.addUser("manager", "qwerty1234", 4);
-//        sqlite.addUser("staff", "qwerty1234", 3);
-//        sqlite.addUser("client1", "qwerty1234", 2);
-//        sqlite.addUser("client2", "qwerty1234", 2);
+////        // Add sample users
+////        sqlite.addUser("admin", "qwerty1234" , 5);
+////        sqlite.addUser("manager", "qwerty1234", 4);
+////        sqlite.addUser("staff", "qwerty1234", 3);
+////        sqlite.addUser("client1", "qwerty1234", 2);
+////        sqlite.addUser("client2", "qwerty1234", 2);
 //        
 //        
 //        // Get users
@@ -94,7 +94,7 @@ public class Main {
 //        for(int nCtr = 0; nCtr < users.size(); nCtr++){
 //            System.out.println("===== User " + users.get(nCtr).getId() + " =====");
 //            System.out.println(" Username: " + users.get(nCtr).getUsername());
-//            System.out.println(" Password: " + users.get(nCtr).getPassword());
+//            System.out.println(" Password: " + users.get(nCtr).getPasswordHash());
 //            System.out.println(" Role: " + users.get(nCtr).getRole());
 //            System.out.println(" Locked: " + users.get(nCtr).getLocked());
 //        }

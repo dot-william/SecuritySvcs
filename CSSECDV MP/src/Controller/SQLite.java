@@ -84,7 +84,8 @@ public class SQLite {
         String sql = "CREATE TABLE IF NOT EXISTS users (\n"
             + " id INTEGER PRIMARY KEY AUTOINCREMENT,\n"
             + " username TEXT NOT NULL UNIQUE,\n"
-            + " password TEXT NOT NULL,\n"
+            + " passwordhash TEXT NOT NULL,\n"
+            + " salt BINARY NOT NULL, \n"
             + " role INTEGER DEFAULT 2,\n"
             + " locked INTEGER DEFAULT 0\n"
             + ");";
@@ -179,8 +180,8 @@ public class SQLite {
         }
     }
     
-    public void addUser(String username, String password) {
-        String sql = "INSERT INTO users(username,password) VALUES('" + username + "','" + password + "')";
+    public void addUser(String username, String passwordhash, byte[] salt) {
+        String sql = "INSERT INTO users(username,passwordhash,salt) VALUES('" + username + "','" + passwordhash + "','" + salt + "')";
         
         try (Connection conn = DriverManager.getConnection(driverURL);
             Statement stmt = conn.createStatement()){
@@ -271,7 +272,8 @@ public class SQLite {
             while (rs.next()) {
                 users.add(new User(rs.getInt("id"),
                                    rs.getString("username"),
-                                   rs.getString("password"),
+                                   rs.getString("passwordhash"),
+                                   rs.getBytes("salt"),
                                    rs.getInt("role"),
                                    rs.getInt("locked")));
             }
