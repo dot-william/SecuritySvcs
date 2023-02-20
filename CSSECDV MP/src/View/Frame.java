@@ -261,7 +261,7 @@ public class Frame extends javax.swing.JFrame {
         if (password.equals(confpass)) {
             User user = new User(username, password);
             
-            main.sqlite.addUser(user.getUsername(), password, user.getSalt());
+            main.sqlite.addUser(user.getUsername(), user.getPasswordHash(), user.getSalt());
         }
         else {
             System.out.println("password and confpss dont match");

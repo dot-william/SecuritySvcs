@@ -1,5 +1,6 @@
 package Model;
 import org.apache.commons.codec.binary.Hex;
+import org.apache.commons.codec.DecoderException;
 import java.security.SecureRandom;
 import javax.crypto.SecretKey;
 import javax.crypto.SecretKeyFactory;
@@ -11,7 +12,7 @@ public class User {
     private int id;
     private String username;
     private String passwordhash;
-    private byte[] salt;
+    private String salt;
     private int role = 2;
     private int locked = 0;
     
@@ -19,10 +20,9 @@ public class User {
         this.username = username;
         this.salt = generateSalt();
         this.passwordhash = hashPassword(password, this.salt);
-        this.salt = new byte[16];
     }
     
-    public User(int id, String username, String passwordhash, byte[] salt, int role, int locked){
+    public User(int id, String username, String passwordhash, String salt, int role, int locked){
         this.id = id;
         this.username = username;
         this.passwordhash = passwordhash;
@@ -61,37 +61,41 @@ public class User {
         return match;
     }
     
-    public static byte[] generateSalt() {
+    public static String generateSalt() {
         try {
             // create secure RNG
             SecureRandom random = SecureRandom.getInstance("SHA1PRNG");     
             // create 16-byte salt
             byte[] salt = new byte[16];
             random.nextBytes(salt);
-            return salt;
+            return Hex.encodeHexString(salt);
         } catch (NoSuchAlgorithmException e) {
             throw new RuntimeException(e);
         }
     }
     
-    public byte[] getSalt() {
+    public String getSalt() {
         return this.salt;
     }
     
-    public static String hashPassword(String password, byte[] salt) {  
-//        String saltStr = Hex.encodeHexString(salt);
-//        System.out.println("salt = " + saltStr);
-        // hash the password and the salt
+    public static String hashPassword(String password, String saltStr) {  
         try {
-            SecretKeyFactory factory = SecretKeyFactory.getInstance("PBKDF2WithHmacSHA512");
-            PBEKeySpec spec = new PBEKeySpec(password.toCharArray(), salt, 10000, 256); 
-            SecretKey key = factory.generateSecret(spec);
-            byte[] hash = key.getEncoded();
-            String hashStr = Hex.encodeHexString(hash);
-            System.out.println(hashStr);
-            return hashStr;
-//            System.out.println(hash.equals(this.passwordhash.getBytes()));
-        } catch (NoSuchAlgorithmException | InvalidKeySpecException e) {
+            byte[] salt = Hex.decodeHex(saltStr);
+            // hash the password and the salt
+            try {
+                SecretKeyFactory factory = SecretKeyFactory.getInstance("PBKDF2WithHmacSHA512");
+                PBEKeySpec spec = new PBEKeySpec(password.toCharArray(), salt, 10000, 256); 
+                SecretKey key = factory.generateSecret(spec);
+                byte[] hash = key.getEncoded();
+                String hashStr = Hex.encodeHexString(hash);
+                System.out.println(hashStr);
+                return hashStr;
+    //            System.out.println(hash.equals(this.passwordhash.getBytes()));
+            } catch (NoSuchAlgorithmException | InvalidKeySpecException e) {
+                throw new RuntimeException(e);
+            }
+        }
+        catch (DecoderException e) {
             throw new RuntimeException(e);
         }
     }

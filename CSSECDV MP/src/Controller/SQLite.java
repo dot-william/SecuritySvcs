@@ -1,4 +1,5 @@
 package Controller;
+import org.apache.commons.codec.binary.Hex;
 
 import Model.History;
 import Model.Logs;
@@ -85,7 +86,7 @@ public class SQLite {
             + " id INTEGER PRIMARY KEY AUTOINCREMENT,\n"
             + " username TEXT NOT NULL UNIQUE,\n"
             + " passwordhash TEXT NOT NULL,\n"
-            + " salt BINARY NOT NULL, \n"
+            + " salt TEXT NOT NULL, \n"
             + " role INTEGER DEFAULT 2,\n"
             + " locked INTEGER DEFAULT 0\n"
             + ");";
@@ -180,7 +181,7 @@ public class SQLite {
         }
     }
     
-    public void addUser(String username, String passwordhash, byte[] salt) {
+    public void addUser(String username, String passwordhash, String salt) {
         String sql = "INSERT INTO users(username,passwordhash,salt) VALUES('" + username + "','" + passwordhash + "','" + salt + "')";
         
         try (Connection conn = DriverManager.getConnection(driverURL);
@@ -263,17 +264,18 @@ public class SQLite {
     
     public ArrayList<User> getUsers(){
         String sql = "SELECT id, username, password, role, locked FROM users";
-        ArrayList<User> users = new ArrayList<User>();
+        ArrayList<User> users = new ArrayList<>();
         
         try (Connection conn = DriverManager.getConnection(driverURL);
             Statement stmt = conn.createStatement();
             ResultSet rs = stmt.executeQuery(sql)){
             
             while (rs.next()) {
+                System.out.println("f");
                 users.add(new User(rs.getInt("id"),
                                    rs.getString("username"),
                                    rs.getString("passwordhash"),
-                                   rs.getBytes("salt"),
+                                   rs.getString("salt"),
                                    rs.getInt("role"),
                                    rs.getInt("locked")));
             }
@@ -282,7 +284,9 @@ public class SQLite {
     }
     
     public void addUser(String username, String password, int role) {
-        String sql = "INSERT INTO users(username,password,role) VALUES('" + username + "','" + password + "','" + role + "')";
+        String salt = User.generateSalt();
+        String passwordhash = User.hashPassword(password, salt);
+        String sql = "INSERT INTO users(username,passwordhash,salt,role) VALUES('" + username + "','" + passwordhash + "','" + salt + "','" + role + "')";
         
         try (Connection conn = DriverManager.getConnection(driverURL);
             Statement stmt = conn.createStatement()){
