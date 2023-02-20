@@ -263,7 +263,7 @@ public class SQLite {
     }
     
     public ArrayList<User> getUsers(){
-        String sql = "SELECT id, username, password, role, locked FROM users";
+        String sql = "SELECT id, username, passwordhash, salt, role, locked FROM users";
         ArrayList<User> users = new ArrayList<>();
         
         try (Connection conn = DriverManager.getConnection(driverURL);
