@@ -91,9 +91,7 @@ public class Main {
 //        }
 //         Get users
         ArrayList<User> users = sqlite.getUsers();
-        System.out.println(users.size());
         for(int nCtr = 0; nCtr < users.size(); nCtr++){
-            System.out.println("users");
             System.out.println("===== User " + users.get(nCtr).getId() + " =====");
             System.out.println(" Username: " + users.get(nCtr).getUsername());
             System.out.println(" PWhash: " + users.get(nCtr).getPasswordHash());
