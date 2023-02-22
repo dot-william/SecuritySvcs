@@ -209,6 +209,7 @@ public class Frame extends javax.swing.JFrame {
     public Main main;
     public Login loginPnl = new Login();
     public Register registerPnl = new Register();
+    public Dialog DialogBox = new Dialog();
     
     private AdminHome adminHomePnl = new AdminHome();
     private ManagerHome managerHomePnl = new ManagerHome();
@@ -256,7 +257,8 @@ public class Frame extends javax.swing.JFrame {
             frameView.show(Container, "homePnl");
         }
         else {
-            System.out.println("Invalid username or password.");
+//            System.out.println("Invalid username or password.");
+            DialogBox.showErrorDialog("Authentication failed", "Username or password is incorrect.");
         }
         
     }
@@ -272,13 +274,21 @@ public class Frame extends javax.swing.JFrame {
     }
     
     public void registerAction(String username, String password, String confpass){
-        if (password.equals(confpass)) {
-            User user = new User(username, password);
-            
-            main.sqlite.addUser(user.getUsername(), user.getPasswordHash(), user.getSalt());
+        User user = main.sqlite.getUser(username); 
+        if (user != null) {
+            DialogBox.showErrorDialog("Registration error", "Username already taken, please enter a different username.");  
         }
         else {
-            System.out.println("password and confpss dont match");
+            if (password.equals(confpass)) {
+                user = new User(username, password);
+
+                main.sqlite.addUser(user.getUsername(), user.getPasswordHash(), user.getSalt());
+                DialogBox.showSuccessDialog("Registration success", "User account registered successfully.");
+            }
+            else {
+    //            System.out.println("password and confpss dont match");
+                DialogBox.showErrorDialog("Registration error", "Make sure both passwords match.");
+            }
         }
     }
 
