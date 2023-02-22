@@ -303,7 +303,8 @@ public class SQLite {
     }
     
     public User getUser(String username) {
-        String sql = "SELECT id, username, passwordhash, salt, role, locked FROM users WHERE username == ?";
+        System.out.println("strt");
+        String sql = "SELECT id, username, passwordhash, salt, role, locked FROM users WHERE username = ?";
         User user = null;
         
         try(Connection conn = DriverManager.getConnection(driverURL);
@@ -312,6 +313,7 @@ public class SQLite {
             pstmt.setString(1, username);
             ResultSet rs = pstmt.executeQuery(); 
             if (rs.next())
+                System.out.println("found");
                 user = new User(rs.getInt("id"),
                                 rs.getString("username"),
                                 rs.getString("passwordhash"),

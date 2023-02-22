@@ -1,9 +1,13 @@
 
 package View;
+import Controller.Main;
+import Model.User;
+import java.util.ArrayList; 
 
 public class Login extends javax.swing.JPanel {
 
     public Frame frame;
+    public Main main;
     
     public Login() {
         initComponents();
@@ -13,6 +17,7 @@ public class Login extends javax.swing.JPanel {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        jOptionPane1 = new javax.swing.JOptionPane();
         jLabel1 = new javax.swing.JLabel();
         usernameFld = new javax.swing.JTextField();
         registerBtn = new javax.swing.JButton();
@@ -84,7 +89,7 @@ public class Login extends javax.swing.JPanel {
         );
     }// </editor-fold>//GEN-END:initComponents
     private void loginBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_loginBtnActionPerformed
-//      authenticate user
+
         frame.mainNav();
     }//GEN-LAST:event_loginBtnActionPerformed
 
@@ -93,9 +98,17 @@ public class Login extends javax.swing.JPanel {
         frame.registerNav();
     }//GEN-LAST:event_registerBtnActionPerformed
 
-
+    public String getLoginUsername() {
+        return usernameFld.getText(); 
+    }
+    
+    public char[] getLoginPassword() {
+        return passwordFld.getPassword();
+    }
+        
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel jLabel1;
+    private javax.swing.JOptionPane jOptionPane1;
     private javax.swing.JButton loginBtn;
     private javax.swing.JPasswordField passwordFld;
     private javax.swing.JButton registerBtn;

@@ -5,6 +5,7 @@ import Model.User;
 import java.awt.BorderLayout;
 import java.awt.CardLayout;
 import java.awt.Dimension;
+import java.util.ArrayList;
 import javax.swing.WindowConstants;
 
 public class Frame extends javax.swing.JFrame {
@@ -246,7 +247,19 @@ public class Frame extends javax.swing.JFrame {
     }
     
     public void mainNav(){
-        frameView.show(Container, "homePnl");
+        // authenticate user
+        String username = loginPnl.getLoginUsername();
+        char[] password = loginPnl.getLoginPassword();
+        System.out.println(username + " " + new String(password));
+        User user = main.sqlite.getUser(username);
+        if (user != null && user.validate(username, password)) {
+            System.out.println("validated");
+            frameView.show(Container, "homePnl");
+        }
+        else {
+            System.out.println("Invalid username or password.");
+        }
+        
     }
     
     public void loginNav(){

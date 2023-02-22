@@ -51,9 +51,9 @@ public class User {
         return this.passwordhash;
     }
     
-    public boolean validate(String username, String password) {
+    public boolean validate(String username, char[] password) {
         boolean match = false;
-        String hashPwd = hashPassword(password, this.getSalt());
+        String hashPwd = hashPassword(new String(password), this.getSalt());
         if (this.getUsername().equals(username) && 
             this.getPasswordHash().equals(hashPwd)) {
             match = true;
