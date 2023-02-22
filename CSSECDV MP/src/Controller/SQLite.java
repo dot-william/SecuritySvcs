@@ -199,7 +199,7 @@ public class SQLite {
     
     public void addUser(String username, String passwordhash, String salt) {
 //        String sql = "INSERT INTO users(username,passwordhash,salt) VALUES('" + username + "','" + passwordhash + "','" + salt + "')";
-        String sql = "INSERT INTO users(username,passwordhash,salt) VALUES(?, ?, ?, ?)";
+        String sql = "INSERT INTO users(username,passwordhash,salt) VALUES(?, ?, ?)";
         
         try (Connection conn = DriverManager.getConnection(driverURL);
             PreparedStatement pstmt = conn.prepareStatement(sql)){
@@ -303,7 +303,6 @@ public class SQLite {
     }
     
     public User getUser(String username) {
-        System.out.println("strt");
         String sql = "SELECT id, username, passwordhash, salt, role, locked FROM users WHERE username = ?";
         User user = null;
         
@@ -313,7 +312,6 @@ public class SQLite {
             pstmt.setString(1, username);
             ResultSet rs = pstmt.executeQuery(); 
             if (rs.next())
-                System.out.println("found");
                 user = new User(rs.getInt("id"),
                                 rs.getString("username"),
                                 rs.getString("passwordhash"),
@@ -323,7 +321,7 @@ public class SQLite {
             return user;
         }
         catch (Exception ex) {
-            System.out.print(ex);
+            System.out.print("");
         }
         return user;
     }

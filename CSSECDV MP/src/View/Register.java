@@ -109,7 +109,12 @@ public class Register extends javax.swing.JPanel {
         frame.loginNav();
     }//GEN-LAST:event_backBtnActionPerformed
 
-
+    public void clear() {
+        usernameFld.setText("");
+        passwordFld.setText(""); 
+        confpassFld.setText("");
+    }
+    
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton backBtn;
     private javax.swing.JPasswordField confpassFld;

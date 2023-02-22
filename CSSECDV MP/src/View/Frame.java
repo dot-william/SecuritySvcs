@@ -202,6 +202,7 @@ public class Frame extends javax.swing.JFrame {
     }//GEN-LAST:event_clientBtnActionPerformed
 
     private void logoutBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_logoutBtnActionPerformed
+        loginPnl.clear();
         frameView.show(Container, "loginPnl");
     }//GEN-LAST:event_logoutBtnActionPerformed
 
@@ -250,10 +251,8 @@ public class Frame extends javax.swing.JFrame {
         // authenticate user
         String username = loginPnl.getLoginUsername();
         char[] password = loginPnl.getLoginPassword();
-        System.out.println(username + " " + new String(password));
         User user = main.sqlite.getUser(username);
         if (user != null && user.validate(username, password)) {
-            System.out.println("validated");
             frameView.show(Container, "homePnl");
         }
         else {
@@ -263,10 +262,12 @@ public class Frame extends javax.swing.JFrame {
     }
     
     public void loginNav(){
+        loginPnl.clear();
         frameView.show(Container, "loginPnl");
     }
     
     public void registerNav(){
+        registerPnl.clear();
         frameView.show(Container, "registerPnl");
     }
     

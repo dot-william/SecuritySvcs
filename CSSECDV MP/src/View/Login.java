@@ -97,7 +97,12 @@ public class Login extends javax.swing.JPanel {
 //      add user 
         frame.registerNav();
     }//GEN-LAST:event_registerBtnActionPerformed
-
+    
+    public void clear() {
+        usernameFld.setText("");
+        passwordFld.setText(""); 
+    }
+    
     public String getLoginUsername() {
         return usernameFld.getText(); 
     }
