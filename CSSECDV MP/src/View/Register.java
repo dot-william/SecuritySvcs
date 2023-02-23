@@ -101,8 +101,11 @@ public class Register extends javax.swing.JPanel {
     }// </editor-fold>//GEN-END:initComponents
 
     private void registerBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_registerBtnActionPerformed
-        frame.registerAction(usernameFld.getText(), passwordFld.getText(), confpassFld.getText());
-        frame.loginNav();
+        String password = String.valueOf(passwordFld.getPassword());
+        String confpass = String.valueOf(confpassFld.getPassword());
+        boolean success = frame.registerAction(usernameFld.getText(), password, confpass);
+        if(success)
+            frame.loginNav();
     }//GEN-LAST:event_registerBtnActionPerformed
 
     private void backBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_backBtnActionPerformed
@@ -115,6 +118,7 @@ public class Register extends javax.swing.JPanel {
         confpassFld.setText("");
     }
     
+        
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton backBtn;
     private javax.swing.JPasswordField confpassFld;

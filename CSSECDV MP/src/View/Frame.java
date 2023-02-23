@@ -273,23 +273,39 @@ public class Frame extends javax.swing.JFrame {
         frameView.show(Container, "registerPnl");
     }
     
-    public void registerAction(String username, String password, String confpass){
+    public boolean registerAction(String username, String password, String confpass){
         User user = main.sqlite.getUser(username); 
-        if (user != null) {
-            DialogBox.showErrorDialog("Registration error", "Username already taken, please enter a different username.");  
-        }
-        else {
-            if (password.equals(confpass)) {
-                user = new User(username, password);
+        
+        boolean result;
+        //Check if either fields are empty
+        if(username.isEmpty() || password.isEmpty() || confpass.isEmpty()) {
+            DialogBox.showErrorDialog("Registration error", "One of the fields is empty. Please try again.");
+            result = false;
+        } else {
+            String lowercase_username = username.toLowerCase();
+        // Convert username to lowercase
 
-                main.sqlite.addUser(user.getUsername(), user.getPasswordHash(), user.getSalt());
-                DialogBox.showSuccessDialog("Registration success", "User account registered successfully.");
-            }
-            else {
-    //            System.out.println("password and confpss dont match");
-                DialogBox.showErrorDialog("Registration error", "Make sure both passwords match.");
+            if (user != null) {
+                DialogBox.showErrorDialog("Registration error", "Username already taken, please enter a different username.");
+                result = false;
+            } else {
+                if (password.equals(confpass)) {
+                    user = new User(lowercase_username, password);
+
+                    main.sqlite.addUser(user.getUsername(), user.getPasswordHash(), user.getSalt());
+                    DialogBox.showSuccessDialog("Registration success", "User account registered successfully.");
+                    result = true;
+                }
+                else {
+        //            System.out.println("password and confpss dont match");
+                    DialogBox.showErrorDialog("Registration error", "Make sure both passwords match.");
+                    result = false;
+                }
             }
         }
+        
+        return result;
+        
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
