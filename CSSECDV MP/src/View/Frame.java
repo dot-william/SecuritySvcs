@@ -7,6 +7,7 @@ import java.awt.CardLayout;
 import java.awt.Dimension;
 import java.util.ArrayList;
 import javax.swing.WindowConstants;
+import Controller.Secure;
 
 public class Frame extends javax.swing.JFrame {
 
@@ -207,6 +208,7 @@ public class Frame extends javax.swing.JFrame {
     }//GEN-LAST:event_logoutBtnActionPerformed
 
     public Main main;
+    public Secure secure = new Secure();
     public Login loginPnl = new Login();
     public Register registerPnl = new Register();
     public Dialog DialogBox = new Dialog();
@@ -275,23 +277,22 @@ public class Frame extends javax.swing.JFrame {
     
     public boolean registerAction(String username, String password, String confpass){
         User user = main.sqlite.getUser(username); 
+        boolean result = false; //by default false so that user will not return to login page if error occurs
         
-        boolean result;
         //Check if either fields are empty
-        if(username.isEmpty() || password.isEmpty() || confpass.isEmpty()) {
+        if(secure.regIsEmpty(username, password, confpass)) {
             DialogBox.showErrorDialog("Registration error", "One of the fields is empty. Please try again.");
-            result = false;
+        } else if (!secure.validUsername(username)) {
+            DialogBox.showErrorDialog("Registration error", "Username should not be less than 5 characters or more than 15 characters long.");
         } else {
             String lowercase_username = username.toLowerCase();
         // Convert username to lowercase
 
             if (user != null) {
                 DialogBox.showErrorDialog("Registration error", "Username already taken, please enter a different username.");
-                result = false;
             } else {
                 if (password.equals(confpass)) {
                     user = new User(lowercase_username, password);
-
                     main.sqlite.addUser(user.getUsername(), user.getPasswordHash(), user.getSalt());
                     DialogBox.showSuccessDialog("Registration success", "User account registered successfully.");
                     result = true;
@@ -299,7 +300,6 @@ public class Frame extends javax.swing.JFrame {
                 else {
         //            System.out.println("password and confpss dont match");
                     DialogBox.showErrorDialog("Registration error", "Make sure both passwords match.");
-                    result = false;
                 }
             }
         }
