@@ -15,11 +15,13 @@ public class User {
     private String salt;
     private int role = 2;
     private int locked = 0;
+    private int failedAttempts = 0;
     
     public User(String username, String password){
         this.username = username;
         this.salt = generateSalt();
         this.passwordhash = hashPassword(password, this.salt);
+        
     }
     
     public User(int id, String username, String passwordhash, String salt, int role, int locked){
@@ -115,4 +117,14 @@ public class User {
     public void setLocked(int locked) {
         this.locked = locked;
     }
+    
+    public int getFailedAttempts() {
+        return failedAttempts;
+    }
+    
+    public void setFailedAttempts(int failedAttempts){
+        this.failedAttempts = failedAttempts;
+    }
+    
+    
 }

@@ -253,9 +253,10 @@ public class Frame extends javax.swing.JFrame {
     public void mainNav(){
         // authenticate user
         String username = loginPnl.getLoginUsername();
+        String lowercase_username = username.toLowerCase();
         char[] password = loginPnl.getLoginPassword();
-        User user = main.sqlite.getUser(username);
-        if (user != null && user.validate(username, password)) {
+        User user = main.sqlite.getUser(lowercase_username);
+        if (user != null && user.validate(lowercase_username, password)) {
             frameView.show(Container, "homePnl");
         }
         else {
@@ -276,36 +277,32 @@ public class Frame extends javax.swing.JFrame {
     }
     
     public boolean registerAction(String username, String password, String confpass){
-        User user = main.sqlite.getUser(username); 
+        String lowercase_username = username.toLowerCase();
+        User user = main.sqlite.getUser(lowercase_username); 
         boolean result = false; //by default false so that user will not return to login page if error occurs
-        
-        //Check if either fields are empty
-        if(secure.regIsEmpty(username, password, confpass)) {
-            DialogBox.showErrorDialog("Registration error", "One of the fields is empty. Please try again.");
-        } else if (!secure.validUsername(username)) {
-            DialogBox.showErrorDialog("Registration error", "Username should not be less than 5 characters or more than 15 characters long.");
-        } else {
-            String lowercase_username = username.toLowerCase();
-        // Convert username to lowercase
+        boolean isEmptyField = secure.regIsEmpty(username, password, confpass);
+        if(!isEmptyField){
+            boolean isValidPassword = secure.isValidPassword(password);
+            boolean isValidUsername = secure.validUsername(username);
 
-            if (user != null) {
-                DialogBox.showErrorDialog("Registration error", "Username already taken, please enter a different username.");
-            } else {
-                if (password.equals(confpass)) {
-                    user = new User(lowercase_username, password);
-                    main.sqlite.addUser(user.getUsername(), user.getPasswordHash(), user.getSalt());
-                    DialogBox.showSuccessDialog("Registration success", "User account registered successfully.");
-                    result = true;
-                }
-                else {
-        //            System.out.println("password and confpss dont match");
-                    DialogBox.showErrorDialog("Registration error", "Make sure both passwords match.");
+            if (!isEmptyField && isValidUsername && isValidPassword) {
+                if (user != null) {
+                    DialogBox.showErrorDialog("Registration error", "Username already taken, please enter a different username.");
+                } else {
+                    if (password.equals(confpass)) {
+                        user = new User(lowercase_username, password);
+                        main.sqlite.addUser(user.getUsername(), user.getPasswordHash(), user.getSalt());
+                        DialogBox.showSuccessDialog("Registration success", "User account registered successfully.");
+                        result = true;
+                    }
+                    else {
+            //            System.out.println("password and confpss dont match");
+                        DialogBox.showErrorDialog("Registration error", "Make sure both passwords match.");
+                    }
                 }
             }
         }
-        
         return result;
-        
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
