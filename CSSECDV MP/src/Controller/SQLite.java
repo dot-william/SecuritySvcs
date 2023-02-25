@@ -326,6 +326,20 @@ public class SQLite {
         return user;
     }
     
+    public boolean updateUser(String username, String passwordhash, String salt, int role, int locked) {
+        String sql = "UPDATE Users SET ";
+        if (passwordhash != "") 
+            sql += "password = ?, ";
+        if (salt != "")
+            sql += "salt = ?, ";
+        if (role != -1)
+            sql += "role = ?, ";
+        if (locked != -1)
+            sql += "locked = ?, ";
+        sql += "WHERE username = ?";
+        return true;
+    }
+    
     public void addUser(String username, String password, int role) {
         String salt = User.generateSalt();
         String passwordhash = User.hashPassword(password, salt);

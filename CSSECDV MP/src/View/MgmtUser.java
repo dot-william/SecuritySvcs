@@ -193,8 +193,9 @@ public class MgmtUser extends javax.swing.JPanel {
     private void deleteBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_deleteBtnActionPerformed
         if(table.getSelectedRow() >= 0){
             int result = JOptionPane.showConfirmDialog(null, "Are you sure you want to delete " + tableModel.getValueAt(table.getSelectedRow(), 0) + "?", "DELETE USER", JOptionPane.YES_NO_OPTION);
-            
+            String username = tableModel.getValueAt(table.getSelectedRow(), 0).toString();
             if (result == JOptionPane.YES_OPTION) {
+                sqlite.removeUser(username);
                 System.out.println(tableModel.getValueAt(table.getSelectedRow(), 0));
             }
         }
