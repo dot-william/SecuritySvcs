@@ -8,6 +8,12 @@ import java.awt.Dimension;
 import java.util.ArrayList;
 import javax.swing.WindowConstants;
 import Controller.Secure;
+import java.sql.Timestamp;
+import java.text.SimpleDateFormat;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
+import java.util.Date;
 
 public class Frame extends javax.swing.JFrame {
 
@@ -145,6 +151,8 @@ public class Frame extends javax.swing.JFrame {
     private CardLayout contentView = new CardLayout();
     private CardLayout frameView = new CardLayout();
     
+    private int maxLoginAttempts;
+    
     public void init(Main controller){
         this.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         this.setTitle("CSSECDV - SECURITY Svcs");
@@ -153,7 +161,7 @@ public class Frame extends javax.swing.JFrame {
         this.main = controller;
         loginPnl.frame = this;
         registerPnl.frame = this;
-        
+        this.maxLoginAttempts = 10;
         adminHomePnl.init(main.sqlite);
         clientHomePnl.init(main.sqlite);
         managerHomePnl.init(main.sqlite);
@@ -180,6 +188,7 @@ public class Frame extends javax.swing.JFrame {
         String lowercase_username = username.toLowerCase();
         char[] password = loginPnl.getLoginPassword();
         User user = main.sqlite.getUser(lowercase_username);
+        
         if (user != null && user.validate(lowercase_username, password)) {
             int role = user.getRole();
             System.out.println(user.getRole());
@@ -206,10 +215,14 @@ public class Frame extends javax.swing.JFrame {
             }
                     
             frameView.show(Container, "homePnl");
+            
+            //Log action
         }
         else {
 //            System.out.println("Invalid username or password.");
             DialogBox.showErrorDialog("Authentication failed", "Username or password is incorrect.");
+            recordFailAttempt(user);
+            // Log action
         }
         
     }
@@ -224,11 +237,37 @@ public class Frame extends javax.swing.JFrame {
         frameView.show(Container, "registerPnl");
     }
     
+    public void recordFailAttempt(User user) {
+        // If user exists
+        if (user != null) {
+            //System.out.println("User exists, incorrect credentials.");
+            int failedAttempts = user.getFailedAttempts();
+            
+            // Create date
+            String ts = user.getCurrentTimstamp();
+            
+            // Increment failed attempts
+            failedAttempts++;
+            if (failedAttempts >= getMaxLoginAttempts()) {
+                System.out.println("You have reached amount of login attempts. Try again later.");
+            } else {
+                user.setFailedAttempts(failedAttempts);
+                // Update timestamp
+                user.setLastFailed(ts);
+
+                // Update db  
+                main.sqlite.updateUserFailedAttempts(user.getUsername(), user.getFailedAttempts(), user.getLastFailed()); 
+            }
+          
+        }
+       
+    }
+    
     public boolean registerAction(String username, String password, String confpass){
         
         //Convert username to lowercase
         String lowercase_username = username.toLowerCase();
-        User user = main.sqlite.getUser(lowercase_username); 
+        User user = main.sqlite.getUser(lowercase_username);
         
         // By default false so that user will not return to login page if error occurs
         boolean result = false; 
@@ -249,8 +288,9 @@ public class Frame extends javax.swing.JFrame {
                     DialogBox.showErrorDialog("Registration error", "Username already taken, please enter a different username.");
                 } else {
                     if (password.equals(confpass)) {
+                        
                         user = new User(lowercase_username, password);
-                        main.sqlite.addUser(user.getUsername(), user.getPasswordHash(), user.getSalt());
+                        main.sqlite.addUser(user.getUsername(), user.getPasswordHash(), user.getSalt(), 2, 0);
                         DialogBox.showSuccessDialog("Registration success", "User account registered successfully.");
                         result = true;
                     }
@@ -263,7 +303,10 @@ public class Frame extends javax.swing.JFrame {
         }
         return result;
     }
-
+    
+    public int getMaxLoginAttempts() {
+        return this.maxLoginAttempts; 
+    }
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JPanel Container;
     private javax.swing.JPanel Content;

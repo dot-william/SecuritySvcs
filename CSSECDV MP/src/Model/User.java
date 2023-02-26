@@ -7,6 +7,10 @@ import javax.crypto.SecretKeyFactory;
 import javax.crypto.spec.PBEKeySpec;
 import java.security.NoSuchAlgorithmException;
 import java.security.spec.InvalidKeySpecException;
+import java.sql.Timestamp;
+import java.text.SimpleDateFormat;
+//import java.time.LocalDateTime;
+import java.util.Date;
 
 public class User {
     private int id;
@@ -16,7 +20,11 @@ public class User {
     private int role = 2;
     private int locked = 0;
     private int failedAttempts = 0;
+    private String lastFailed = null;
+    private String lastLogin = null;
     
+    
+    // Use this constructor for registration
     public User(String username, String password){
         this.username = username;
         this.salt = generateSalt();
@@ -24,13 +32,17 @@ public class User {
         
     }
     
-    public User(int id, String username, String passwordhash, String salt, int role, int locked){
+    // Use this constructor when getting existing user
+    public User(int id, String username, String passwordhash, String salt, int role, int locked, int failedAttempts, String lastFailed, String lastLogin){
         this.id = id;
         this.username = username;
         this.passwordhash = passwordhash;
         this.salt = salt;
         this.role = role;
         this.locked = locked;
+        this.failedAttempts  = failedAttempts;
+        this.lastFailed = lastFailed;
+        this.lastLogin = lastLogin;
     }
     
     public int getId() {
@@ -126,5 +138,38 @@ public class User {
         this.failedAttempts = failedAttempts;
     }
     
+    public String getLastFailed() {
+        return lastFailed;
+    }
     
+    public void setLastFailed(String lastFailed) {
+        System.out.println("[USER.JAVA] Timestamp: " + lastFailed);
+        this.lastFailed = lastFailed;
+    }
+    
+    public String getLastLogin(){
+        return lastLogin;
+    }
+    
+    public void setLastLogin(String lastLogin) {
+        this.lastLogin = lastLogin;
+    }
+    
+    public Date convertStringtoDate (String dateString) {
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        Date date = null;
+        try {
+            date = sdf.parse(dateString);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return date;
+    }
+    
+    public String getCurrentTimstamp() {
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        Timestamp timestamp = new Timestamp(System.currentTimeMillis());
+        String ts = sdf.format(timestamp);
+        return ts;
+    }
 }

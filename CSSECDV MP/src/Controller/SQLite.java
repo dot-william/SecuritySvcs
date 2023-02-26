@@ -11,6 +11,9 @@ import java.sql.ResultSet;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.sql.PreparedStatement; 
+import java.util.Date;
+//import java.time.LocalDateTime;
+
 
 public class SQLite {
     
@@ -90,7 +93,10 @@ public class SQLite {
             + " passwordhash TEXT NOT NULL,\n"
             + " salt TEXT NOT NULL, \n"
             + " role INTEGER DEFAULT 2,\n"
-            + " locked INTEGER DEFAULT 0\n"
+            + " locked INTEGER DEFAULT 0,\n"
+            + " failedAttempts INTEGER DEFAULT 0,\n"
+            + " lastFailed TEXT DEFAULT NULL,\n"
+            + " lastLogin TEXT DEFAULT NULL\n"
             + ");";
 
         try (Connection conn = DriverManager.getConnection(driverURL);
@@ -283,7 +289,7 @@ public class SQLite {
     }
     
     public ArrayList<User> getUsers(){
-        String sql = "SELECT id, username, passwordhash, salt, role, locked FROM users";
+        String sql = "SELECT id, username, passwordhash, salt, role, locked, failedAttempts, lastFailed, lastLogin FROM users";
         ArrayList<User> users = new ArrayList<>();
         
         try (Connection conn = DriverManager.getConnection(driverURL);
@@ -296,14 +302,19 @@ public class SQLite {
                                    rs.getString("passwordhash"),
                                    rs.getString("salt"),
                                    rs.getInt("role"),
-                                   rs.getInt("locked")));
+                                   rs.getInt("locked"),
+                                   rs.getInt("failedAttempts"),
+                                   rs.getString("lastFailed"),
+                                   rs.getString("lastLogin")));
             }
-        } catch (Exception ex) {}
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
         return users;
     }
     
     public User getUser(String username) {
-        String sql = "SELECT id, username, passwordhash, salt, role, locked FROM users WHERE username = ?";
+        String sql = "SELECT id, username, passwordhash, salt, role, locked, failedAttempts, lastFailed, lastLogin FROM users WHERE username = ?";
         User user = null;
         
         try(Connection conn = DriverManager.getConnection(driverURL);
@@ -317,11 +328,14 @@ public class SQLite {
                                 rs.getString("passwordhash"),
                                 rs.getString("salt"),
                                 rs.getInt("role"),
-                                rs.getInt("locked"));
+                                rs.getInt("locked"),
+                                rs.getInt("failedAttempts"),
+                                rs.getString("lastFailed"),
+                                rs.getString("lastLogin"));
             return user;
         }
         catch (Exception ex) {
-            System.out.print("");
+            ex.printStackTrace();
         }
         return user;
     }
@@ -346,11 +360,12 @@ public class SQLite {
         return true;
     }
     
-    public void addUser(String username, String password, int role) {
-        String salt = User.generateSalt();
-        String passwordhash = User.hashPassword(password, salt);
+    public void addUser(String username, String passwordhash, String salt, int role, int failedAttempts) {
+//        String salt = User.generateSalt();
+//        String passwordhash = User.hashPassword(password, salt);
 //        String sql = "INSERT INTO users(username,passwordhash,salt,role) VALUES('" + username + "','" + passwordhash + "','" + salt + "','" + role + "')";
-        String sql = "INSERT INTO users(username,passwordhash,salt,role) VALUES(?,?,?,?)";
+        String sql = "INSERT INTO users(username,passwordhash,salt,role, failedAttempts) VALUES(?,?,?,?,?)";
+//        System.out.println("Date being passed: " + date);
         
         try (Connection conn = DriverManager.getConnection(driverURL);
             PreparedStatement pstmt = conn.prepareStatement(sql)){
@@ -358,10 +373,12 @@ public class SQLite {
             pstmt.setString(2, passwordhash);
             pstmt.setString(3, salt);
             pstmt.setInt(4, role);
+            pstmt.setInt(5, failedAttempts);
+//            pstmt.setObject(6, date);
             pstmt.execute();
             
         } catch (Exception ex) {
-            System.out.print(ex);
+            ex.printStackTrace();
         }
     }
     
@@ -395,5 +412,20 @@ public class SQLite {
             System.out.print(ex);
         }
         return product;
+    }
+    
+    public void updateUserFailedAttempts (String username, int failedAttempts, String lastFailed) {
+        String sql = "UPDATE users SET failedAttempts = ?, lastFailed =? WHERE username = ?;";
+        try (Connection conn = DriverManager.getConnection(driverURL);
+            PreparedStatement pstmt = conn.prepareStatement(sql)){
+            pstmt.setInt(1, failedAttempts);
+            pstmt.setString(2, lastFailed);
+            pstmt.setString(3, username);
+            pstmt.execute();
+            System.out.println("User updated!");
+            System.out.println("What is the date: " + lastFailed);
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
     }
 }
