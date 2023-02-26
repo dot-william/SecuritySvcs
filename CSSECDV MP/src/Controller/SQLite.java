@@ -341,7 +341,7 @@ public class SQLite {
     }
     
     public boolean updateUser(String oldUsername, User updatedUser) {
-        String sql = "UPDATE Users SET username = ?, passwordhash = ?, salt = ?, role = ?, locked = ?, WHERE username = ?";
+        String sql = "UPDATE Users SET username = ?, passwordhash = ?, salt = ?, role = ?, locked = ? WHERE username = ?";
         
         try (Connection conn = DriverManager.getConnection(driverURL);
             PreparedStatement pstmt = conn.prepareStatement(sql)){

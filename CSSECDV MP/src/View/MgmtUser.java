@@ -24,6 +24,7 @@ public class MgmtUser extends javax.swing.JPanel {
 
     public SQLite sqlite;
     public DefaultTableModel tableModel;
+    public Dialog dialogBox; 
     
     public MgmtUser(SQLite sqlite) {
         initComponents();
@@ -53,6 +54,9 @@ public class MgmtUser extends javax.swing.JPanel {
                 users.get(nCtr).getRole(), 
                 users.get(nCtr).getLocked()});
         }
+        
+        // dialog box 
+        dialogBox = new Dialog();
     }
 
     public void designer(JTextField component, String text){
@@ -221,9 +225,9 @@ public class MgmtUser extends javax.swing.JPanel {
 
     private void chgpassBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_chgpassBtnActionPerformed
         if(table.getSelectedRow() >= 0){
-            JTextField oldPassword = new JPasswordField();
-            JTextField password = new JPasswordField();
-            JTextField confpass = new JPasswordField();
+            JPasswordField oldPassword = new JPasswordField();
+            JPasswordField password = new JPasswordField();
+            JPasswordField confpass = new JPasswordField();
             designer(oldPassword, "OLD PASSWORD");
             designer(password, "NEW PASSWORD");
             designer(confpass, "CONFIRM PASSWORD");
@@ -238,6 +242,24 @@ public class MgmtUser extends javax.swing.JPanel {
                 String username = tableModel.getValueAt(table.getSelectedRow(), 0).toString();
                 System.out.println(username);
                 User user = sqlite.getUser(username);
+                if (user.validate(username, oldPassword.getPassword())) {
+                    String newpassStr = new String(password.getPassword());
+                    String confpassStr = new String(confpass.getPassword());
+                    if (newpassStr.equals(confpassStr)) {
+                        user.setSalt(User.generateSalt());
+                        user.setPasswordHash(User.hashPassword(newpassStr, user.getSalt()));
+                        boolean status = sqlite.updateUser(username, user);
+                        if (status) {
+                            dialogBox.showSuccessDialog("Change password success", "User password changed successfully.");
+                        }
+                    }
+                    else {
+                        dialogBox.showErrorDialog("Error changing password", "Both passwords do not match.");
+                    }
+                }
+                else {
+                    dialogBox.showErrorDialog("Error changing password", "Current password is incorrect.");
+                }
                 System.out.println(oldPassword.getText());
                 System.out.println(password.getText());
                 System.out.println(confpass.getText());
