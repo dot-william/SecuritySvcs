@@ -155,21 +155,6 @@ public class User {
         this.lastLogin = lastLogin;
     }
     
-    public Date convertStringtoDate (String dateString) {
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-        Date date = null;
-        try {
-            date = sdf.parse(dateString);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return date;
-    }
     
-    public String getCurrentTimstamp() {
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-        Timestamp timestamp = new Timestamp(System.currentTimeMillis());
-        String ts = sdf.format(timestamp);
-        return ts;
-    }
+    
 }

@@ -360,6 +360,28 @@ public class SQLite {
         return true;
     }
     
+    // Updates all fields from user
+    public void updateUser(User updatedUser) {
+         String sql = "UPDATE users SET username = ?, passwordhash = ?, salt = ?, role = ?, locked = ?, failedAttempts = ?, lastFailed = ?, lastLogin = ? WHERE username = ?";
+        
+        try (Connection conn = DriverManager.getConnection(driverURL);
+            PreparedStatement pstmt = conn.prepareStatement(sql)){
+            pstmt.setString(1, updatedUser.getUsername());
+            pstmt.setString(2, updatedUser.getPasswordHash());
+            pstmt.setString(3, updatedUser.getSalt());
+            pstmt.setInt(4, updatedUser.getRole());
+            pstmt.setInt(5, updatedUser.getLocked()); 
+            pstmt.setInt(6, updatedUser.getFailedAttempts());
+            pstmt.setString(7, updatedUser.getLastFailed());
+            pstmt.setString(8, updatedUser.getLastLogin());
+            pstmt.setString(9, updatedUser.getUsername());
+            pstmt.execute();
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+        
+    }
+    
     public void addUser(String username, String passwordhash, String salt, int role, int failedAttempts) {
 //        String salt = User.generateSalt();
 //        String passwordhash = User.hashPassword(password, salt);
