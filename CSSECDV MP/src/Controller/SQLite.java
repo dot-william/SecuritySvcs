@@ -326,17 +326,23 @@ public class SQLite {
         return user;
     }
     
-    public boolean updateUser(String username, String passwordhash, String salt, int role, int locked) {
-        String sql = "UPDATE Users SET ";
-        if (passwordhash != "") 
-            sql += "password = ?, ";
-        if (salt != "")
-            sql += "salt = ?, ";
-        if (role != -1)
-            sql += "role = ?, ";
-        if (locked != -1)
-            sql += "locked = ?, ";
-        sql += "WHERE username = ?";
+    public boolean updateUser(String oldUsername, User updatedUser) {
+        String sql = "UPDATE Users SET username = ?, passwordhash = ?, salt = ?, role = ?, locked = ?, WHERE username = ?";
+        
+        try (Connection conn = DriverManager.getConnection(driverURL);
+            PreparedStatement pstmt = conn.prepareStatement(sql)){
+            pstmt.setString(1, updatedUser.getUsername());
+            pstmt.setString(2, updatedUser.getPasswordHash());
+            pstmt.setString(3, updatedUser.getSalt());
+            pstmt.setInt(4, updatedUser.getRole());
+            pstmt.setInt(5, updatedUser.getLocked()); 
+            pstmt.setString(6, oldUsername);
+            pstmt.execute();
+            
+        } catch (Exception ex) {
+            System.out.print(ex);
+            return false;
+        }
         return true;
     }
     

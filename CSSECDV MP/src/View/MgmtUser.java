@@ -184,7 +184,10 @@ public class MgmtUser extends javax.swing.JPanel {
                 "EDIT USER ROLE", JOptionPane.QUESTION_MESSAGE, null, options, options[(int)tableModel.getValueAt(table.getSelectedRow(), 2) - 1]);
             
             if(result != null){
-                System.out.println(tableModel.getValueAt(table.getSelectedRow(), 0));
+                String username = tableModel.getValueAt(table.getSelectedRow(), 0).toString();
+                System.out.println(username);
+                User user = sqlite.getUser(username);
+//                user.setRole(ERROR);
                 System.out.println(result.charAt(0));
             }
         }
@@ -218,18 +221,24 @@ public class MgmtUser extends javax.swing.JPanel {
 
     private void chgpassBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_chgpassBtnActionPerformed
         if(table.getSelectedRow() >= 0){
+            JTextField oldPassword = new JPasswordField();
             JTextField password = new JPasswordField();
             JTextField confpass = new JPasswordField();
-            designer(password, "PASSWORD");
+            designer(oldPassword, "OLD PASSWORD");
+            designer(password, "NEW PASSWORD");
             designer(confpass, "CONFIRM PASSWORD");
             
             Object[] message = {
-                "Enter New Password:", password, confpass
+                "Enter New Password:", oldPassword, password, confpass
             };
 
             int result = JOptionPane.showConfirmDialog(null, message, "CHANGE PASSWORD", JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE, null);
             
             if (result == JOptionPane.OK_OPTION) {
+                String username = tableModel.getValueAt(table.getSelectedRow(), 0).toString();
+                System.out.println(username);
+                User user = sqlite.getUser(username);
+                System.out.println(oldPassword.getText());
                 System.out.println(password.getText());
                 System.out.println(confpass.getText());
             }
