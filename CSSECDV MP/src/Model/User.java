@@ -65,6 +65,10 @@ public class User {
         return this.passwordhash;
     }
     
+    public void setPasswordHash(String newPasswordHash) {
+        this.passwordhash = newPasswordHash;
+    }
+    
     public boolean validate(String username, char[] password) {
         boolean match = false;
         String hashPwd = hashPassword(new String(password), this.getSalt());
@@ -86,6 +90,9 @@ public class User {
         } catch (NoSuchAlgorithmException e) {
             throw new RuntimeException(e);
         }
+    }
+    public void setSalt(String newsalt) {
+        this.salt = newsalt;
     }
     
     public String getSalt() {
