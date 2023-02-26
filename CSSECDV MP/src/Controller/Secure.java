@@ -12,9 +12,9 @@ import View.Dialog;
  */
 public class Secure {
 
-    public Dialog DialogBox = new Dialog();
+    public static Dialog DialogBox = new Dialog();
     
-    public boolean regIsEmpty(String username, String password, String confpass) {
+    public static boolean regIsEmpty(String username, String password, String confpass) {
         if(username.isEmpty() || password.isEmpty() || confpass.isEmpty()) {
             DialogBox.showErrorDialog("Registration error", "One of the fields is empty. Please try again.");
             return true;
@@ -23,7 +23,7 @@ public class Secure {
             return false;
                 
     }
-    public boolean  validUsername (String username) {
+    public static boolean  validUsername (String username) {
         // Check for length
         if(username.length() < 5 || username.length() > 15) {
             DialogBox.showErrorDialog("Registration error", "Username should not be less than 5 characters or more than 15 characters long.");
@@ -33,7 +33,7 @@ public class Secure {
             return true;
     }
     
-    public boolean isValidPassword (String password) {
+    public static boolean isValidPassword (String password) {
         boolean isValid = true;
             if (password.length() < 8)
             {

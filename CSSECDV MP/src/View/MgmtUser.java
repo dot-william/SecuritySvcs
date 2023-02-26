@@ -5,7 +5,8 @@
  */
 package View;
 
-import Controller.SQLite;
+import Controller.SQLite; 
+import Controller.Secure; 
 import Model.User;
 import java.util.ArrayList;
 import javax.swing.JComboBox;
@@ -245,7 +246,7 @@ public class MgmtUser extends javax.swing.JPanel {
                 if (user.validate(username, oldPassword.getPassword())) {
                     String newpassStr = new String(password.getPassword());
                     String confpassStr = new String(confpass.getPassword());
-                    if (newpassStr.equals(confpassStr)) {
+                    if (newpassStr.equals(confpassStr) && Secure.isValidPassword(newpassStr)) {
                         user.setSalt(User.generateSalt());
                         user.setPasswordHash(User.hashPassword(newpassStr, user.getSalt()));
                         boolean status = sqlite.updateUser(username, user);
@@ -254,7 +255,7 @@ public class MgmtUser extends javax.swing.JPanel {
                         }
                     }
                     else {
-                        dialogBox.showErrorDialog("Error changing password", "Both passwords do not match.");
+                        dialogBox.showErrorDialog("Error changing password", "Both passwords do not match or password does not follow the required criteria.");
                     }
                 }
                 else {
