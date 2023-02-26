@@ -225,15 +225,26 @@ public class Frame extends javax.swing.JFrame {
     }
     
     public boolean registerAction(String username, String password, String confpass){
+        
+        //Convert username to lowercase
         String lowercase_username = username.toLowerCase();
         User user = main.sqlite.getUser(lowercase_username); 
-        boolean result = false; //by default false so that user will not return to login page if error occurs
+        
+        // By default false so that user will not return to login page if error occurs
+        boolean result = false; 
+        
+        // Check if ny of the fields are empty
         boolean isEmptyField = secure.regIsEmpty(username, password, confpass);
         if(!isEmptyField){
+            
+            // Check based on username policy and password policy
             boolean isValidPassword = secure.isValidPassword(password);
             boolean isValidUsername = secure.validUsername(username);
 
+            // If there are no empty fields and username and password are valid
             if (!isEmptyField && isValidUsername && isValidPassword) {
+                
+                // If user already exists
                 if (user != null) {
                     DialogBox.showErrorDialog("Registration error", "Username already taken, please enter a different username.");
                 } else {
@@ -244,7 +255,7 @@ public class Frame extends javax.swing.JFrame {
                         result = true;
                     }
                     else {
-            //            System.out.println("password and confpss dont match");
+                        //System.out.println("password and confpss dont match");
                         DialogBox.showErrorDialog("Registration error", "Make sure both passwords match.");
                     }
                 }
