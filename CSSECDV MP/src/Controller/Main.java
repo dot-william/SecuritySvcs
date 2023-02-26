@@ -10,6 +10,9 @@ import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Date;
 
+import java.time.format.DateTimeFormatter;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
 
 public class Main {
     
@@ -103,6 +106,14 @@ public class Main {
         // Initialize User Interface
         Frame frame = new Frame();
         frame.init(this);
+        
+        
+        // Test date
+        
+//        Date in = new Date();
+//        LocalDateTime ldt = LocalDateTime.ofInstant(in.toInstant(), ZoneId.systemDefault());
+//        Date out = Date.from(ldt.atZone(ZoneId.systemDefault()).toInstant());
+//        System.out.println(out.toString());  
     }
     
 }

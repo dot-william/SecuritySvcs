@@ -89,7 +89,6 @@ public class Login extends javax.swing.JPanel {
         );
     }// </editor-fold>//GEN-END:initComponents
     private void loginBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_loginBtnActionPerformed
-
         frame.mainNav();
     }//GEN-LAST:event_loginBtnActionPerformed
 
