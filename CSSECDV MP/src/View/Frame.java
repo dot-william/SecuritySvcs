@@ -235,10 +235,7 @@ public class Frame extends javax.swing.JFrame {
                 frameView.show(Container, "homePnl");
             }
             else if (!user.validate(lowercase_username, password)) {
-                if(user.getLocked() == 0) {
-                    DialogBox.showErrorDialog("Authentication failed", "Username or password is incorrect.");
-                    recordFailAttempt(user);
-                }
+                recordFailAttempt(user);
                 DialogBox.showErrorDialog("Authentication failed", "Username or password is incorrect.");  
                 String formattedDateTime = datetimeformatter.format(LocalDateTime.now());
                 main.sqlite.addLogs("authenticationError", lowercase_username, "Incorrect username or password entered during login.", formattedDateTime);
@@ -246,7 +243,7 @@ public class Frame extends javax.swing.JFrame {
             main.sqlite.updateUser(lowercase_username, user); 
         }
         catch (NullPointerException e) {
-            DialogBox.showErrorDialog("Authentication failed", "sername or password is incorrect."); 
+            DialogBox.showErrorDialog("Authentication failed", "Username or password is incorrect."); 
         }
         
     }
