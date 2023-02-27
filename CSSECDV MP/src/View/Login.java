@@ -1,18 +1,36 @@
 
 package View;
 import Controller.Main;
+import Controller.SQLite;
 import Model.User;
 import java.util.ArrayList; 
+import javax.swing.JTextField; 
+import javax.swing.JOptionPane; 
 
 public class Login extends javax.swing.JPanel {
 
     public Frame frame;
     public Main main;
+    public SQLite sqlite;
+    public Dialog dialogBox;  
     
     public Login() {
         initComponents();
+        dialogBox = new Dialog();
     }
-
+    
+    public void init(SQLite sqlite) {
+        this.sqlite = sqlite;
+    }
+    
+    public void designer(JTextField component, String text){
+        component.setSize(70, 600);
+        component.setFont(new java.awt.Font("Tahoma", 0, 18));
+        component.setBackground(new java.awt.Color(240, 240, 240));
+        component.setHorizontalAlignment(javax.swing.JTextField.CENTER);
+        component.setBorder(javax.swing.BorderFactory.createTitledBorder(new javax.swing.border.LineBorder(new java.awt.Color(0, 0, 0), 2, true), text, javax.swing.border.TitledBorder.CENTER, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Tahoma", 0, 12)));
+    }
+    
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
@@ -23,6 +41,7 @@ public class Login extends javax.swing.JPanel {
         registerBtn = new javax.swing.JButton();
         loginBtn = new javax.swing.JButton();
         passwordFld = new javax.swing.JPasswordField();
+        forgetPassBtn = new javax.swing.JButton();
 
         jLabel1.setFont(new java.awt.Font("Tahoma", 1, 48)); // NOI18N
         jLabel1.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
@@ -56,6 +75,15 @@ public class Login extends javax.swing.JPanel {
         passwordFld.setActionCommand("");
         passwordFld.setBorder(javax.swing.BorderFactory.createTitledBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0), 2), "PASSWORD", javax.swing.border.TitledBorder.CENTER, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Tahoma", 0, 12))); // NOI18N
 
+        forgetPassBtn.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
+        forgetPassBtn.setText("Forget password");
+        forgetPassBtn.setActionCommand("Forget Password");
+        forgetPassBtn.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                forgetPassBtnActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
@@ -71,6 +99,10 @@ public class Login extends javax.swing.JPanel {
                     .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(passwordFld, javax.swing.GroupLayout.Alignment.LEADING))
                 .addContainerGap(200, Short.MAX_VALUE))
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(forgetPassBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 270, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(264, 264, 264))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -85,7 +117,9 @@ public class Login extends javax.swing.JPanel {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(registerBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 52, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(loginBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 52, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(126, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(forgetPassBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(83, Short.MAX_VALUE))
         );
     }// </editor-fold>//GEN-END:initComponents
     private void loginBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_loginBtnActionPerformed
@@ -96,6 +130,30 @@ public class Login extends javax.swing.JPanel {
 //      add user 
         frame.registerNav();
     }//GEN-LAST:event_registerBtnActionPerformed
+
+    private void forgetPassBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_forgetPassBtnActionPerformed
+            
+        JTextField usernameFld = new JTextField();
+        designer(usernameFld, "USERNAME");
+
+        Object[] message = {
+            "Enter your username:", usernameFld
+        };
+        
+        int result = JOptionPane.showConfirmDialog(null, message, "RESET PASSWORD", JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE, null);
+        if (result == JOptionPane.OK_OPTION) { 
+            String username = usernameFld.getText();
+
+            User user =  this.sqlite.getUser(username); 
+            
+            if (user != null) {
+                dialogBox.showSuccessDialog("Reset password", "Reset password request sent, you will be contacted by your administrator soon.");
+            }
+            else {           
+                dialogBox.showErrorDialog("Reset password", "User account not found.");
+            }
+        }
+    }//GEN-LAST:event_forgetPassBtnActionPerformed
     
     public void clear() {
         usernameFld.setText("");
@@ -111,6 +169,7 @@ public class Login extends javax.swing.JPanel {
     }
         
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton forgetPassBtn;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JOptionPane jOptionPane1;
     private javax.swing.JButton loginBtn;
