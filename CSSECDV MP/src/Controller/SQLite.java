@@ -247,6 +247,20 @@ public class SQLite {
         return histories;
     }
     
+    public boolean clearLogs() {
+        String sql = "DELETE FROM logs;"; 
+        
+        try (Connection conn = DriverManager.getConnection(driverURL);
+            PreparedStatement pstmt = conn.prepareStatement(sql);
+            ){
+            int i = pstmt.executeUpdate();
+            return true;
+        } catch (Exception ex) {
+            System.out.print(ex);
+            return false;
+        }
+    }
+    
     public ArrayList<Logs> getLogs(){
         String sql = "SELECT id, event, username, desc, timestamp FROM logs";
         ArrayList<Logs> logs = new ArrayList<Logs>();

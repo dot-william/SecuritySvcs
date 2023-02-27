@@ -2,6 +2,7 @@ package View;
 
 import Controller.Main;
 import Model.User;
+import Model.Logs;
 import java.awt.BorderLayout;
 import java.awt.CardLayout;
 import java.awt.Dimension;
@@ -134,6 +135,10 @@ public class Frame extends javax.swing.JFrame {
 
     private void logoutBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_logoutBtnActionPerformed
         loginPnl.clear();
+        // log the logout to db
+        String formattedDateTime = datetimeformatter.format(LocalDateTime.now());
+        main.sqlite.addLogs("logout", this.currentUser.getUsername(), "User logged out", formattedDateTime);
+        this.currentUser = null;
         frameView.show(Container, "loginPnl");
     }//GEN-LAST:event_logoutBtnActionPerformed
 
@@ -150,8 +155,9 @@ public class Frame extends javax.swing.JFrame {
     
     private CardLayout contentView = new CardLayout();
     private CardLayout frameView = new CardLayout();
-    
+    private User currentUser = null;
     private int maxLoginAttempts;
+    DateTimeFormatter datetimeformatter = DateTimeFormatter.ofPattern(Logs.datetimeformatstring);
     
     public void init(Main controller){
         this.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
@@ -188,56 +194,65 @@ public class Frame extends javax.swing.JFrame {
         String username = loginPnl.getLoginUsername();
         String lowercase_username = username.toLowerCase();
         char[] password = loginPnl.getLoginPassword();
-        User user = main.sqlite.getUser(lowercase_username);
-        int isLocked = user.getLocked();
+        try {
+            User user = main.sqlite.getUser(lowercase_username); 
+            if (user.validate(lowercase_username, password) && user.getLocked() != 1) {
+                int isLocked = user.getLocked();
+                if (isLocked == 1) {
+                    checkIfUnlock(user);
+                } else if (isLocked == 0) {
+                    checkIfResetFailedCounter(user);
+                }
+                String currTimestamp = getCurrentTimestamp();
+                unlockUser(user);
+                user.setLastLogin(currTimestamp);
+                this.currentUser = user;
+                main.sqlite.updateUser(user); 
+                int role = user.getRole();
+                // log the successful login to db
+                String formattedDateTime = datetimeformatter.format(LocalDateTime.now());
+                main.sqlite.addLogs("loginSuccess", lowercase_username, "User logged in successfully.", formattedDateTime);
+                switch (role) {
+                    case 2:
+                        clientHomePnl.showPnl("home");
+                        contentView.show(Content, "clientHomePnl");
+                        break;
+                    case 3:
+                        staffHomePnl.showPnl("home");
+                        contentView.show(Content, "staffHomePnl");
+                        break;
+                    case 4:
+                        managerHomePnl.showPnl("home");
+                        contentView.show(Content, "managerHomePnl");
+                        break;
+                    case 5:
+                        adminHomePnl.showPnl("home");
+                        contentView.show(Content, "adminHomePnl");
+                        break;
+                    default:
+                        DialogBox.showErrorDialog("Account disabled", "Account disabled due to multiple failed login attempts, wait 5 minutes before logging in again.");
+                        break;
+                }
+                frameView.show(Container, "homePnl");
+            }
+            else if (!user.validate(lowercase_username, password)) {
+                if(user.getLocked() == 0) {
+                    DialogBox.showErrorDialog("Authentication failed", "Username or password is incorrect.");
+                    recordFailAttempt(user);
+                }
+                DialogBox.showErrorDialog("Authentication failed", "Username or password is incorrect.");  
+                String formattedDateTime = datetimeformatter.format(LocalDateTime.now());
+                main.sqlite.addLogs("authenticationError", lowercase_username, "Incorrect username or password entered during login.", formattedDateTime);
+            }
+            main.sqlite.updateUser(lowercase_username, user); 
+        }
+        catch (NullPointerException e) {
+            DialogBox.showErrorDialog("Authentication failed", "sername or password is incorrect."); 
+//            log the authentication failure to db
+            String formattedDateTime = datetimeformatter.format(LocalDateTime.now());
+            main.sqlite.addLogs("user404", lowercase_username, "User account doesn't exist.", formattedDateTime);
+        }
         
-        if (isLocked == 1) {
-            checkIfUnlock(user);
-        } else if (isLocked == 0) {
-            checkIfResetFailedCounter(user);
-        }
-        if (user != null && user.validate(lowercase_username, password) && isLocked != 1 ) {
-            String currTimestamp = getCurrentTimestamp();
-            unlockUser(user);
-            user.setLastLogin(currTimestamp);
-            main.sqlite.updateUser(user); 
-            int role = user.getRole();
-            System.out.println(user.getRole());
-            switch (role) {
-                case 2:
-                    clientHomePnl.showPnl("home");
-                    contentView.show(Content, "clientHomePnl");
-                    break;
-                case 3:
-                    staffHomePnl.showPnl("home");
-                    contentView.show(Content, "staffHomePnl");
-                    break;
-                case 4:
-                    managerHomePnl.showPnl("home");
-                    contentView.show(Content, "managerHomePnl");
-                    break;
-                case 5:
-                    adminHomePnl.showPnl("home");
-                    contentView.show(Content, "adminHomePnl");
-                    break;
-                default:
-                    DialogBox.showErrorDialog("Account disabled", "Account disabled due to multiple failed login attempts, wait 5 minutes before logging in again.");
-                    break;
-            }
-                    
-            frameView.show(Container, "homePnl");
-        } else if (user == null) {
-            DialogBox.showErrorDialog("Authentication failed", "Username or password is incorrect.");
-        } else {
-//            System.out.println("Invalid username or password.");
-            if(isLocked == 0) {
-                DialogBox.showErrorDialog("Authentication failed", "Username or password is incorrect.");
-                recordFailAttempt(user);
-            }
-                
-            // Log action
-        }
-        main.sqlite.updateUser(user); 
     }
     
     // Check if 15 minutes has passed to unlock account
@@ -367,6 +382,9 @@ public class Frame extends javax.swing.JFrame {
                         user = new User(lowercase_username, password);
                         main.sqlite.addUser(user.getUsername(), user.getPasswordHash(), user.getSalt(), 2, 0);
                         DialogBox.showSuccessDialog("Registration success", "User account registered successfully.");
+                        // log the successful registration to db
+                        String formattedDateTime = datetimeformatter.format(LocalDateTime.now());
+                        main.sqlite.addLogs("registrationSuccess", lowercase_username, "User registered successfully.", formattedDateTime);
                         result = true;
                     }
                     else {
