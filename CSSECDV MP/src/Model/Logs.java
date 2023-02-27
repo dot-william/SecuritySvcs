@@ -21,8 +21,9 @@ public class Logs {
     private String username;
     private String desc;
     private Timestamp timestamp;
-
-    private SimpleDateFormat dateformat = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss.SSS");
+    
+    public static String datetimeformatstring = "yyyy-MM-dd hh:mm:ss.SSS";
+    public static SimpleDateFormat dateformat = new SimpleDateFormat(datetimeformatstring);
     
     public Logs(String event, String desc){
         this.event = event;
@@ -89,5 +90,5 @@ public class Logs {
     public void setTimestamp(Timestamp timestamp) {
         this.timestamp = timestamp;
     }
-    
+      
 }
