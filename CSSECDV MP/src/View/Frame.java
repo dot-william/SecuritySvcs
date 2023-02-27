@@ -183,6 +183,7 @@ public class Frame extends javax.swing.JFrame {
     }
     
     public void mainNav(){
+        
         // authenticate user
         String username = loginPnl.getLoginUsername();
         String lowercase_username = username.toLowerCase();
@@ -261,7 +262,7 @@ public class Frame extends javax.swing.JFrame {
         }
     }
     
-      // Check if 15 minutes has passed to unlock account
+      // Check if 10 minutes has passed to unlock account
     public void checkIfResetFailedCounter(User user) {
         // 10 minutes
         long timeToResetFailedAttempts = (long) 600000;
