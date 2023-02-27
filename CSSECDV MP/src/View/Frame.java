@@ -168,6 +168,7 @@ public class Frame extends javax.swing.JFrame {
         loginPnl.frame = this;
         registerPnl.frame = this;
         this.maxLoginAttempts = 10;
+        loginPnl.init(main.sqlite);
         adminHomePnl.init(main.sqlite);
         clientHomePnl.init(main.sqlite);
         managerHomePnl.init(main.sqlite);

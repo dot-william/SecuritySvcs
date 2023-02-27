@@ -83,7 +83,6 @@ public class MgmtUser extends javax.swing.JPanel {
         deleteBtn = new javax.swing.JButton();
         lockBtn = new javax.swing.JButton();
         chgpassBtn = new javax.swing.JButton();
-        resetpassBtn = new javax.swing.JButton();
 
         table.setFont(new java.awt.Font("SansSerif", 0, 14)); // NOI18N
         table.setModel(new javax.swing.table.DefaultTableModel(
@@ -147,14 +146,6 @@ public class MgmtUser extends javax.swing.JPanel {
             }
         });
 
-        resetpassBtn.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
-        resetpassBtn.setText("RESET PASS");
-        resetpassBtn.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                resetpassBtnActionPerformed(evt);
-            }
-        });
-
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
@@ -167,11 +158,9 @@ public class MgmtUser extends javax.swing.JPanel {
                         .addGap(0, 0, 0)
                         .addComponent(deleteBtn, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(lockBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 86, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(lockBtn)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(chgpassBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 95, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(resetpassBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 91, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addComponent(chgpassBtn))
                     .addComponent(jScrollPane1))
                 .addContainerGap())
         );
@@ -185,8 +174,7 @@ public class MgmtUser extends javax.swing.JPanel {
                     .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                         .addComponent(lockBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 41, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addComponent(chgpassBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 41, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addComponent(deleteBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 41, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addComponent(resetpassBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 41, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                        .addComponent(deleteBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 41, javax.swing.GroupLayout.PREFERRED_SIZE))))
         );
     }// </editor-fold>//GEN-END:initComponents
 
@@ -236,43 +224,41 @@ public class MgmtUser extends javax.swing.JPanel {
         }
     }//GEN-LAST:event_lockBtnActionPerformed
 
-    private void resetpassBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_resetpassBtnActionPerformed
-        if(table.getSelectedRow() >= 0){
-            JPasswordField password = new JPasswordField();
-            JPasswordField confpass = new JPasswordField();
-            designer(password, "NEW PASSWORD");
-            designer(confpass, "CONFIRM PASSWORD");
-
-            Object[] message = {
-                "Enter New Password:", password, confpass
-            };
-
-            int result = JOptionPane.showConfirmDialog(null, message, "CHANGE PASSWORD", JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE, null);
-
-            if (result == JOptionPane.OK_OPTION) {
-                String username = tableModel.getValueAt(table.getSelectedRow(), 0).toString();
-                User user = sqlite.getUser(username);
-                if (user != null) {
-                    String newpassStr = new String(password.getPassword());
-                    String confpassStr = new String(confpass.getPassword());
-                    if (newpassStr.equals(confpassStr) && Secure.isValidPassword(newpassStr)) {
-                        user.setSalt(User.generateSalt());
-                        user.setPasswordHash(User.hashPassword(newpassStr, user.getSalt()));
-                        boolean status = sqlite.updateUser(username, user);
-                        if (status) {
-                            dialogBox.showSuccessDialog("Reset password success", "User password changed successfully.");
-                        }
-                    }
-                    else {
-                        dialogBox.showErrorDialog("Error resetting password", "Both passwords do not match or password does not follow the required criteria.");
-                    }
-                }
-                else {
-                    dialogBox.showErrorDialog("Error changing password", "Current password is incorrect.");
-                }
-            }
-        }
-    }//GEN-LAST:event_resetpassBtnActionPerformed
+//    if(table.getSelectedRow() >= 0){
+//            JPasswordField password = new JPasswordField();
+//            JPasswordField confpass = new JPasswordField();
+//            designer(password, "NEW PASSWORD");
+//            designer(confpass, "CONFIRM PASSWORD");
+//
+//            Object[] message = {
+//                "Enter New Password:", password, confpass
+//            };
+//
+//            int result = JOptionPane.showConfirmDialog(null, message, "CHANGE PASSWORD", JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE, null);
+//
+//            if (result == JOptionPane.OK_OPTION) {
+//                String username = tableModel.getValueAt(table.getSelectedRow(), 0).toString();
+//                User user = sqlite.getUser(username);
+//                if (user != null) {
+//                    String newpassStr = new String(password.getPassword());
+//                    String confpassStr = new String(confpass.getPassword());
+//                    if (newpassStr.equals(confpassStr) && Secure.isValidPassword(newpassStr)) {
+//                        user.setSalt(User.generateSalt());
+//                        user.setPasswordHash(User.hashPassword(newpassStr, user.getSalt()));
+//                        boolean status = sqlite.updateUser(username, user);
+//                        if (status) {
+//                            dialogBox.showSuccessDialog("Reset password success", "User password changed successfully.");
+//                        }
+//                    }
+//                    else {
+//                        dialogBox.showErrorDialog("Error resetting password", "Both passwords do not match or password does not follow the required criteria.");
+//                    }
+//                }
+//                else {
+//                    dialogBox.showErrorDialog("Error changing password", "Current password is incorrect.");
+//                }
+//            }
+//        }
 
     private void chgpassBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_chgpassBtnActionPerformed
         if(table.getSelectedRow() >= 0){
@@ -322,7 +308,6 @@ public class MgmtUser extends javax.swing.JPanel {
     private javax.swing.JButton editRoleBtn;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JButton lockBtn;
-    private javax.swing.JButton resetpassBtn;
     private javax.swing.JTable table;
     // End of variables declaration//GEN-END:variables
 }
