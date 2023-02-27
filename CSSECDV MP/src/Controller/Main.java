@@ -93,16 +93,16 @@ public class Main {
 //            System.out.println(" Price: " + products.get(nCtr).getPrice());
 //        }
 //         Get users
-        ArrayList<User> users = sqlite.getUsers();
-        for(int nCtr = 0; nCtr < users.size(); nCtr++){
-            System.out.println("===== User " + users.get(nCtr).getId() + " =====");
-            System.out.println(" Username: " + users.get(nCtr).getUsername());
-            System.out.println(" PWhash: " + users.get(nCtr).getPasswordHash());
-            System.out.println(" salt: " + users.get(nCtr).getSalt());
-            System.out.println(" Role: " + users.get(nCtr).getRole());
-            System.out.println(" Locked: " + users.get(nCtr).getLocked());
-        }
-        
+//        ArrayList<User> users = sqlite.getUsers();
+//        for(int nCtr = 0; nCtr < users.size(); nCtr++){
+//            System.out.println("===== User " + users.get(nCtr).getId() + " =====");
+//            System.out.println(" Username: " + users.get(nCtr).getUsername());
+//            System.out.println(" PWhash: " + users.get(nCtr).getPasswordHash());
+//            System.out.println(" salt: " + users.get(nCtr).getSalt());
+//            System.out.println(" Role: " + users.get(nCtr).getRole());
+//            System.out.println(" Locked: " + users.get(nCtr).getLocked());
+//        }
+//        
         // Initialize User Interface
         Frame frame = new Frame();
         frame.init(this);

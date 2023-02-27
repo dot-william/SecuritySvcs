@@ -1,5 +1,6 @@
 package View;
 
+import Controller.Helper;
 import Controller.Main;
 import Model.User;
 import Model.Logs;
@@ -9,12 +10,9 @@ import java.awt.Dimension;
 import java.util.ArrayList;
 import javax.swing.WindowConstants;
 import Controller.Secure;
-import java.sql.Timestamp;
-import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
-import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
-import java.util.Date;
+
 
 public class Frame extends javax.swing.JFrame {
 
@@ -144,6 +142,7 @@ public class Frame extends javax.swing.JFrame {
 
     public Main main;
     public Secure secure = new Secure();
+    public Helper helper = new Helper();
     public Login loginPnl = new Login();
     public Register registerPnl = new Register();
     public Dialog DialogBox = new Dialog();
@@ -156,7 +155,7 @@ public class Frame extends javax.swing.JFrame {
     private CardLayout contentView = new CardLayout();
     private CardLayout frameView = new CardLayout();
     private User currentUser = null;
-    private int maxLoginAttempts;
+    
     DateTimeFormatter datetimeformatter = DateTimeFormatter.ofPattern(Logs.datetimeformatstring);
     
     public void init(Main controller){
@@ -167,7 +166,6 @@ public class Frame extends javax.swing.JFrame {
         this.main = controller;
         loginPnl.frame = this;
         registerPnl.frame = this;
-        this.maxLoginAttempts = 10;
         adminHomePnl.init(main.sqlite);
         clientHomePnl.init(main.sqlite);
         managerHomePnl.init(main.sqlite);
@@ -196,15 +194,10 @@ public class Frame extends javax.swing.JFrame {
         char[] password = loginPnl.getLoginPassword();
         try {
             User user = main.sqlite.getUser(lowercase_username); 
+            secure.checkUserStatus(user);
             if (user.validate(lowercase_username, password) && user.getLocked() != 1) {
-                int isLocked = user.getLocked();
-                if (isLocked == 1) {
-                    checkIfUnlock(user);
-                } else if (isLocked == 0) {
-                    checkIfResetFailedCounter(user);
-                }
-                String currTimestamp = getCurrentTimestamp();
-                unlockUser(user);
+                String currTimestamp = helper.getCurrentTimestamp();
+                secure.unlockUser(user);
                 user.setLastLogin(currTimestamp);
                 this.currentUser = user;
                 main.sqlite.updateUser(user); 
@@ -236,12 +229,18 @@ public class Frame extends javax.swing.JFrame {
                 frameView.show(Container, "homePnl");
             }
             else if (!user.validate(lowercase_username, password)) {
-                recordFailAttempt(user);
-                DialogBox.showErrorDialog("Authentication failed", "Username or password is incorrect.");  
+                
+                // If user is not yet locked
+                if(user.getLocked() == 0) {
+                  secure.recordFailAttempt(user);
+                  DialogBox.showErrorDialog("Authentication failed", "Username or password is incorrect.");  
+                }
+              
                 String formattedDateTime = datetimeformatter.format(LocalDateTime.now());
                 main.sqlite.addLogs("authenticationError", lowercase_username, "Incorrect username or password entered during login.", formattedDateTime);
             }
-            main.sqlite.updateUser(lowercase_username, user); 
+            
+            main.sqlite.updateUser(user);
         }
         catch (NullPointerException e) {
             DialogBox.showErrorDialog("Authentication failed", "Username or password is incorrect."); 
@@ -249,54 +248,7 @@ public class Frame extends javax.swing.JFrame {
         
     }
     
-    // Check if 15 minutes has passed to unlock account
-    public void checkIfUnlock(User user) {
-        // 15 minutes
-        long timeToResetLocked = (long) 900000;
-        String currTimestamp = getCurrentTimestamp();
-        String lastFailedStr = user.getLastFailed();
-        
-        if (currTimestamp != null && lastFailedStr != null) {
-            Date currDateTime = convertStringToDate(currTimestamp);
-            Date lastFailed = convertStringToDate(lastFailedStr);
-            long difference = currDateTime.getTime() - lastFailed.getTime();
-            long minutes = ((timeToResetLocked - difference)/1000)/60;
-
-            if (difference >= timeToResetLocked) {
-                System.out.println("Difference: " + difference);
-                unlockUser(user);
-            } else {
-                 DialogBox.showErrorDialog("Authentication failed", "Account currently locked. Please try again in " + minutes +" minutes.");
-            }
-        }
-    }
     
-      // Check if 10 minutes has passed to unlock account
-    public void checkIfResetFailedCounter(User user) {
-        // 10 minutes
-        long timeToResetFailedAttempts = (long) 600000;
-
-        String currTimestamp = getCurrentTimestamp();
-        String lastFailedStr = user.getLastFailed();
-        if(currTimestamp != null && lastFailedStr != null) {
-            Date currDateTime = convertStringToDate(currTimestamp);
-            Date lastFailed = convertStringToDate(lastFailedStr);
-            long difference = currDateTime.getTime() - lastFailed.getTime();
-            
-
-            if (difference >= timeToResetFailedAttempts) {
-                System.out.println("Difference: " + difference);
-                unlockUser(user);
-            } 
-        }
-       
-    }
-    
-    public void unlockUser(User user) {
-        user.setLocked(0);
-        user.setFailedAttempts(0);
-        user.setLastFailed(null);
-    }
     
     public void loginNav(){
         loginPnl.clear();
@@ -308,44 +260,7 @@ public class Frame extends javax.swing.JFrame {
         frameView.show(Container, "registerPnl");
     }
     
-    public void recordFailAttempt(User user) {
-        // If user exists
-        if (user != null) {
-            //System.out.println("User exists, incorrect credentials.");
-            int failedAttempts = user.getFailedAttempts();
-            
-            // Create date
-            String ts = getCurrentTimestamp();
-            
-            // Increment failed attempts
-            failedAttempts++;
-            
-//            String customDate = "2023-02-26 22:20:00";
-//            Date tempDate = convertStringToDate(customDate);
-//            
-//            Date currentDate = convertStringToDate(ts);
-//            
-//            long difference = currentDate.getTime() - tempDate.getTime();
-//            System.out.println(currentDate.getTime()+"-" + tempDate.getTime() + " = " + difference);
-//            System.out.println("Difference: " + difference);
-            
-            
-            
-            if (failedAttempts >= getMaxLoginAttempts()) {
-                System.out.println("You have reached amount of login attempts. Try again later.");
-                user.setLocked(1);
-            } 
-            user.setFailedAttempts(failedAttempts);
-            // Update timestamp
-            user.setLastFailed(ts);
-
-            // Update db  
-//            main.sqlite.updateUserFailedAttempts(user.getUsername(), user.getFailedAttempts(), user.getLastFailed()); 
-            
-          
-        }
-       
-    }
+    
     
     public boolean registerAction(String username, String password, String confpass){
         
@@ -390,29 +305,7 @@ public class Frame extends javax.swing.JFrame {
         }
         return result;
     }
-    
-    public int getMaxLoginAttempts() {
-        return this.maxLoginAttempts; 
-    }
-    
-    public String getCurrentTimestamp() {
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-        Timestamp timestamp = new Timestamp(System.currentTimeMillis());
-        String ts = sdf.format(timestamp);
-        return ts;
-    }
-    
-    public Date convertStringToDate (String dateString) {
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-        Date date = null;
-        try {
-            date = sdf.parse(dateString);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return date;
-    }
-    
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JPanel Container;
     private javax.swing.JPanel Content;

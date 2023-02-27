@@ -458,8 +458,6 @@ public class SQLite {
             pstmt.setString(2, lastFailed);
             pstmt.setString(3, username);
             pstmt.execute();
-            System.out.println("User updated!");
-            System.out.println("What is the date: " + lastFailed);
         } catch (Exception ex) {
             ex.printStackTrace();
         }
