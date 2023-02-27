@@ -150,7 +150,6 @@ public class User {
     }
     
     public void setLastFailed(String lastFailed) {
-        System.out.println("[USER.JAVA] Timestamp: " + lastFailed);
         this.lastFailed = lastFailed;
     }
     

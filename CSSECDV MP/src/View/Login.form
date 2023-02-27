@@ -34,10 +34,10 @@
               </Group>
               <EmptySpace pref="200" max="32767" attributes="0"/>
           </Group>
-          <Group type="102" alignment="1" attributes="0">
+          <Group type="102" alignment="0" attributes="0">
               <EmptySpace max="32767" attributes="0"/>
               <Component id="forgetPassBtn" min="-2" pref="270" max="-2" attributes="0"/>
-              <EmptySpace min="-2" pref="264" max="-2" attributes="0"/>
+              <EmptySpace max="32767" attributes="0"/>
           </Group>
       </Group>
     </DimensionLayout>
@@ -143,7 +143,7 @@
         <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
           <Font name="Tahoma" size="12" style="1"/>
         </Property>
-        <Property name="text" type="java.lang.String" value="Forget password"/>
+        <Property name="text" type="java.lang.String" value="Forgot password?"/>
         <Property name="actionCommand" type="java.lang.String" value="Forget Password"/>
       </Properties>
       <Events>

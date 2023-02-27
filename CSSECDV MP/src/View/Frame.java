@@ -190,7 +190,7 @@ public class Frame extends javax.swing.JFrame {
     public void mainNav(){
         
         // authenticate user
-        String username = loginPnl.getLoginUsername();
+        String username = loginPnl.getLoginUsername().trim();
         String lowercase_username = username.toLowerCase();
         char[] password = loginPnl.getLoginPassword();
         try {

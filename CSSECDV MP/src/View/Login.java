@@ -76,7 +76,7 @@ public class Login extends javax.swing.JPanel {
         passwordFld.setBorder(javax.swing.BorderFactory.createTitledBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0), 2), "PASSWORD", javax.swing.border.TitledBorder.CENTER, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Tahoma", 0, 12))); // NOI18N
 
         forgetPassBtn.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
-        forgetPassBtn.setText("Forget password");
+        forgetPassBtn.setText("Forgot password?");
         forgetPassBtn.setActionCommand("Forget Password");
         forgetPassBtn.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -99,10 +99,10 @@ public class Login extends javax.swing.JPanel {
                     .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(passwordFld, javax.swing.GroupLayout.Alignment.LEADING))
                 .addContainerGap(200, Short.MAX_VALUE))
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+            .addGroup(layout.createSequentialGroup()
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(forgetPassBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 270, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(264, 264, 264))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -142,8 +142,9 @@ public class Login extends javax.swing.JPanel {
         
         int result = JOptionPane.showConfirmDialog(null, message, "RESET PASSWORD", JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE, null);
         if (result == JOptionPane.OK_OPTION) { 
-            String username = usernameFld.getText();
-
+            String temp_username = usernameFld.getText();
+            String lowercase_username = temp_username.toLowerCase();
+            String username = lowercase_username.trim();
             User user =  this.sqlite.getUser(username); 
             
             if (user != null) {
