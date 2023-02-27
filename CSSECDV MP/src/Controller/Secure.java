@@ -1,18 +1,17 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package Controller;
 
+import Model.User;
 import View.Dialog;
+import java.sql.Timestamp;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
-/**
- *
- * @author william
- */
+
 public class Secure {
 
     public static Dialog DialogBox = new Dialog();
+    public Helper helper = new Helper();
+    private final int maxLoginAttempts = 10;
     
     public static boolean regIsEmpty(String username, String password, String confpass) {
         if(username.isEmpty() || password.isEmpty() || confpass.isEmpty()) {
@@ -23,10 +22,11 @@ public class Secure {
             return false;
                 
     }
-    public static boolean  validUsername (String username) {
+    public static boolean  validUsername (String checkUsername) {
         // Check for length
-        if(username.length() < 5 || username.length() > 15) {
-            DialogBox.showErrorDialog("Registration error", "Username should not be less than 5 characters or more than 15 characters long.");
+        String username = checkUsername.trim();
+        if(username.length() < 5 || username.length() > 15 || username.contains(" ")) {
+            DialogBox.showErrorDialog("Registration error", "Username should not be less than 5 characters, more than 15 characters long, or contain spaces.");
             return false;
         }
         else
@@ -76,8 +76,117 @@ public class Secure {
             }
             return isValid;
     }
-//    public boolean validPassword (String password) {
-//    
-//    }
     
+    // Checks a user 
+    public void checkUserStatus(User user) {
+        if (user != null) {
+            int isLocked = user.getLocked();
+            if (isLocked == 1) {
+                System.out.println("Hello");
+                checkIfUnlock(user);
+            } else if (isLocked == 0) {
+                checkIfResetFailedCounter(user);
+            }
+        } else {
+            System.out.println("User does not exist");
+        }
+    }
+    
+    // Check if 15 minutes has passed to unlock account
+    public void checkIfUnlock(User user) {
+        // 15 minutes
+        long timeToResetLocked = (long) 900000;
+        String currTimestamp = helper.getCurrentTimestamp();
+        String lastFailedStr = user.getLastFailed();
+        
+        if (currTimestamp != null && lastFailedStr != null) {
+            Date currDateTime = helper.convertStringToDate(currTimestamp);
+            Date lastFailed = helper.convertStringToDate(lastFailedStr);
+            long difference = currDateTime.getTime() - lastFailed.getTime();
+            long minutes = ((timeToResetLocked - difference)/1000)/60;
+
+            if (difference >= timeToResetLocked) {
+                System.out.println("Difference: " + difference);
+                unlockUser(user);
+            } else {
+                 DialogBox.showErrorDialog("Authentication failed", "Account currently locked. Please try again in " + minutes +" minutes.");
+            }
+        }
+    }
+    
+    // Check if 10 minutes has passed to unlock account
+    public void checkIfResetFailedCounter(User user) {
+        // 10 minutes
+        long timeToResetFailedAttempts = (long) 600000;
+
+        String currTimestamp = helper.getCurrentTimestamp();
+        String lastFailedStr = user.getLastFailed();
+        if(currTimestamp != null && lastFailedStr != null) {
+            Date currDateTime = helper.convertStringToDate(currTimestamp);
+            Date lastFailed = helper.convertStringToDate(lastFailedStr);
+            long difference = currDateTime.getTime() - lastFailed.getTime();
+            
+
+            if (difference >= timeToResetFailedAttempts) {
+                System.out.println("Difference: " + difference);
+                unlockUser(user);
+            } 
+        }
+       
+    }
+    
+    public void unlockUser(User user) {
+        user.setLocked(0);
+        user.setFailedAttempts(0);
+        user.setLastFailed(null);
+        String uname = user.getUsername();
+        switch (uname) {
+                  case "admin":
+                      user.setRole(5);
+                      break;
+                  case "manager":
+                      user.setRole(4);
+                      break;
+                  case "staff":
+                      user.setRole(3);
+                      break;
+                  default:
+                      user.setRole(2);
+                      break;
+              }
+    }
+    
+    
+    public void recordFailAttempt(User user) {
+        // If user exists
+        if (user != null) {
+            int failedAttempts = user.getFailedAttempts();
+            
+            // Create date
+            String ts = helper.getCurrentTimestamp();
+            
+            // Increment failed attempts
+            failedAttempts++;
+            
+            if (failedAttempts >= getMaxLoginAttempts()) {
+                System.out.println("You have reached amount of login attempts. Try again later.");
+                user.setLocked(1);
+                user.setRole(1);
+            } 
+           
+            user.setFailedAttempts(failedAttempts);
+            // Update timestamp
+            user.setLastFailed(ts);
+
+            // Update db  
+//            main.sqlite.updateUserFailedAttempts(user.getUsername(), user.getFailedAttempts(), user.getLastFailed()); 
+            
+          
+        }
+       
+    }
+    
+    public int getMaxLoginAttempts() {
+        return this.maxLoginAttempts; 
+    }
 }
