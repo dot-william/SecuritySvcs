@@ -66,7 +66,7 @@ public class Secure {
             }
             
             if (!isValid) {
-                String message = "Invalid password. Consider the following when createing passwords: \n\n" 
+                String message = "Invalid password. Consider the following when creating passwords: \n\n" 
                                   + "1.) Password must be more than 8 characters in length.\n"
                                   + "2.) Password must have atleast one uppercase character.\n"
                                   + "3.) Password must have atleast one lowercase character.\n"
