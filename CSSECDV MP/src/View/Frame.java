@@ -247,9 +247,6 @@ public class Frame extends javax.swing.JFrame {
         }
         catch (NullPointerException e) {
             DialogBox.showErrorDialog("Authentication failed", "sername or password is incorrect."); 
-//            log the authentication failure to db
-            String formattedDateTime = datetimeformatter.format(LocalDateTime.now());
-            main.sqlite.addLogs("user404", lowercase_username, "User account doesn't exist.", formattedDateTime);
         }
         
     }
