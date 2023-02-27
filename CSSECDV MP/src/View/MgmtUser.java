@@ -272,12 +272,12 @@ public class MgmtUser extends javax.swing.JPanel {
             Object[] message = {
                 "Enter New Password:", oldPassword, password, confpass
             };
-
-            int result = JOptionPane.showConfirmDialog(null, message, "CHANGE PASSWORD", JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE, null);
+            String username = tableModel.getValueAt(table.getSelectedRow(), 0).toString();
+            int result = JOptionPane.showConfirmDialog(null, message, "Change Password for " + username , JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE, null);
 
             if (result == JOptionPane.OK_OPTION) {
-                String username = tableModel.getValueAt(table.getSelectedRow(), 0).toString();
-                System.out.println(username);
+                //String username = tableModel.getValueAt(table.getSelectedRow(), 0).toString();
+//                System.out.println(username);
                 User user = sqlite.getUser(username);
                 if (user.validate(username, oldPassword.getPassword())) {
                     String newpassStr = new String(password.getPassword());
@@ -291,7 +291,9 @@ public class MgmtUser extends javax.swing.JPanel {
                         }
                     }
                     else {
-                        dialogBox.showErrorDialog("Error changing password", "Both passwords do not match or password does not follow the required criteria.");
+                        String passCriteria = Secure.getPassCriteria();
+                        dialogBox.showErrorDialog("Error changing password", "Both passwords do not match or password does not follow the required criteria. " + passCriteria);
+                        
                     }
                 }
                 else {
