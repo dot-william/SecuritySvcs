@@ -1,18 +1,23 @@
 package Controller;
 
+import Model.Logs;
 import Model.User;
 import View.Dialog;
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.Date;
 
+    
 
 public class Secure {
-
+    public Main main;
     public static Dialog DialogBox = new Dialog();
     public Helper helper = new Helper();
     private final int maxLoginAttempts = 10;
-    
+    DateTimeFormatter datetimeformatter = DateTimeFormatter.ofPattern(Logs.datetimeformatstring);
+            
     public static boolean regIsEmpty(String username, String password, String confpass) {
         if(username.isEmpty() || password.isEmpty() || confpass.isEmpty()) {
             DialogBox.showErrorDialog("Registration error", "One of the fields is empty. Please try again.");
@@ -61,28 +66,27 @@ public class Secure {
             String specialChars = "(.*[-._!\"`'#%&,:;<>=@{}~\\$\\(\\)\\*\\+\\/\\\\\\?\\[\\]\\^\\|].*$)";
             if (!password.matches(specialChars ))
             {
-                    System.out.println("Password must have atleast one special character among @#$%");
+                    System.out.println("Password must have atleast one special character.");
                     isValid = false;
             }
-            
-            if (!isValid) {
-                String message = "Invalid password. Consider the following when creating passwords: \n\n" 
+            return isValid;
+    }
+    
+    public static String getPassCriteria () {
+        String criteria = "Consider the following when creating passwords: \n\n" 
                                   + "1.) Password must be more than 8 characters in length.\n"
                                   + "2.) Password must have atleast one uppercase character.\n"
                                   + "3.) Password must have atleast one lowercase character.\n"
                                   + "4.) Password must have atleast one number.\n"
                                   + "5.) Password must have atleast one special character.\n";
-                DialogBox.showErrorDialog("Registration error", message);
-            }
-            return isValid;
+        return criteria;
     }
-    
     // Checks a user 
     public void checkUserStatus(User user) {
         if (user != null) {
             int isLocked = user.getLocked();
             if (isLocked == 1) {
-                System.out.println("Hello");
+                
                 checkIfUnlock(user);
             } else if (isLocked == 0) {
                 checkIfResetFailedCounter(user);
@@ -173,17 +177,11 @@ public class Secure {
                 user.setLocked(1);
                 user.setRole(1);
             } 
-           
+            System.out.println("attempts: " + failedAttempts);
             user.setFailedAttempts(failedAttempts);
             // Update timestamp
             user.setLastFailed(ts);
-
-            // Update db  
-//            main.sqlite.updateUserFailedAttempts(user.getUsername(), user.getFailedAttempts(), user.getLastFailed()); 
-            
-          
         }
-       
     }
     
     public int getMaxLoginAttempts() {
