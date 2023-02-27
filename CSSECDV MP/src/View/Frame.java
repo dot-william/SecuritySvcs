@@ -10,6 +10,7 @@ import java.awt.Dimension;
 import java.util.ArrayList;
 import javax.swing.WindowConstants;
 import Controller.Secure;
+import static Controller.Secure.DialogBox;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
@@ -230,17 +231,20 @@ public class Frame extends javax.swing.JFrame {
                 frameView.show(Container, "homePnl");
             }
             else if (!user.validate(lowercase_username, password)) {
-                
                 // If user is not yet locked
                 if(user.getLocked() == 0) {
-                  secure.recordFailAttempt(user);
-                  DialogBox.showErrorDialog("Authentication failed", "Username or password is incorrect.");  
+                    secure.recordFailAttempt(user);
+                    String formattedDateTime = datetimeformatter.format(LocalDateTime.now());
+                    main.sqlite.addLogs("authenticationError", lowercase_username, "Incorrect username or password entered during login.", formattedDateTime);
+                   if (user.getLocked() == 1) {
+                       formattedDateTime = datetimeformatter.format(LocalDateTime.now());
+                       main.sqlite.addLogs("loginFail", user.getUsername(), "User has been locked out.", formattedDateTime);
+                      
+                   }
+                    DialogBox.showErrorDialog("Authentication failed", "Username or password is incorrect.");  
                 }
-              
-                String formattedDateTime = datetimeformatter.format(LocalDateTime.now());
-                main.sqlite.addLogs("authenticationError", lowercase_username, "Incorrect username or password entered during login.", formattedDateTime);
+               
             }
-            
             main.sqlite.updateUser(user);
         }
         catch (NullPointerException e) {
@@ -273,25 +277,25 @@ public class Frame extends javax.swing.JFrame {
         boolean result = false; 
         
         // Check if ny of the fields are empty
-        boolean isEmptyField = secure.regIsEmpty(lowercase_username, password, confpass);
+        boolean isEmptyField = Secure.regIsEmpty(lowercase_username, password, confpass);
         if(!isEmptyField){
             
             // Check based on username policy and password policy
-            boolean isValidPassword = secure.isValidPassword(password);
-            boolean isValidUsername = secure.validUsername(lowercase_username);
+            boolean isValidPassword = Secure.isValidPassword(password);
+            boolean isValidUsername = Secure.validUsername(lowercase_username);
 
             // If there are no empty fields and username and password are valid
             if (!isEmptyField && isValidUsername && isValidPassword) {
                 
                 // If user already exists
                 if (user != null) {
-                    DialogBox.showErrorDialog("Registration error", "Username already taken, please enter a different username.");
+                    DialogBox.showErrorDialog("Registration Error", "Username already taken, please enter a different username.");
                 } else {
                     if (password.equals(confpass)) {
                         
                         user = new User(lowercase_username, password);
                         main.sqlite.addUser(user.getUsername(), user.getPasswordHash(), user.getSalt(), 2, 0);
-                        DialogBox.showSuccessDialog("Registration success", "User account registered successfully.");
+                        DialogBox.showSuccessDialog("Registration Success", "User account registered successfully.");
                         // log the successful registration to db
                         String formattedDateTime = datetimeformatter.format(LocalDateTime.now());
                         main.sqlite.addLogs("registrationSuccess", lowercase_username, "User registered successfully.", formattedDateTime);
@@ -299,9 +303,12 @@ public class Frame extends javax.swing.JFrame {
                     }
                     else {
                         //System.out.println("password and confpss dont match");
-                        DialogBox.showErrorDialog("Registration error", "Make sure both passwords match.");
+                        DialogBox.showErrorDialog("Registration Error", "Make sure both passwords match.");
                     }
                 }
+            } else if (!isValidPassword) {
+                String passCriteria = Secure.getPassCriteria();
+                DialogBox.showErrorDialog("Registration Error", "Invalid password. " + passCriteria);
             }
         }
         return result;
