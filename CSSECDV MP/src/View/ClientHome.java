@@ -23,7 +23,7 @@ public class ClientHome extends javax.swing.JPanel {
 
     public MgmtHistory mgmtHistory;
     public MgmtLogs mgmtLogs;
-    public MgmtProduct mgmtProduct;
+    public BuyProducts buyProducts;
     public MgmtUser mgmtUser;
     
     private CardLayout contentView = new CardLayout();
@@ -35,14 +35,14 @@ public class ClientHome extends javax.swing.JPanel {
     public void init(SQLite sqlite){
         mgmtHistory = new MgmtHistory(sqlite);
         mgmtLogs = new MgmtLogs(sqlite);
-        mgmtProduct = new MgmtProduct(sqlite);
+        buyProducts = new BuyProducts(sqlite);
         mgmtUser = new MgmtUser(sqlite);
     
         Content.setLayout(contentView);
         Content.add(new Home("WELCOME CLIENT!", new java.awt.Color(255,102,51)), "home");
         Content.add(mgmtUser, "mgmtUser");
         Content.add(mgmtHistory, "mgmtHistory");
-        Content.add(mgmtProduct, "mgmtProduct");
+        Content.add(buyProducts, "buyProducts");
         Content.add(mgmtLogs, "mgmtLogs");
         
 //        UNCOMMENT TO DISABLE BUTTONS
@@ -129,12 +129,12 @@ public class ClientHome extends javax.swing.JPanel {
     }// </editor-fold>//GEN-END:initComponents
 
     private void productsBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_productsBtnActionPerformed
-        mgmtProduct.init();
+        buyProducts.init();
 //        usersBtn.setForeground(Color.black);
         productsBtn.setForeground(Color.red);
         historyBtn.setForeground(Color.black);
 //        logsBtn.setForeground(Color.black);
-        contentView.show(Content, "mgmtProduct");
+        contentView.show(Content, "buyProducts");
     }//GEN-LAST:event_productsBtnActionPerformed
 
     private void historyBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_historyBtnActionPerformed
