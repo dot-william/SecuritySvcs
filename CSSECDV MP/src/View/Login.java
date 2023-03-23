@@ -61,7 +61,9 @@ public class Login extends javax.swing.JPanel {
             }
         });
 
+        loginBtn.setBackground(new java.awt.Color(0, 153, 0));
         loginBtn.setFont(new java.awt.Font("Tahoma", 1, 24)); // NOI18N
+        loginBtn.setForeground(new java.awt.Color(255, 255, 255));
         loginBtn.setText("LOGIN");
         loginBtn.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
