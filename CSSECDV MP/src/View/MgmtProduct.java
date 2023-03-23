@@ -43,7 +43,32 @@ public class MgmtProduct extends javax.swing.JPanel {
         for(int nCtr = tableModel.getRowCount(); nCtr > 0; nCtr--){
             tableModel.removeRow(0);
         }
-        
+        int role = this.currentUser.getRole(); 
+        switch (role) {
+//         client can only buy products 
+            case (2):
+                purchaseBtn.setVisible(true);
+                addBtn.setVisible(false);
+                editBtn.setVisible(false);
+                deleteBtn.setVisible(false);
+                break; 
+//          staff and manager can add, edit, or delete products
+            case (3):
+                purchaseBtn.setVisible(false);
+                addBtn.setVisible(true);
+                editBtn.setVisible(true);
+                deleteBtn.setVisible(true);
+                break;
+            case (4):
+                purchaseBtn.setVisible(false);
+                addBtn.setVisible(true);
+                editBtn.setVisible(true);
+                deleteBtn.setVisible(true);
+                break;
+            default:
+                System.out.println("Error, wrong privileges");
+        }
+                
 //      LOAD CONTENTS
         ArrayList<Product> products = sqlite.getProduct();
         for(int nCtr = 0; nCtr < products.size(); nCtr++){

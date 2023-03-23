@@ -74,7 +74,6 @@ public class StaffHome extends javax.swing.JPanel {
 
         productsBtn = new javax.swing.JButton();
         Content = new javax.swing.JPanel();
-        historyBtn = new javax.swing.JButton();
 
         setBackground(new java.awt.Color(0, 204, 102));
 
@@ -99,14 +98,6 @@ public class StaffHome extends javax.swing.JPanel {
             .addGap(0, 271, Short.MAX_VALUE)
         );
 
-        historyBtn.setFont(new java.awt.Font("Tahoma", 1, 10)); // NOI18N
-        historyBtn.setText("VIEW MY HISTORY");
-        historyBtn.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                historyBtnActionPerformed(evt);
-            }
-        });
-
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
@@ -118,18 +109,14 @@ public class StaffHome extends javax.swing.JPanel {
                     .addGroup(layout.createSequentialGroup()
                         .addGap(8, 8, 8)
                         .addComponent(productsBtn)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(historyBtn)
-                        .addGap(0, 157, Short.MAX_VALUE)))
+                        .addGap(0, 292, Short.MAX_VALUE)))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(productsBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 41, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(historyBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 41, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addComponent(productsBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 41, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(Content, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addContainerGap())
@@ -140,25 +127,13 @@ public class StaffHome extends javax.swing.JPanel {
         mgmtProduct.init(this.currentUser);
 //        usersBtn.setForeground(Color.black);
         productsBtn.setForeground(Color.red);
-        historyBtn.setForeground(Color.black);
-//        logsBtn.setForeground(Color.black);
         contentView.show(Content, "mgmtProduct");
     }//GEN-LAST:event_productsBtnActionPerformed
-
-    private void historyBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_historyBtnActionPerformed
-        mgmtHistory.init(this.currentUser);
-//        usersBtn.setForeground(Color.black);
-        productsBtn.setForeground(Color.black);
-        historyBtn.setForeground(Color.red);
-//        logsBtn.setForeground(Color.black);
-        contentView.show(Content, "mgmtHistory");
-    }//GEN-LAST:event_historyBtnActionPerformed
     
     
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JPanel Content;
-    private javax.swing.JButton historyBtn;
     private javax.swing.JButton productsBtn;
     // End of variables declaration//GEN-END:variables
 }

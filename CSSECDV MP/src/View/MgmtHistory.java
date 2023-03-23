@@ -43,6 +43,21 @@ public class MgmtHistory extends javax.swing.JPanel {
 
     public void init(User currentUser){ 
         this.currentUser = currentUser;
+        
+        int role = this.currentUser.getRole(); 
+        switch (role) {
+//         client can only view own history
+            case (2):
+                searchBtn.setVisible(false);
+                break; 
+//          staff and manager can view all history
+            case (4):
+                searchBtn.setVisible(true);
+                break;
+            default:
+                System.out.println("Error, wrong privileges");
+        }
+        
 //      CLEAR TABLE
         for(int nCtr = tableModel.getRowCount(); nCtr > 0; nCtr--){
             tableModel.removeRow(0);
