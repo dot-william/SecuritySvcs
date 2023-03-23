@@ -73,12 +73,8 @@ public class AdminHome extends javax.swing.JPanel {
     private void initComponents() {
 
         usersBtn = new javax.swing.JButton();
-        productsBtn = new javax.swing.JButton();
         Content = new javax.swing.JPanel();
-        historyBtn = new javax.swing.JButton();
         logsBtn = new javax.swing.JButton();
-        productsBtn1 = new javax.swing.JButton();
-        historyBtn1 = new javax.swing.JButton();
 
         setBackground(new java.awt.Color(51, 153, 255));
 
@@ -87,14 +83,6 @@ public class AdminHome extends javax.swing.JPanel {
         usersBtn.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 usersBtnActionPerformed(evt);
-            }
-        });
-
-        productsBtn.setFont(new java.awt.Font("Tahoma", 1, 10)); // NOI18N
-        productsBtn.setText("PRODUCTS FOR SALE");
-        productsBtn.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                productsBtnActionPerformed(evt);
             }
         });
 
@@ -111,35 +99,11 @@ public class AdminHome extends javax.swing.JPanel {
             .addGap(0, 271, Short.MAX_VALUE)
         );
 
-        historyBtn.setFont(new java.awt.Font("Tahoma", 1, 10)); // NOI18N
-        historyBtn.setText("VIEW MY HISTORY");
-        historyBtn.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                historyBtnActionPerformed(evt);
-            }
-        });
-
         logsBtn.setFont(new java.awt.Font("Tahoma", 1, 10)); // NOI18N
         logsBtn.setText("VIEW LOGS");
         logsBtn.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 logsBtnActionPerformed(evt);
-            }
-        });
-
-        productsBtn1.setFont(new java.awt.Font("Tahoma", 1, 10)); // NOI18N
-        productsBtn1.setText("MANAGE PRODUCTS");
-        productsBtn1.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                productsBtn1ActionPerformed(evt);
-            }
-        });
-
-        historyBtn1.setFont(new java.awt.Font("Tahoma", 1, 10)); // NOI18N
-        historyBtn1.setText("VIEW USER HISTORY");
-        historyBtn1.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                historyBtn1ActionPerformed(evt);
             }
         });
 
@@ -154,15 +118,8 @@ public class AdminHome extends javax.swing.JPanel {
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(usersBtn)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(productsBtn, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(productsBtn1)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(historyBtn)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(historyBtn1)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(logsBtn)))
+                        .addComponent(logsBtn)
+                        .addGap(0, 205, Short.MAX_VALUE)))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
@@ -171,11 +128,7 @@ public class AdminHome extends javax.swing.JPanel {
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(usersBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 41, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(productsBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 41, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(historyBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 41, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(logsBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 41, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(productsBtn1, javax.swing.GroupLayout.PREFERRED_SIZE, 41, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(historyBtn1, javax.swing.GroupLayout.PREFERRED_SIZE, 41, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(logsBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 41, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(Content, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addContainerGap())
@@ -185,56 +138,20 @@ public class AdminHome extends javax.swing.JPanel {
     private void usersBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_usersBtnActionPerformed
         mgmtUser.init();
         usersBtn.setForeground(Color.red);
-        productsBtn.setForeground(Color.black);
-        historyBtn.setForeground(Color.black);
         logsBtn.setForeground(Color.black);
         contentView.show(Content, "mgmtUser");
     }//GEN-LAST:event_usersBtnActionPerformed
 
-    private void productsBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_productsBtnActionPerformed
-        mgmtProduct.init();
-        usersBtn.setForeground(Color.black);
-        productsBtn.setForeground(Color.red);
-        historyBtn.setForeground(Color.black);
-        logsBtn.setForeground(Color.black);
-        contentView.show(Content, "mgmtProduct");
-    }//GEN-LAST:event_productsBtnActionPerformed
-
-    private void historyBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_historyBtnActionPerformed
-        mgmtHistory.init();
-        usersBtn.setForeground(Color.black);
-        productsBtn.setForeground(Color.black);
-        historyBtn.setForeground(Color.red);
-        logsBtn.setForeground(Color.black);
-        contentView.show(Content, "mgmtHistory");
-    }//GEN-LAST:event_historyBtnActionPerformed
-
     private void logsBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_logsBtnActionPerformed
         mgmtLogs.init();
         usersBtn.setForeground(Color.black);
-        productsBtn.setForeground(Color.black);
-        historyBtn.setForeground(Color.black);
         logsBtn.setForeground(Color.red);
         contentView.show(Content, "mgmtLogs");
     }//GEN-LAST:event_logsBtnActionPerformed
 
-    private void productsBtn1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_productsBtn1ActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_productsBtn1ActionPerformed
-
-    private void historyBtn1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_historyBtn1ActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_historyBtn1ActionPerformed
-    
-    
-
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JPanel Content;
-    private javax.swing.JButton historyBtn;
-    private javax.swing.JButton historyBtn1;
     private javax.swing.JButton logsBtn;
-    private javax.swing.JButton productsBtn;
-    private javax.swing.JButton productsBtn1;
     private javax.swing.JButton usersBtn;
     // End of variables declaration//GEN-END:variables
 }

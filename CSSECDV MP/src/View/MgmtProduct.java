@@ -7,6 +7,7 @@ package View;
 
 import Controller.SQLite;
 import Model.Product;
+import Model.User;
 import java.util.ArrayList;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
@@ -21,6 +22,7 @@ public class MgmtProduct extends javax.swing.JPanel {
 
     public SQLite sqlite;
     public DefaultTableModel tableModel;
+    private User currentUser; 
     
     public MgmtProduct(SQLite sqlite) {
         initComponents();
@@ -35,7 +37,8 @@ public class MgmtProduct extends javax.swing.JPanel {
 //        deleteBtn.setVisible(false);
     }
 
-    public void init(){
+    public void init(User currentUser){
+        this.currentUser = currentUser;
         //      CLEAR TABLE
         for(int nCtr = tableModel.getRowCount(); nCtr > 0; nCtr--){
             tableModel.removeRow(0);

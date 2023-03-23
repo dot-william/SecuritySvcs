@@ -21,8 +21,8 @@ import javax.swing.table.DefaultTableModel;
  */
 public class ClientHome extends javax.swing.JPanel {
 
-    public SelfHistory selfHistory;
-    public BuyProducts buyProducts;
+    public MgmtHistory mgmtHistory;
+    public MgmtProduct mgmtProduct;
     private User currentUser; 
     private CardLayout contentView = new CardLayout();
     
@@ -32,13 +32,13 @@ public class ClientHome extends javax.swing.JPanel {
     
     public void init(SQLite sqlite){
         
-        selfHistory = new SelfHistory(sqlite);
-        buyProducts = new BuyProducts(sqlite);
+        mgmtHistory = new MgmtHistory(sqlite);
+        mgmtProduct = new MgmtProduct(sqlite);
         
         Content.setLayout(contentView);
         Content.add(new Home("WELCOME CLIENT!", new java.awt.Color(255,102,51)), "home");
-        Content.add(selfHistory, "selfHistory");
-        Content.add(buyProducts, "buyProducts");
+        Content.add(mgmtHistory, "mgmtHistory");
+        Content.add(mgmtProduct, "mgmtProduct");
         
 //        UNCOMMENT TO DISABLE BUTTONS
 //        historyBtn.setVisible(false);
@@ -134,21 +134,21 @@ public class ClientHome extends javax.swing.JPanel {
     }// </editor-fold>//GEN-END:initComponents
 
     private void productsBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_productsBtnActionPerformed
-        buyProducts.init();
+        mgmtProduct.init(this.currentUser);
 //        usersBtn.setForeground(Color.black);
         productsBtn.setForeground(Color.red);
         historyBtn.setForeground(Color.black);
 //        logsBtn.setForeground(Color.black);
-        contentView.show(Content, "buyProducts");
+        contentView.show(Content, "mgmtProduct");
     }//GEN-LAST:event_productsBtnActionPerformed
 
     private void historyBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_historyBtnActionPerformed
-        selfHistory.init(this.currentUser);
+        mgmtHistory.init(this.currentUser);
 //        usersBtn.setForeground(Color.black);
         productsBtn.setForeground(Color.black);
         historyBtn.setForeground(Color.red);
 //        logsBtn.setForeground(Color.black);
-        contentView.show(Content, "selfHistory");
+        contentView.show(Content, "mgmtHistory");
     }//GEN-LAST:event_historyBtnActionPerformed
     
     

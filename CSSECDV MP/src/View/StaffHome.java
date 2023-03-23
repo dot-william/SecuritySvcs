@@ -75,7 +75,6 @@ public class StaffHome extends javax.swing.JPanel {
         productsBtn = new javax.swing.JButton();
         Content = new javax.swing.JPanel();
         historyBtn = new javax.swing.JButton();
-        productsBtn1 = new javax.swing.JButton();
 
         setBackground(new java.awt.Color(0, 204, 102));
 
@@ -108,14 +107,6 @@ public class StaffHome extends javax.swing.JPanel {
             }
         });
 
-        productsBtn1.setFont(new java.awt.Font("Tahoma", 1, 10)); // NOI18N
-        productsBtn1.setText("PRODUCTS FOR SALE");
-        productsBtn1.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                productsBtn1ActionPerformed(evt);
-            }
-        });
-
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
@@ -125,12 +116,11 @@ public class StaffHome extends javax.swing.JPanel {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(Content, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addGroup(layout.createSequentialGroup()
-                        .addComponent(productsBtn1)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGap(8, 8, 8)
                         .addComponent(productsBtn)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(historyBtn)
-                        .addGap(0, 13, Short.MAX_VALUE)))
+                        .addGap(0, 157, Short.MAX_VALUE)))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
@@ -139,8 +129,7 @@ public class StaffHome extends javax.swing.JPanel {
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(productsBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 41, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(historyBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 41, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(productsBtn1, javax.swing.GroupLayout.PREFERRED_SIZE, 41, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(historyBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 41, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(Content, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addContainerGap())
@@ -148,7 +137,7 @@ public class StaffHome extends javax.swing.JPanel {
     }// </editor-fold>//GEN-END:initComponents
 
     private void productsBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_productsBtnActionPerformed
-        mgmtProduct.init();
+        mgmtProduct.init(this.currentUser);
 //        usersBtn.setForeground(Color.black);
         productsBtn.setForeground(Color.red);
         historyBtn.setForeground(Color.black);
@@ -157,17 +146,13 @@ public class StaffHome extends javax.swing.JPanel {
     }//GEN-LAST:event_productsBtnActionPerformed
 
     private void historyBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_historyBtnActionPerformed
-        mgmtHistory.init();
+        mgmtHistory.init(this.currentUser);
 //        usersBtn.setForeground(Color.black);
         productsBtn.setForeground(Color.black);
         historyBtn.setForeground(Color.red);
 //        logsBtn.setForeground(Color.black);
         contentView.show(Content, "mgmtHistory");
     }//GEN-LAST:event_historyBtnActionPerformed
-
-    private void productsBtn1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_productsBtn1ActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_productsBtn1ActionPerformed
     
     
 
@@ -175,6 +160,5 @@ public class StaffHome extends javax.swing.JPanel {
     private javax.swing.JPanel Content;
     private javax.swing.JButton historyBtn;
     private javax.swing.JButton productsBtn;
-    private javax.swing.JButton productsBtn1;
     // End of variables declaration//GEN-END:variables
 }
