@@ -246,6 +246,30 @@ public class SQLite {
         }
         return histories;
     }
+        
+    public ArrayList<History> getSelfHistory(User currentUser){
+        String sql = "SELECT id, username, name, stock, timestamp FROM history WHERE username = ?";
+        ArrayList<History> histories = new ArrayList<>();
+        String username = currentUser.getUsername();
+        
+        try (Connection conn = DriverManager.getConnection(driverURL);
+            PreparedStatement pstmt = conn.prepareStatement(sql))
+        {
+            pstmt.setString(1, username);
+            ResultSet rs = pstmt.executeQuery(); 
+            while (rs.next()) {
+                histories.add(new History(rs.getInt("id"),
+                                   rs.getString("username"),
+                                   rs.getString("name"),
+                                   rs.getInt("stock"),
+                                   rs.getString("timestamp")));
+            }
+        } 
+        catch (Exception ex) {
+            System.out.print(ex);
+        }
+        return histories;
+    }
     
     public boolean clearLogs() {
         String sql = "DELETE FROM logs;"; 

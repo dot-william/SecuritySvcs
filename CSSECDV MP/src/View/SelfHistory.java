@@ -6,10 +6,11 @@
 package View;
 
 import Controller.SQLite;
+import Model.History;
 import Model.Product;
+import Model.User;
 import java.util.ArrayList;
 import javax.swing.JOptionPane;
-import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.table.DefaultTableModel;
 
@@ -17,37 +18,47 @@ import javax.swing.table.DefaultTableModel;
  *
  * @author beepxD
  */
-public class BuyProducts extends javax.swing.JPanel {
+public class SelfHistory extends javax.swing.JPanel {
 
     public SQLite sqlite;
     public DefaultTableModel tableModel;
+    private User currentUser;
     
-    public BuyProducts(SQLite sqlite) {
+    public SelfHistory(SQLite sqlite) {
         initComponents();
         this.sqlite = sqlite;
         tableModel = (DefaultTableModel)table.getModel();
         table.getTableHeader().setFont(new java.awt.Font("SansSerif", java.awt.Font.BOLD, 14));
-
+        javax.swing.table.DefaultTableCellRenderer rightAlign = new javax.swing.table.DefaultTableCellRenderer();
+        rightAlign.setHorizontalAlignment(javax.swing.JLabel.RIGHT);
+        table.getColumnModel().getColumn(2).setCellRenderer(rightAlign);
+        table.getColumnModel().getColumn(3).setCellRenderer(rightAlign);
+        table.getColumnModel().getColumn(4).setCellRenderer(rightAlign);
+        table.getColumnModel().getColumn(5).setCellRenderer(rightAlign);
+        
 //        UNCOMMENT TO DISABLE BUTTONS
-//        purchaseBtn.setVisible(false);
-//        addBtn.setVisible(false);
-//        editBtn.setVisible(false);
-//        deleteBtn.setVisible(false);
+//        searchBtn.setVisible(false);
+//        reportBtn.setVisible(false);
     }
 
-    public void init(){
-        //      CLEAR TABLE
+    public void init(User currentUser){
+//      CLEAR TABLE
         for(int nCtr = tableModel.getRowCount(); nCtr > 0; nCtr--){
             tableModel.removeRow(0);
         }
         
 //      LOAD CONTENTS
-        ArrayList<Product> products = sqlite.getProduct();
-        for(int nCtr = 0; nCtr < products.size(); nCtr++){
+        ArrayList<History> history = sqlite.getHistory();
+        for(int nCtr = 0; nCtr < history.size(); nCtr++){
+            Product product = sqlite.getProduct(history.get(nCtr).getName());
             tableModel.addRow(new Object[]{
-                products.get(nCtr).getName(), 
-                products.get(nCtr).getStock(), 
-                products.get(nCtr).getPrice()});
+                history.get(nCtr).getUsername(), 
+                history.get(nCtr).getName(), 
+                history.get(nCtr).getStock(), 
+                product.getPrice(), 
+                product.getPrice() * history.get(nCtr).getStock(), 
+                history.get(nCtr).getTimestamp()
+            });
         }
     }
     
@@ -70,22 +81,22 @@ public class BuyProducts extends javax.swing.JPanel {
 
         jScrollPane1 = new javax.swing.JScrollPane();
         table = new javax.swing.JTable();
-        purchaseBtn = new javax.swing.JButton();
+        reloadBtn = new javax.swing.JButton();
 
         table.setFont(new java.awt.Font("SansSerif", 0, 14)); // NOI18N
         table.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {null, null, null},
-                {null, null, null},
-                {null, null, null},
-                {null, null, null}
+                {null, null, null, null, null, null},
+                {null, null, null, null, null, null},
+                {null, null, null, null, null, null},
+                {null, null, null, null, null, null}
             },
             new String [] {
-                "Name", "Stock", "Price"
+                "Username", "Name", "Stock", "Price", "Total", "Timestamp"
             }
         ) {
             boolean[] canEdit = new boolean [] {
-                false, false, false
+                false, false, false, false, false, false
             };
 
             public boolean isCellEditable(int rowIndex, int columnIndex) {
@@ -96,16 +107,19 @@ public class BuyProducts extends javax.swing.JPanel {
         table.getTableHeader().setReorderingAllowed(false);
         jScrollPane1.setViewportView(table);
         if (table.getColumnModel().getColumnCount() > 0) {
-            table.getColumnModel().getColumn(0).setMinWidth(50);
-            table.getColumnModel().getColumn(1).setMaxWidth(100);
-            table.getColumnModel().getColumn(2).setMaxWidth(100);
+            table.getColumnModel().getColumn(0).setPreferredWidth(160);
+            table.getColumnModel().getColumn(1).setPreferredWidth(160);
+            table.getColumnModel().getColumn(2).setMinWidth(80);
+            table.getColumnModel().getColumn(3).setMinWidth(100);
+            table.getColumnModel().getColumn(4).setMinWidth(100);
+            table.getColumnModel().getColumn(5).setPreferredWidth(240);
         }
 
-        purchaseBtn.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
-        purchaseBtn.setText("PURCHASE");
-        purchaseBtn.addActionListener(new java.awt.event.ActionListener() {
+        reloadBtn.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
+        reloadBtn.setText("RELOAD");
+        reloadBtn.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                purchaseBtnActionPerformed(evt);
+                reloadBtnActionPerformed(evt);
             }
         });
 
@@ -117,9 +131,9 @@ public class BuyProducts extends javax.swing.JPanel {
                 .addGap(0, 0, 0)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
-                        .addComponent(purchaseBtn, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addGap(312, 312, 312))
-                    .addComponent(jScrollPane1))
+                        .addGap(310, 310, 310)
+                        .addComponent(reloadBtn, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 424, Short.MAX_VALUE))
                 .addGap(0, 0, 0))
         );
         layout.setVerticalGroup(
@@ -128,31 +142,18 @@ public class BuyProducts extends javax.swing.JPanel {
                 .addGap(0, 0, 0)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 222, Short.MAX_VALUE)
                 .addGap(0, 0, 0)
-                .addComponent(purchaseBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 41, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addComponent(reloadBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 41, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
     }// </editor-fold>//GEN-END:initComponents
 
-    private void purchaseBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_purchaseBtnActionPerformed
-        if(table.getSelectedRow() >= 0){
-            JTextField stockFld = new JTextField("0");
-            designer(stockFld, "PRODUCT STOCK");
-
-            Object[] message = {
-                "How many " + tableModel.getValueAt(table.getSelectedRow(), 0) + " do you want to purchase?", stockFld
-            };
-
-            int result = JOptionPane.showConfirmDialog(null, message, "PURCHASE PRODUCT", JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE, null);
-
-            if (result == JOptionPane.OK_OPTION) {
-                System.out.println(stockFld.getText());
-            }
-        }
-    }//GEN-LAST:event_purchaseBtnActionPerformed
+    private void reloadBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_reloadBtnActionPerformed
+        init(currentUser);
+    }//GEN-LAST:event_reloadBtnActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JButton purchaseBtn;
+    private javax.swing.JButton reloadBtn;
     private javax.swing.JTable table;
     // End of variables declaration//GEN-END:variables
 }

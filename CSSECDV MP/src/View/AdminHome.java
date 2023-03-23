@@ -25,19 +25,19 @@ public class AdminHome extends javax.swing.JPanel {
     public MgmtLogs mgmtLogs;
     public MgmtProduct mgmtProduct;
     public MgmtUser mgmtUser;
-    
+    private User currentUser; 
     private CardLayout contentView = new CardLayout();
     
     public AdminHome() {
         initComponents();
     }
     
-    public void init(SQLite sqlite){
+    public void init(SQLite sqlite, User currentUser){
         mgmtHistory = new MgmtHistory(sqlite);
         mgmtLogs = new MgmtLogs(sqlite);
         mgmtProduct = new MgmtProduct(sqlite);
         mgmtUser = new MgmtUser(sqlite);
-        
+        this.currentUser = currentUser; 
         Content.setLayout(contentView);
         Content.add(new Home("WELCOME ADMIN!", new java.awt.Color(51, 153, 255)), "home");
         Content.add(this.mgmtUser, "mgmtUser");

@@ -21,10 +21,11 @@ import javax.swing.table.DefaultTableModel;
  */
 public class ClientHome extends javax.swing.JPanel {
 
-    public MgmtHistory mgmtHistory;
+    public SelfHistory selfHistory;
     public MgmtLogs mgmtLogs;
     public BuyProducts buyProducts;
     public MgmtUser mgmtUser;
+    private User currentUser; 
     
     private CardLayout contentView = new CardLayout();
     
@@ -32,16 +33,17 @@ public class ClientHome extends javax.swing.JPanel {
         initComponents();
     }
     
-    public void init(SQLite sqlite){
-        mgmtHistory = new MgmtHistory(sqlite);
+    public void init(SQLite sqlite, User currentUser){
+        selfHistory = new SelfHistory(sqlite);
         mgmtLogs = new MgmtLogs(sqlite);
         buyProducts = new BuyProducts(sqlite);
         mgmtUser = new MgmtUser(sqlite);
-    
+        this.currentUser = currentUser; 
+        
         Content.setLayout(contentView);
         Content.add(new Home("WELCOME CLIENT!", new java.awt.Color(255,102,51)), "home");
         Content.add(mgmtUser, "mgmtUser");
-        Content.add(mgmtHistory, "mgmtHistory");
+        Content.add(selfHistory, "selfHistory");
         Content.add(buyProducts, "buyProducts");
         Content.add(mgmtLogs, "mgmtLogs");
         
@@ -138,12 +140,12 @@ public class ClientHome extends javax.swing.JPanel {
     }//GEN-LAST:event_productsBtnActionPerformed
 
     private void historyBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_historyBtnActionPerformed
-        mgmtHistory.init();
+        selfHistory.init(currentUser);
 //        usersBtn.setForeground(Color.black);
         productsBtn.setForeground(Color.black);
         historyBtn.setForeground(Color.red);
 //        logsBtn.setForeground(Color.black);
-        contentView.show(Content, "mgmtHistory");
+        contentView.show(Content, "selfHistory");
     }//GEN-LAST:event_historyBtnActionPerformed
     
     
