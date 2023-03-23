@@ -6,6 +6,8 @@
 package View;
 
 import Controller.SQLite;
+import Controller.Secure;
+import static Controller.Secure.DialogBox;
 import Model.Product;
 import Model.User;
 import java.util.ArrayList;
@@ -23,6 +25,7 @@ public class MgmtProduct extends javax.swing.JPanel {
     public SQLite sqlite;
     public DefaultTableModel tableModel;
     private User currentUser; 
+    public Secure secure = new Secure();
     
     public MgmtProduct(SQLite sqlite) {
         initComponents();
@@ -70,6 +73,10 @@ public class MgmtProduct extends javax.swing.JPanel {
         }
                 
 //      LOAD CONTENTS
+        loadContents(); 
+    }
+    
+    public void loadContents() {
         ArrayList<Product> products = sqlite.getProduct();
         for(int nCtr = 0; nCtr < products.size(); nCtr++){
             tableModel.addRow(new Object[]{
@@ -77,6 +84,13 @@ public class MgmtProduct extends javax.swing.JPanel {
                 products.get(nCtr).getStock(), 
                 products.get(nCtr).getPrice()});
         }
+    }
+    
+    public void reloadContents() {
+        for(int nCtr = tableModel.getRowCount(); nCtr > 0; nCtr--){
+            tableModel.removeRow(0);
+        }
+        loadContents();
     }
     
     public void designer(JTextField component, String text){
@@ -200,17 +214,45 @@ public class MgmtProduct extends javax.swing.JPanel {
 
     private void purchaseBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_purchaseBtnActionPerformed
         if(table.getSelectedRow() >= 0){
-            JTextField stockFld = new JTextField("0");
+            JTextField stockFld = new JTextField("");
             designer(stockFld, "PRODUCT STOCK");
+            String itemName = tableModel.getValueAt(table.getSelectedRow(), 0).toString();
 
             Object[] message = {
-                "How many " + tableModel.getValueAt(table.getSelectedRow(), 0) + " do you want to purchase?", stockFld
+                "How many " + itemName + " do you want to purchase?", stockFld
             };
-
+            
+           
             int result = JOptionPane.showConfirmDialog(null, message, "PURCHASE PRODUCT", JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE, null);
 
             if (result == JOptionPane.OK_OPTION) {
-                System.out.println(stockFld.getText());
+                
+                // Validate input
+                String userInput = stockFld.getText();
+                boolean isValidInput = secure.checkIfValidPurchase(userInput);
+                
+                if(isValidInput) {
+                    // if valid check if there is stock, assumed product exists because selected by user
+                    Product item = sqlite.getProduct(itemName);
+                    int numWant = Integer.parseInt(userInput);
+                    int numStock = item.getStock();
+                    
+                    if(numWant <= numStock) {
+                        // If amount is less than or equal to stock, update the products
+                        int updatedStock = numStock - numWant;
+                        item.setStock(updatedStock);
+                        
+                        sqlite.updatePuchasedProduct(item);
+                        
+                        System.out.println("Purchase successful");
+                        reloadContents();
+                    } else {
+                        DialogBox.showErrorDialog("Invalid purchase.", "The amount you want to purchase exceeds the available stock. Please try again.");
+                    }
+                    
+                } else {
+                    DialogBox.showErrorDialog("Invalid input.", "The amount you entered is invalid. Please try again.");
+                }
             }
         }
     }//GEN-LAST:event_purchaseBtnActionPerformed

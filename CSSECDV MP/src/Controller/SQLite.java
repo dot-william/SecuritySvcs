@@ -474,6 +474,7 @@ public class SQLite {
         return product;
     }
     
+    
     public void updateUserFailedAttempts (String username, int failedAttempts, String lastFailed) {
         String sql = "UPDATE users SET failedAttempts = ?, lastFailed =? WHERE username = ?;";
         try (Connection conn = DriverManager.getConnection(driverURL);
@@ -481,6 +482,18 @@ public class SQLite {
             pstmt.setInt(1, failedAttempts);
             pstmt.setString(2, lastFailed);
             pstmt.setString(3, username);
+            pstmt.execute();
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+    }
+    
+    public void updatePuchasedProduct(Product product){
+        String sql = "UPDATE product SET stock = ? WHERE name = ?;";
+        try (Connection conn = DriverManager.getConnection(driverURL);
+            PreparedStatement pstmt = conn.prepareStatement(sql)){
+            pstmt.setInt(1, product.getStock());
+            pstmt.setString(2, product.getName());
             pstmt.execute();
         } catch (Exception ex) {
             ex.printStackTrace();

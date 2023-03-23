@@ -187,4 +187,15 @@ public class Secure {
     public int getMaxLoginAttempts() {
         return this.maxLoginAttempts; 
     }
+    
+    
+    public boolean checkIfValidPurchase(String input) {
+        boolean result = false;
+        String intValues = "^[1-9]\\d*$";
+        
+        if(input.matches(intValues))
+            result = true;
+        return result;
+    }
+    
 }
