@@ -488,15 +488,19 @@ public class SQLite {
         }
     }
     
-    public void updatePuchasedProduct(Product product){
+    public boolean updatePuchasedProduct(Product product){
         String sql = "UPDATE product SET stock = ? WHERE name = ?;";
+        boolean successful = false;
         try (Connection conn = DriverManager.getConnection(driverURL);
             PreparedStatement pstmt = conn.prepareStatement(sql)){
             pstmt.setInt(1, product.getStock());
             pstmt.setString(2, product.getName());
             pstmt.execute();
+            successful = true;
         } catch (Exception ex) {
             ex.printStackTrace();
         }
+        
+        return successful;
     }
 }

@@ -242,9 +242,12 @@ public class MgmtProduct extends javax.swing.JPanel {
                         int updatedStock = numStock - numWant;
                         item.setStock(updatedStock);
                         
-                        sqlite.updatePuchasedProduct(item);
+                        boolean successful = sqlite.updatePuchasedProduct(item);
                         
-                        System.out.println("Purchase successful");
+                        if(successful) {
+                            System.out.println("Purchase successful");
+                            DialogBox.showSuccessDialog("Successful Purchase!", "The product has been purchased.");
+                        }
                         reloadContents();
                     } else {
                         DialogBox.showErrorDialog("Invalid purchase.", "The amount you want to purchase exceeds the available stock. Please try again.");
