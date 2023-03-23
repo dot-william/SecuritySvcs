@@ -42,13 +42,14 @@ public class SelfHistory extends javax.swing.JPanel {
     }
 
     public void init(User currentUser){
+        this.currentUser = currentUser;
 //      CLEAR TABLE
         for(int nCtr = tableModel.getRowCount(); nCtr > 0; nCtr--){
             tableModel.removeRow(0);
         }
         
 //      LOAD CONTENTS
-        ArrayList<History> history = sqlite.getHistory();
+        ArrayList<History> history = sqlite.getSelfHistory(this.currentUser);
         for(int nCtr = 0; nCtr < history.size(); nCtr++){
             Product product = sqlite.getProduct(history.get(nCtr).getName());
             tableModel.addRow(new Object[]{
@@ -61,6 +62,8 @@ public class SelfHistory extends javax.swing.JPanel {
             });
         }
     }
+    
+    
     
     public void designer(JTextField component, String text){
         component.setSize(70, 600);
@@ -147,7 +150,7 @@ public class SelfHistory extends javax.swing.JPanel {
     }// </editor-fold>//GEN-END:initComponents
 
     private void reloadBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_reloadBtnActionPerformed
-        init(currentUser);
+        init(this.currentUser);
     }//GEN-LAST:event_reloadBtnActionPerformed
 
 

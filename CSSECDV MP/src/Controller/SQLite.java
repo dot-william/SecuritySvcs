@@ -251,7 +251,7 @@ public class SQLite {
         String sql = "SELECT id, username, name, stock, timestamp FROM history WHERE username = ?";
         ArrayList<History> histories = new ArrayList<>();
         String username = currentUser.getUsername();
-        
+        System.out.println(username);
         try (Connection conn = DriverManager.getConnection(driverURL);
             PreparedStatement pstmt = conn.prepareStatement(sql))
         {

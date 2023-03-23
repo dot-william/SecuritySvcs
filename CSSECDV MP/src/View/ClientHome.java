@@ -22,36 +22,39 @@ import javax.swing.table.DefaultTableModel;
 public class ClientHome extends javax.swing.JPanel {
 
     public SelfHistory selfHistory;
-    public MgmtLogs mgmtLogs;
     public BuyProducts buyProducts;
-    public MgmtUser mgmtUser;
     private User currentUser; 
-    
     private CardLayout contentView = new CardLayout();
     
     public ClientHome() {
         initComponents();
     }
     
-    public void init(SQLite sqlite, User currentUser){
+    public void init(SQLite sqlite){
+        
         selfHistory = new SelfHistory(sqlite);
-        mgmtLogs = new MgmtLogs(sqlite);
         buyProducts = new BuyProducts(sqlite);
-        mgmtUser = new MgmtUser(sqlite);
-        this.currentUser = currentUser; 
         
         Content.setLayout(contentView);
         Content.add(new Home("WELCOME CLIENT!", new java.awt.Color(255,102,51)), "home");
-        Content.add(mgmtUser, "mgmtUser");
         Content.add(selfHistory, "selfHistory");
         Content.add(buyProducts, "buyProducts");
-        Content.add(mgmtLogs, "mgmtLogs");
         
 //        UNCOMMENT TO DISABLE BUTTONS
 //        historyBtn.setVisible(false);
 //        usersBtn.setVisible(false);
 //        productsBtn.setVisible(false);
 //        logsBtn.setVisible(false);
+    }
+    
+    public void setCurrentUser(User currentUser) {
+        if (currentUser != null) {
+            this.currentUser = currentUser; 
+            System.out.println(this.currentUser.getUsername());
+        }
+            
+        else
+            this.currentUser = null;
     }
     
     public void showPnl(String panelName){
@@ -140,7 +143,7 @@ public class ClientHome extends javax.swing.JPanel {
     }//GEN-LAST:event_productsBtnActionPerformed
 
     private void historyBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_historyBtnActionPerformed
-        selfHistory.init(currentUser);
+        selfHistory.init(this.currentUser);
 //        usersBtn.setForeground(Color.black);
         productsBtn.setForeground(Color.black);
         historyBtn.setForeground(Color.red);

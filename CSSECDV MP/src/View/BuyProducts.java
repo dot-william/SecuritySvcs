@@ -92,12 +92,16 @@ public class BuyProducts extends javax.swing.JPanel {
                 return canEdit [columnIndex];
             }
         });
+        table.setAutoResizeMode(javax.swing.JTable.AUTO_RESIZE_ALL_COLUMNS);
         table.setRowHeight(24);
         table.getTableHeader().setReorderingAllowed(false);
         jScrollPane1.setViewportView(table);
         if (table.getColumnModel().getColumnCount() > 0) {
             table.getColumnModel().getColumn(0).setMinWidth(50);
+            table.getColumnModel().getColumn(0).setMaxWidth(100);
+            table.getColumnModel().getColumn(1).setMinWidth(50);
             table.getColumnModel().getColumn(1).setMaxWidth(100);
+            table.getColumnModel().getColumn(2).setMinWidth(50);
             table.getColumnModel().getColumn(2).setMaxWidth(100);
         }
 

@@ -32,12 +32,11 @@ public class ManagerHome extends javax.swing.JPanel {
         initComponents();
     }
     
-    public void init(SQLite sqlite, User currentUser){
+    public void init(SQLite sqlite){
         mgmtHistory = new MgmtHistory(sqlite);
         mgmtLogs = new MgmtLogs(sqlite);
         mgmtProduct = new MgmtProduct(sqlite);
-        mgmtUser = new MgmtUser(sqlite);
-        this.currentUser = currentUser;  
+        mgmtUser = new MgmtUser(sqlite); 
         
         Content.setLayout(contentView);
         Content.add(new Home("WELCOME MANAGER!", new java.awt.Color(153,102,255)), "home");
@@ -51,6 +50,13 @@ public class ManagerHome extends javax.swing.JPanel {
 //        usersBtn.setVisible(false);
 //        productsBtn.setVisible(false);
 //        logsBtn.setVisible(false);
+    }
+    
+    public void setCurrentUser(User currentUser) {
+        if (currentUser != null)
+            this.currentUser = currentUser;  
+        else
+            this.currentUser = null;
     }
     
     public void showPnl(String panelName){

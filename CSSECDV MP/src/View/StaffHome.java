@@ -32,12 +32,11 @@ public class StaffHome extends javax.swing.JPanel {
         initComponents();
     }
     
-    public void init(SQLite sqlite, User currentUser){
+    public void init(SQLite sqlite){
         mgmtHistory = new MgmtHistory(sqlite);
         mgmtLogs = new MgmtLogs(sqlite);
         mgmtProduct = new MgmtProduct(sqlite);
-        mgmtUser = new MgmtUser(sqlite);
-        this.currentUser = currentUser;  
+        mgmtUser = new MgmtUser(sqlite);  
         
         Content.setLayout(contentView);
         Content.add(new Home("WELCOME STAFF!", new java.awt.Color(0,204,102)), "home");
@@ -53,6 +52,13 @@ public class StaffHome extends javax.swing.JPanel {
 //        logsBtn.setVisible(false);
     }
     
+    public void setCurrentUser(User currentUser) {
+        if (currentUser != null)
+            this.currentUser = currentUser;  
+        else
+            this.currentUser = null;
+    }
+        
     public void showPnl(String panelName){
         contentView.show(Content, panelName);
     }

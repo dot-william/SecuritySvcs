@@ -95,6 +95,7 @@ public class MgmtProduct extends javax.swing.JPanel {
                 return canEdit [columnIndex];
             }
         });
+        table.setAutoResizeMode(javax.swing.JTable.AUTO_RESIZE_ALL_COLUMNS);
         table.setRowHeight(24);
         table.getTableHeader().setReorderingAllowed(false);
         jScrollPane1.setViewportView(table);
@@ -104,7 +105,6 @@ public class MgmtProduct extends javax.swing.JPanel {
             table.getColumnModel().getColumn(2).setMaxWidth(100);
         }
 
-        purchaseBtn.setBackground(new java.awt.Color(255, 255, 255));
         purchaseBtn.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
         purchaseBtn.setText("PURCHASE");
         purchaseBtn.addActionListener(new java.awt.event.ActionListener() {
@@ -113,7 +113,6 @@ public class MgmtProduct extends javax.swing.JPanel {
             }
         });
 
-        addBtn.setBackground(new java.awt.Color(255, 255, 255));
         addBtn.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
         addBtn.setText("ADD");
         addBtn.addActionListener(new java.awt.event.ActionListener() {
@@ -122,7 +121,6 @@ public class MgmtProduct extends javax.swing.JPanel {
             }
         });
 
-        editBtn.setBackground(new java.awt.Color(255, 255, 255));
         editBtn.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
         editBtn.setText("EDIT");
         editBtn.setToolTipText("");
@@ -132,7 +130,6 @@ public class MgmtProduct extends javax.swing.JPanel {
             }
         });
 
-        deleteBtn.setBackground(new java.awt.Color(255, 255, 255));
         deleteBtn.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
         deleteBtn.setText("DELETE");
         deleteBtn.addActionListener(new java.awt.event.ActionListener() {
