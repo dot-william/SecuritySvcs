@@ -204,17 +204,25 @@ public class SQLite {
     }
     
     public void addProduct(String name, int stock, double price) {
-//        String sql = "INSERT INTO product(name,stock,price) VALUES('" + name + "','" + stock + "','" + price + "')";
-        String sql = "INSERT INTO product(name,stock,price) VALUES(?, ?, ?)";
-        
-        try (Connection conn = DriverManager.getConnection(driverURL);
-            PreparedStatement pstmt = conn.prepareStatement(sql)){
-            pstmt.setString(1, name);
-            pstmt.setInt(2, stock);
-            pstmt.setDouble(3, price);
-            pstmt.execute();
-        } catch (Exception ex) {
-            System.out.print(ex);
+        Product existingProduct = this.getProduct(name);
+//        append existing stock if product exists
+        if (existingProduct != null) {
+            existingProduct.addStock(stock);
+            this.updateProduct(existingProduct);
+        }
+        else {
+            //        String sql = "INSERT INTO product(name,stock,price) VALUES('" + name + "','" + stock + "','" + price + "')";
+            String sql = "INSERT INTO product(name,stock,price) VALUES(?, ?, ?)";
+
+            try (Connection conn = DriverManager.getConnection(driverURL);
+                PreparedStatement pstmt = conn.prepareStatement(sql)){
+                pstmt.setString(1, name);
+                pstmt.setInt(2, stock);
+                pstmt.setDouble(3, price);
+                pstmt.execute();
+            } catch (Exception ex) {
+                System.out.print(ex);
+            }
         }
     }
     
@@ -503,7 +511,7 @@ public class SQLite {
         }
     }
     
-    public boolean updatePuchasedProduct(Product product){
+    public boolean updateProduct(Product product){
         String sql = "UPDATE product SET stock = ? WHERE name = ?;";
         boolean successful = false;
         try (Connection conn = DriverManager.getConnection(driverURL);

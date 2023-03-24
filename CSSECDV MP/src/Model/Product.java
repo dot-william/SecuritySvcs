@@ -52,6 +52,10 @@ public class Product {
     public void setStock(int stock) {
         this.stock = stock;
     }
+    
+    public void addStock(int stock) {
+        this.stock += stock;
+    }
 
     public float getPrice() {
         return price;

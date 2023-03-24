@@ -188,14 +188,33 @@ public class Secure {
         return this.maxLoginAttempts; 
     }
     
-    
+    // stock must be positive integer up to 10 digits
     public boolean checkIfValidPurchase(String input) {
         boolean result = false;
-        String intValues = "^[1-9]\\d*$";
+        String intValues = "^[1-9]\\d{0,10}$";
         
         if(input.matches(intValues))
             result = true;
         return result;
     }
     
+//  product names can only contain alphanumeric with max length 30 chars
+    public boolean checkIfValidProductName(String input) {
+        boolean result = false;
+        String regex = "^[\\w|\\ ]{1,30}$";
+        
+        if(input.matches(regex))
+            result = true;
+        return result;
+    }
+    
+// prices can only be a maximum of 6 digits and 2 decimal places
+    public boolean checkIfValidPrice(String input) {
+        boolean result = false;
+        String regex = "^[1-9]\\d{0,10}\\.?\\d{0,2}$";
+        
+        if(input.matches(regex))
+            result = true;
+        return result;
+    }
 }
