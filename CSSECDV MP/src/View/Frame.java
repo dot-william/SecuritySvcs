@@ -13,7 +13,9 @@ import Controller.Secure;
 import static Controller.Secure.DialogBox;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-
+import javax.swing.JOptionPane;
+import javax.swing.JPasswordField;
+import javax.swing.JTextField;
 
 public class Frame extends javax.swing.JFrame {
 
@@ -31,6 +33,7 @@ public class Frame extends javax.swing.JFrame {
         Navigation = new javax.swing.JPanel();
         jLabel1 = new javax.swing.JLabel();
         logoutBtn = new javax.swing.JButton();
+        changePassBtn = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setBackground(new java.awt.Color(153, 153, 153));
@@ -67,6 +70,14 @@ public class Frame extends javax.swing.JFrame {
             }
         });
 
+        changePassBtn.setFont(new java.awt.Font("Liberation Sans", 1, 18)); // NOI18N
+        changePassBtn.setText("Change Password");
+        changePassBtn.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                changePassBtnActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout NavigationLayout = new javax.swing.GroupLayout(Navigation);
         Navigation.setLayout(NavigationLayout);
         NavigationLayout.setHorizontalGroup(
@@ -74,6 +85,7 @@ public class Frame extends javax.swing.JFrame {
             .addGroup(NavigationLayout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(NavigationLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(changePassBtn, javax.swing.GroupLayout.DEFAULT_SIZE, 226, Short.MAX_VALUE)
                     .addComponent(jLabel1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 226, Short.MAX_VALUE)
                     .addComponent(logoutBtn, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap())
@@ -83,7 +95,9 @@ public class Frame extends javax.swing.JFrame {
             .addGroup(NavigationLayout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 46, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 392, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 341, Short.MAX_VALUE)
+                .addComponent(changePassBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 45, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(logoutBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap())
         );
@@ -131,7 +145,15 @@ public class Frame extends javax.swing.JFrame {
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
-
+    
+    public void designer(JTextField component, String text){
+        component.setSize(70, 600);
+        component.setFont(new java.awt.Font("Tahoma", 0, 18));
+        component.setBackground(new java.awt.Color(240, 240, 240));
+        component.setHorizontalAlignment(javax.swing.JTextField.CENTER);
+        component.setBorder(javax.swing.BorderFactory.createTitledBorder(new javax.swing.border.LineBorder(new java.awt.Color(0, 0, 0), 2, true), text, javax.swing.border.TitledBorder.CENTER, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Tahoma", 0, 12)));
+    }
+    
     private void logoutBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_logoutBtnActionPerformed
         loginPnl.clear();
         // log the logout to db
@@ -141,12 +163,54 @@ public class Frame extends javax.swing.JFrame {
         frameView.show(Container, "loginPnl");
     }//GEN-LAST:event_logoutBtnActionPerformed
 
+    private void changePassBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_changePassBtnActionPerformed
+        // TODO add your handling code here: 
+        JPasswordField oldPassword = new JPasswordField();
+        JPasswordField password = new JPasswordField();
+        JPasswordField confpass = new JPasswordField();
+        designer(oldPassword, "OLD PASSWORD");
+        designer(password, "NEW PASSWORD");
+        designer(confpass, "CONFIRM PASSWORD");
+
+        Object[] message = {
+            "Enter New Password:", oldPassword, password, confpass
+        };
+        String username = currentUser.getUsername();
+        int result = JOptionPane.showConfirmDialog(null, message, "Change Password for " + username , JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE, null);
+
+        if (result == JOptionPane.OK_OPTION) {
+            //String username = tableModel.getValueAt(table.getSelectedRow(), 0).toString();
+//                System.out.println(username);
+//            User user = sqlite.getUser(username);
+            if (currentUser.validate(username, oldPassword.getPassword())) {
+                String newpassStr = new String(password.getPassword());
+                String confpassStr = new String(confpass.getPassword());
+                if (newpassStr.equals(confpassStr) && Secure.isValidPassword(newpassStr)) {
+                    currentUser.setSalt(User.generateSalt());
+                    currentUser.setPasswordHash(User.hashPassword(newpassStr, currentUser.getSalt()));
+                    boolean status = main.sqlite.updateUser(username, currentUser);
+                    if (status) {
+                        dialogBox.showSuccessDialog("Change password success", "User password changed successfully.");
+                    }
+                }
+                else {
+                    String passCriteria = Secure.getPassCriteria();
+                    dialogBox.showErrorDialog("Error changing password", "Both passwords do not match or password does not follow the required criteria. " + passCriteria);
+
+                }
+            }
+            else {
+                dialogBox.showErrorDialog("Error changing password", "Current password is incorrect.");
+            }
+        }
+    }//GEN-LAST:event_changePassBtnActionPerformed
+
     public Main main;
     public Secure secure = new Secure();
     public Helper helper = new Helper();
     public Login loginPnl = new Login();
     public Register registerPnl = new Register();
-    public Dialog DialogBox = new Dialog();
+    public Dialog dialogBox = new Dialog();
     
     private AdminHome adminHomePnl = new AdminHome();
     private ManagerHome managerHomePnl = new ManagerHome();
@@ -229,7 +293,7 @@ public class Frame extends javax.swing.JFrame {
                         contentView.show(Content, "adminHomePnl");
                         break;
                     default:
-                        DialogBox.showErrorDialog("Account disabled", "Account disabled due to multiple failed login attempts, wait 5 minutes before logging in again.");
+                        dialogBox.showErrorDialog("Account disabled", "Account disabled due to multiple failed login attempts, wait 5 minutes before logging in again.");
                         break;
                 }
                 frameView.show(Container, "homePnl");
@@ -245,14 +309,14 @@ public class Frame extends javax.swing.JFrame {
                        main.sqlite.addLogs("loginFail", user.getUsername(), "User has been locked out.", formattedDateTime);
                       
                    }
-                    DialogBox.showErrorDialog("Authentication failed", "Username or password is incorrect.");  
+                    dialogBox.showErrorDialog("Authentication failed", "Username or password is incorrect.");  
                 }
                
             }
             main.sqlite.updateUser(user);
         }
         catch (NullPointerException e) {
-            DialogBox.showErrorDialog("Authentication failed", "Username or password is incorrect."); 
+            dialogBox.showErrorDialog("Authentication failed", "Username or password is incorrect."); 
         }
         
     }
@@ -293,13 +357,13 @@ public class Frame extends javax.swing.JFrame {
                 
                 // If user already exists
                 if (user != null) {
-                    DialogBox.showErrorDialog("Registration Error", "Username already taken, please enter a different username.");
+                    dialogBox.showErrorDialog("Registration Error", "Username already taken, please enter a different username.");
                 } else {
                     if (password.equals(confpass)) {
                         
                         user = new User(lowercase_username, password);
                         main.sqlite.addUser(user.getUsername(), user.getPasswordHash(), user.getSalt(), 2, 0);
-                        DialogBox.showSuccessDialog("Registration Success", "User account registered successfully.");
+                        dialogBox.showSuccessDialog("Registration Success", "User account registered successfully.");
                         // log the successful registration to db
                         String formattedDateTime = datetimeformatter.format(LocalDateTime.now());
                         main.sqlite.addLogs("registrationSuccess", lowercase_username, "User registered successfully.", formattedDateTime);
@@ -307,12 +371,12 @@ public class Frame extends javax.swing.JFrame {
                     }
                     else {
                         //System.out.println("password and confpss dont match");
-                        DialogBox.showErrorDialog("Registration Error", "Make sure both passwords match.");
+                        dialogBox.showErrorDialog("Registration Error", "Make sure both passwords match.");
                     }
                 }
             } else if (!isValidPassword) {
                 String passCriteria = Secure.getPassCriteria();
-                DialogBox.showErrorDialog("Registration Error", "Invalid password. " + passCriteria);
+                dialogBox.showErrorDialog("Registration Error", "Invalid password. " + passCriteria);
             }
         }
         return result;
@@ -323,6 +387,7 @@ public class Frame extends javax.swing.JFrame {
     private javax.swing.JPanel Content;
     private javax.swing.JPanel HomePnl;
     private javax.swing.JPanel Navigation;
+    private javax.swing.JButton changePassBtn;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JButton logoutBtn;
     // End of variables declaration//GEN-END:variables
