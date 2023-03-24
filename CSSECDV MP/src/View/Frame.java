@@ -275,21 +275,25 @@ public class Frame extends javax.swing.JFrame {
                     case 2:
                         clientHomePnl.showPnl("home");
                         clientHomePnl.setCurrentUser(this.currentUser);
+                        clientHomePnl.setButtonsBlack(); //reset button colors
                         contentView.show(Content, "clientHomePnl");
                         break;
                     case 3:
                         staffHomePnl.showPnl("home");
                         staffHomePnl.setCurrentUser(this.currentUser);
+                        staffHomePnl.setButtonsBlack();
                         contentView.show(Content, "staffHomePnl");
                         break;
                     case 4:
                         managerHomePnl.showPnl("home");
                         managerHomePnl.setCurrentUser(this.currentUser);
+                        managerHomePnl.setButtonsBlack();
                         contentView.show(Content, "managerHomePnl");
                         break;
                     case 5:
                         adminHomePnl.showPnl("home");
                         adminHomePnl.setCurrentUser(this.currentUser);
+                        adminHomePnl.setButtonsBlack();
                         contentView.show(Content, "adminHomePnl");
                         break;
                     default:

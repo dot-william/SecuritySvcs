@@ -62,7 +62,12 @@ public class AdminHome extends javax.swing.JPanel {
     public void showPnl(String panelName){
         contentView.show(Content, panelName);
     }
-
+    
+    
+    public void setButtonsBlack () {
+        usersBtn.setForeground(Color.black);
+        logsBtn.setForeground(Color.black);
+    }
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always

@@ -151,7 +151,10 @@ public class ClientHome extends javax.swing.JPanel {
         contentView.show(Content, "mgmtHistory");
     }//GEN-LAST:event_historyBtnActionPerformed
     
-    
+    public void setButtonsBlack () {
+        productsBtn.setForeground(Color.black);
+        historyBtn.setForeground(Color.black);
+    }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JPanel Content;
