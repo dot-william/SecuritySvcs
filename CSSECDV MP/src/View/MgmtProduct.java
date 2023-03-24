@@ -297,8 +297,9 @@ public class MgmtProduct extends javax.swing.JPanel {
                  float price = Float.parseFloat(strPrice);
                  int stock = Integer.parseInt(strStock);
                  sqlite.addProduct(strName, stock, price); 
-                 DialogBox.showSuccessDialog("Product successfully added", "The product has been added successfully."); 
                  this.reloadContents();
+                 DialogBox.showSuccessDialog("Product successfully added", "The product has been added successfully."); 
+
             }
         }
     }//GEN-LAST:event_addBtnActionPerformed
@@ -319,10 +320,29 @@ public class MgmtProduct extends javax.swing.JPanel {
 
             int result = JOptionPane.showConfirmDialog(null, message, "EDIT PRODUCT", JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE, null);
 
-            if (result == JOptionPane.OK_OPTION) {
-                System.out.println(nameFld.getText());
-                System.out.println(stockFld.getText());
-                System.out.println(priceFld.getText());
+            if (result == JOptionPane.OK_OPTION) { 
+                String strName = nameFld.getText();
+                String strStock = stockFld.getText();
+                String strPrice = priceFld.getText();
+                if (!secure.checkIfValidProductName(strName)) {
+                    DialogBox.showErrorDialog("Invalid name", "Name must be alphanumeric only between 1 and 30 characters. ");
+                }
+                else if (!secure.checkIfValidPurchase(strStock)) {
+                    DialogBox.showErrorDialog("Invalid stock", "Stock must be a positive integer with a maximum of 10 digits. ");
+                } 
+                else if (!secure.checkIfValidPrice(strPrice)) {
+                    DialogBox.showErrorDialog("Invalid price", "Price must be a positive decimal number with a maximum of 10 digits.");
+                }
+                else {
+                     float price = Float.parseFloat(strPrice);
+                     int stock = Integer.parseInt(strStock);
+                     Product product = new Product(strName, stock, price);
+                     sqlite.updateProduct(product);
+                     this.reloadContents();
+                     DialogBox.showSuccessDialog("Product successfully edited", "The product has been edited successfully."); 
+                     
+                }
+                
             }
         }
     }//GEN-LAST:event_editBtnActionPerformed
@@ -332,7 +352,10 @@ public class MgmtProduct extends javax.swing.JPanel {
             int result = JOptionPane.showConfirmDialog(null, "Are you sure you want to delete " + tableModel.getValueAt(table.getSelectedRow(), 0) + "?", "DELETE PRODUCT", JOptionPane.YES_NO_OPTION);
             
             if (result == JOptionPane.YES_OPTION) {
-                System.out.println(tableModel.getValueAt(table.getSelectedRow(), 0));
+                String productName = tableModel.getValueAt(table.getSelectedRow(), 0).toString();
+                sqlite.deleteProduct(productName);
+                this.reloadContents();
+                DialogBox.showSuccessDialog("Product successfully deleted", "The product has been deleted successfully."); 
             }
         }
     }//GEN-LAST:event_deleteBtnActionPerformed

@@ -512,12 +512,13 @@ public class SQLite {
     }
     
     public boolean updateProduct(Product product){
-        String sql = "UPDATE product SET stock = ? WHERE name = ?;";
+        String sql = "UPDATE product SET stock = ?, price = ? WHERE name = ?;";
         boolean successful = false;
         try (Connection conn = DriverManager.getConnection(driverURL);
             PreparedStatement pstmt = conn.prepareStatement(sql)){
             pstmt.setInt(1, product.getStock());
-            pstmt.setString(2, product.getName());
+            pstmt.setFloat(2, product.getPrice());
+            pstmt.setString(3, product.getName());
             pstmt.execute();
             successful = true;
         } catch (Exception ex) {
@@ -525,5 +526,19 @@ public class SQLite {
         }
         
         return successful;
+    }
+    
+    public boolean deleteProduct(String name) {
+        String sql = "DELETE FROM product WHERE name = ?;"; 
+        
+        try (Connection conn = DriverManager.getConnection(driverURL);
+            PreparedStatement pstmt = conn.prepareStatement(sql)){
+            pstmt.setString(1, name);
+            pstmt.execute();
+            return true;
+        } catch (Exception ex) {
+            System.out.print(ex);
+            return false;
+        }
     }
 }
