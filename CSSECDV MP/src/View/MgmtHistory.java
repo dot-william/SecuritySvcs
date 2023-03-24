@@ -64,7 +64,7 @@ public class MgmtHistory extends javax.swing.JPanel {
         }
         
 //      LOAD CONTENTS
-        ArrayList<History> history = sqlite.getHistory();
+        ArrayList<History> history = sqlite.getSelfHistory(currentUser);
         for(int nCtr = 0; nCtr < history.size(); nCtr++){
             Product product = sqlite.getProduct(history.get(nCtr).getName());
             tableModel.addRow(new Object[]{
