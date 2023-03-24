@@ -130,7 +130,9 @@ public class StaffHome extends javax.swing.JPanel {
         contentView.show(Content, "mgmtProduct");
     }//GEN-LAST:event_productsBtnActionPerformed
     
-    
+    public void setButtonsBlack () {
+        productsBtn.setForeground(Color.black);
+    }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JPanel Content;
