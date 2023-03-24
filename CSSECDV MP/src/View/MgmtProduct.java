@@ -10,6 +10,8 @@ import Controller.Secure;
 import static Controller.Secure.DialogBox;
 import Model.Product;
 import Model.User;
+import Model.History; 
+import java.util.Date;
 import java.util.ArrayList;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
@@ -245,6 +247,9 @@ public class MgmtProduct extends javax.swing.JPanel {
                         boolean successful = sqlite.updatePuchasedProduct(item);
                         
                         if(successful) {
+//                            create history of purchased product 
+                            History history = new History(this.currentUser.getUsername(), item.getName(), numWant, new Date());
+                            this.sqlite.addHistory(history);
                             System.out.println("Purchase successful");
                             DialogBox.showSuccessDialog("Successful Purchase!", "The product has been purchased.");
                         }

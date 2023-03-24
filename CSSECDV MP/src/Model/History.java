@@ -22,13 +22,14 @@ public class History {
     private int stock;
     private Timestamp timestamp;
 
-    private SimpleDateFormat dateformat = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss.SSS");
+    public static SimpleDateFormat dateformat = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss.SSS");
     
-    public History(String username, String name, int stock){
+    public History(String username, String name, int stock, Date date){
         this.username = username;
         this.name = name;
         this.stock = stock;
-        this.timestamp = new Timestamp(new Date().getTime());
+//        this.timestamp = new Timestamp(new Date().getTime());
+        this.timestamp = new Timestamp(date.getTime());
     }
     
     public History(int id, String username, String name, int stock, String timestamp){
