@@ -5,9 +5,13 @@
  */
 package View;
 
+import Controller.Helper;
 import Controller.SQLite; 
 import Controller.Secure; 
+import Model.Logs;
 import Model.User;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import javax.swing.JComboBox;
 import javax.swing.JDialog;
@@ -27,6 +31,8 @@ public class MgmtUser extends javax.swing.JPanel {
     public DefaultTableModel tableModel;
     public Dialog dialogBox; 
     private User currentUser;
+    public Helper helper = new Helper();
+    DateTimeFormatter datetimeformatter = DateTimeFormatter.ofPattern(Logs.datetimeformatstring);
     
     public MgmtUser(SQLite sqlite) {
         initComponents();
@@ -49,16 +55,13 @@ public class MgmtUser extends javax.swing.JPanel {
     }
     
     public void init(){
-        //      CLEAR TABLE
+        // CLEAR TABLE
         for(int nCtr = tableModel.getRowCount(); nCtr > 0; nCtr--){
             tableModel.removeRow(0);
         }
         
-//      LOAD CONTENTS
+        // LOAD CONTENTS
         loadContents();
-        
-        
-        // dialog box 
         dialogBox = new Dialog();
     }
     
@@ -214,11 +217,14 @@ public class MgmtUser extends javax.swing.JPanel {
 
     private void editRoleBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_editRoleBtnActionPerformed
         User currUser = getCurrentUser();
+        String formattedDateTime = datetimeformatter.format(LocalDateTime.now());
+        System.out.println("formattedDateTime: " + formattedDateTime);
         
+        String currTime = helper.getCurrentTimestamp();
+        System.out.println("currTime: " + currTime);
         if(table.getSelectedRow() >= 0  && currUser != null && currUser.getRole() == 5){
             System.out.println("Current user username: " + currUser.getUsername() + ", role: " + currUser.getRole());
             String[] options = {"2-CLIENT","3-STAFF","4-MANAGER","5-ADMIN"};
-//            String[] options = {"2-CLIENT","3-STAFF","4-MANAGER","5-ADMIN"};
             JComboBox optionList = new JComboBox(options);
             optionList.setSelectedIndex((int)tableModel.getValueAt(table.getSelectedRow(), 1) - 2);
             String result = (String) JOptionPane.showInputDialog(null, "USER: " + tableModel.getValueAt(table.getSelectedRow(), 0), 
@@ -234,8 +240,9 @@ public class MgmtUser extends javax.swing.JPanel {
 
                     int role = Character.getNumericValue(result.charAt(0));
                     user.setRole(role);
-                    //Log old role to new role
-
+                    //Log old role to new role]
+                    
+//                    sqlite.addLogs(result, username, result, username);
 
                     // If role is 1 somehow, default to 2 set disable to 1, separated from role to not overwrite old role
                     if (role == 1) {
@@ -249,7 +256,6 @@ public class MgmtUser extends javax.swing.JPanel {
                 }
             }
         }
-        
     }//GEN-LAST:event_editRoleBtnActionPerformed
 
     private void deleteBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_deleteBtnActionPerformed

@@ -157,7 +157,8 @@ public class Frame extends javax.swing.JFrame {
     private void logoutBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_logoutBtnActionPerformed
         loginPnl.clear();
         // log the logout to db
-        String formattedDateTime = datetimeformatter.format(LocalDateTime.now());
+        String formattedDateTime= helper.getCurrentTimestamp();
+        //String formattedDateTime = datetimeformatter.format(LocalDateTime.now());
         main.sqlite.addLogs("logout", this.currentUser.getUsername(), "User logged out", formattedDateTime);
         this.currentUser = null;
         frameView.show(Container, "loginPnl");
@@ -270,7 +271,8 @@ public class Frame extends javax.swing.JFrame {
                 int disabled = user.getDisabled();
                 int role = user.getRole();
                 // log the successful login to db
-                String formattedDateTime = datetimeformatter.format(LocalDateTime.now());
+//                String formattedDateTime = datetimeformatter.format(LocalDateTime.now());
+                String formattedDateTime = helper.getCurrentTimestamp();
                 main.sqlite.addLogs("loginSuccess", lowercase_username, "User logged in successfully.", formattedDateTime);
                 if (disabled != 1) {
                     switch (role) {
@@ -311,7 +313,8 @@ public class Frame extends javax.swing.JFrame {
                 // If user is not yet locked
                 if(user.getLocked() == 0) {
                     secure.recordFailAttempt(user);
-                    String formattedDateTime = datetimeformatter.format(LocalDateTime.now());
+//                    String formattedDateTime = datetimeformatter.format(LocalDateTime.now());
+                    String formattedDateTime = helper.getCurrentTimestamp();                    
                     main.sqlite.addLogs("authenticationError", lowercase_username, "Incorrect username or password entered during login.", formattedDateTime);
                    if (user.getLocked() == 1) {
                        formattedDateTime = datetimeformatter.format(LocalDateTime.now());
@@ -374,7 +377,8 @@ public class Frame extends javax.swing.JFrame {
                         main.sqlite.addUser(user.getUsername(), user.getPasswordHash(), user.getSalt(), 2, 0);
                         dialogBox.showSuccessDialog("Registration Success", "User account registered successfully.");
                         // log the successful registration to db
-                        String formattedDateTime = datetimeformatter.format(LocalDateTime.now());
+                        //  String formattedDateTime = datetimeformatter.format(LocalDateTime.now());
+                        String formattedDateTime = helper.getCurrentTimestamp();                        
                         main.sqlite.addLogs("registrationSuccess", lowercase_username, "User registered successfully.", formattedDateTime);
                         result = true;
                     }

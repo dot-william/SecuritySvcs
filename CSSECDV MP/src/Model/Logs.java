@@ -22,7 +22,7 @@ public class Logs {
     private String desc;
     private Timestamp timestamp;
     
-    public static String datetimeformatstring = "yyyy-MM-dd hh:mm:ss.SSS";
+    public static String datetimeformatstring = "yyyy-MM-dd hh:mm:ss";
     public static SimpleDateFormat dateformat = new SimpleDateFormat(datetimeformatstring);
     
     public Logs(String event, String desc){
