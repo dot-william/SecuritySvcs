@@ -217,21 +217,23 @@ public class MgmtUser extends javax.swing.JPanel {
 
     private void editRoleBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_editRoleBtnActionPerformed
         User currUser = getCurrentUser();
-        String formattedDateTime = datetimeformatter.format(LocalDateTime.now());
-        System.out.println("formattedDateTime: " + formattedDateTime);
         
-        String currTime = helper.getCurrentTimestamp();
-        System.out.println("currTime: " + currTime);
+        // Ensures the role is admin
         if(table.getSelectedRow() >= 0  && currUser != null && currUser.getRole() == 5){
             System.out.println("Current user username: " + currUser.getUsername() + ", role: " + currUser.getRole());
             String[] options = {"2-CLIENT","3-STAFF","4-MANAGER","5-ADMIN"};
+            
             JComboBox optionList = new JComboBox(options);
             optionList.setSelectedIndex((int)tableModel.getValueAt(table.getSelectedRow(), 1) - 2);
             String result = (String) JOptionPane.showInputDialog(null, "USER: " + tableModel.getValueAt(table.getSelectedRow(), 0), 
                 "EDIT USER ROLE", JOptionPane.QUESTION_MESSAGE, null, options, options[(int)tableModel.getValueAt(table.getSelectedRow(), 1) - 2]);
+            
             System.out.println("result: " + result);
+            
             if(result != null){
                 String username = tableModel.getValueAt(table.getSelectedRow(), 0).toString();
+                
+                // If admin is trying to change their role
                 if (username.equalsIgnoreCase(currUser.getUsername())) {
                     dialogBox.showErrorDialog("ERROR ROLE CHANGE", "You cannot set/update your own role.");
                 } else {
@@ -240,7 +242,10 @@ public class MgmtUser extends javax.swing.JPanel {
 
                     int role = Character.getNumericValue(result.charAt(0));
                     user.setRole(role);
-                    //Log old role to new role]
+                    //Log old role to new role
+                    String desc = "Role of user " + "\"" + username + "\"" + " edited from " + oldRole + " to " + role + "."; 
+                    String timestamp = helper.getCurrentTimestamp();
+                    sqlite.addLogs("editRoleSuccess", currUser.getUsername(), desc, timestamp);
                     
 //                    sqlite.addLogs(result, username, result, username);
 
@@ -259,12 +264,18 @@ public class MgmtUser extends javax.swing.JPanel {
     }//GEN-LAST:event_editRoleBtnActionPerformed
 
     private void deleteBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_deleteBtnActionPerformed
+        User currUser = getCurrentUser();
+        
         if(table.getSelectedRow() >= 0){
             int result = JOptionPane.showConfirmDialog(null, "Are you sure you want to delete " + tableModel.getValueAt(table.getSelectedRow(), 0) + "?", "DELETE USER", JOptionPane.YES_NO_OPTION);
             String username = tableModel.getValueAt(table.getSelectedRow(), 0).toString();
             if (result == JOptionPane.YES_OPTION) {
                 sqlite.removeUser(username);
+                String desc = "User " + "\"" + username + "\"" + " deleted."; 
+                String timestamp = helper.getCurrentTimestamp();
+                sqlite.addLogs("deletedUserSuccess", currUser.getUsername(), desc, timestamp);
                 System.out.println(tableModel.getValueAt(table.getSelectedRow(), 0));
+                reloadContents();
             }
         }
     }//GEN-LAST:event_deleteBtnActionPerformed
@@ -296,6 +307,9 @@ public class MgmtUser extends javax.swing.JPanel {
                         user.setLocked(1);
 
                     sqlite.updateUser(user);
+                    String desc = "User " + "\"" + username + "\"" + " has now been "+ state + "ed."; 
+                    String timestamp = helper.getCurrentTimestamp();
+                    sqlite.addLogs("lockUserSuccess", currUser.getUsername(), desc, timestamp);
                     reloadContents();
 //                System.out.println("Clicked yes");
                 }
@@ -345,8 +359,8 @@ public class MgmtUser extends javax.swing.JPanel {
 //        }
 
     private void chgpassBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_chgpassBtnActionPerformed
-        
-        if(table.getSelectedRow() >= 0){
+        User currUser = getCurrentUser();
+        if(table.getSelectedRow() >= 0  && currUser != null && currUser.getRole() == 5){
             JPasswordField oldPassword = new JPasswordField();
             JPasswordField password = new JPasswordField();
             JPasswordField confpass = new JPasswordField();
@@ -373,16 +387,22 @@ public class MgmtUser extends javax.swing.JPanel {
                         boolean status = sqlite.updateUser(username, user);
                         if (status) {
                             dialogBox.showSuccessDialog("Change password success", "User password changed successfully.");
+                            String desc = "User " + "\"" + username + "\"" + " password successfully changed."; 
+                            String timestamp = helper.getCurrentTimestamp();
+                            sqlite.addLogs("passwordUserSuccess", currUser.getUsername(), desc, timestamp);
                         }
-                    }
-                    else {
+                    } else {
                         String passCriteria = Secure.getPassCriteria();
                         dialogBox.showErrorDialog("Error changing password", "Both passwords do not match or password does not follow the required criteria. " + passCriteria);
-                        
+                        String desc = "User " + "\"" + username + "\"" + " error in changing password. Both passwords do not match or password does not follow the required criteria."; 
+                        String timestamp = helper.getCurrentTimestamp();
+                        sqlite.addLogs("passwordUserFailed", currUser.getUsername(), desc, timestamp);
                     }
-                }
-                else {
+                } else {
                     dialogBox.showErrorDialog("Error changing password", "Current password is incorrect.");
+                    String desc = "User " + "\"" + username + "\"" + " error in changing password. Password entered was incorrect."; 
+                    String timestamp = helper.getCurrentTimestamp();
+                    sqlite.addLogs("passwordUserFailed", currUser.getUsername(), desc, timestamp);
                 }
             }
         }
@@ -407,6 +427,9 @@ public class MgmtUser extends javax.swing.JPanel {
                 
                 if (username.equalsIgnoreCase(currUser.getUsername())) {
                     dialogBox.showErrorDialog("ERROR DISABLING ACCOUNT", "You cannot disable your own account.");
+                    String desc = "User " + "\"" + currUser.getUsername() + "\"" + " tried to " + state + " \"" + username + "\"" + " but failed."; 
+                    String timestamp = helper.getCurrentTimestamp();
+                    sqlite.addLogs("disableUserFailed", currUser.getUsername(), desc, timestamp);
                 } else {
                     User user = sqlite.getUser(username);
                     if (user.getDisabled() == 1 && state.equals("enable")) 
@@ -418,10 +441,16 @@ public class MgmtUser extends javax.swing.JPanel {
 
                     sqlite.updateUser(user);
                     reloadContents();
+                    String desc = "User " + "\"" + username + "\"" + " successfully " + state + "d."; 
+                    String timestamp = helper.getCurrentTimestamp();
+                    sqlite.addLogs(state+"UserSuccess", currUser.getUsername(), desc, timestamp);
     //                System.out.println("Clicked yes");
                     }
                 
             } else {
+                String desc = "Canceled enable/disable."; 
+                String timestamp = helper.getCurrentTimestamp();
+                sqlite.addLogs(state+"UserCanceled", currUser.getUsername(), desc, timestamp);
                 System.out.println("Canceled");
             }
             
