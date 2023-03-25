@@ -363,7 +363,10 @@ public class Frame extends javax.swing.JFrame {
             // Check based on username policy and password policy
             boolean isValidPassword = Secure.isValidPassword(password);
             boolean isValidUsername = Secure.validUsername(lowercase_username);
-
+            
+            if (!isValidUsername) {
+                DialogBox.showErrorDialog("Registration error", "Username should contain only alphanumeric characters, periods, and underscores.");
+            }
             // If there are no empty fields and username and password are valid
             if (!isEmptyField && isValidUsername && isValidPassword) {
                 
