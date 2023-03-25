@@ -9,6 +9,7 @@ import Controller.SQLite;
 import Model.Logs;
 import java.util.ArrayList;
 import javax.swing.table.DefaultTableModel;
+import View.Dialog;
 
 /**
  *
@@ -18,6 +19,7 @@ public class MgmtLogs extends javax.swing.JPanel {
 
     public SQLite sqlite;
     public DefaultTableModel tableModel;
+    public Dialog dialog; 
     
     public MgmtLogs(SQLite sqlite) {
         initComponents();
@@ -31,6 +33,7 @@ public class MgmtLogs extends javax.swing.JPanel {
     }
 
     public void init(){
+        this.dialog = new Dialog();
         //      CLEAR TABLE
         for(int nCtr = tableModel.getRowCount(); nCtr > 0; nCtr--){
             tableModel.removeRow(0);
@@ -140,10 +143,14 @@ public class MgmtLogs extends javax.swing.JPanel {
     }//GEN-LAST:event_clearBtnActionPerformed
 
     private void debugBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_debugBtnActionPerformed
-        if(sqlite.DEBUG_MODE == 1)
+        if(sqlite.DEBUG_MODE == 1) {
             sqlite.DEBUG_MODE = 0;
-        else
+            dialog.showSuccessDialog("Debug mode", "Debug mode disabled.");
+        }
+        else {
             sqlite.DEBUG_MODE = 1;
+            dialog.showSuccessDialog("Debug mode", "Debug mode enabled.");
+        }
     }//GEN-LAST:event_debugBtnActionPerformed
 
 

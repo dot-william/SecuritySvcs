@@ -23,7 +23,7 @@ public class MgmtHistory extends javax.swing.JPanel {
     public SQLite sqlite;
     public DefaultTableModel tableModel;
     private User currentUser; 
-    
+    private ArrayList<History> history;
     public MgmtHistory(SQLite sqlite) {
         initComponents();
         this.sqlite = sqlite;
@@ -49,10 +49,14 @@ public class MgmtHistory extends javax.swing.JPanel {
 //         client can only view own history
             case (2):
                 searchBtn.setVisible(false);
+                //      LOAD CONTENTS
+                history = sqlite.getSelfHistory(currentUser);
                 break; 
 //          staff and manager can view all history
             case (4):
-                searchBtn.setVisible(true);
+                searchBtn.setVisible(true); 
+                //      LOAD CONTENTS
+                history = sqlite.getHistory();
                 break;
             default:
                 System.out.println("Error, wrong privileges");
@@ -63,8 +67,6 @@ public class MgmtHistory extends javax.swing.JPanel {
             tableModel.removeRow(0);
         }
         
-//      LOAD CONTENTS
-        ArrayList<History> history = sqlite.getSelfHistory(currentUser);
         for(int nCtr = 0; nCtr < history.size(); nCtr++){
             Product product = sqlite.getProduct(history.get(nCtr).getName());
             tableModel.addRow(new Object[]{
