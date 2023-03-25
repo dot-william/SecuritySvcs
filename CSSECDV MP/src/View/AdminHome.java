@@ -58,6 +58,10 @@ public class AdminHome extends javax.swing.JPanel {
         else
             this.currentUser = null;
     }
+    
+    public User getCurrentUser() {
+        return this.currentUser;
+    }
         
     public void showPnl(String panelName){
         contentView.show(Content, panelName);
@@ -142,6 +146,7 @@ public class AdminHome extends javax.swing.JPanel {
 
     private void usersBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_usersBtnActionPerformed
         mgmtUser.init();
+        mgmtUser.setCurrentuser(getCurrentUser());
         usersBtn.setForeground(Color.red);
         logsBtn.setForeground(Color.black);
         contentView.show(Content, "mgmtUser");

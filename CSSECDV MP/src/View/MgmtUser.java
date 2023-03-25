@@ -26,18 +26,26 @@ public class MgmtUser extends javax.swing.JPanel {
     public SQLite sqlite;
     public DefaultTableModel tableModel;
     public Dialog dialogBox; 
+    private User currentUser;
     
     public MgmtUser(SQLite sqlite) {
         initComponents();
         this.sqlite = sqlite;
         tableModel = (DefaultTableModel)table.getModel();
         table.getTableHeader().setFont(new java.awt.Font("SansSerif", java.awt.Font.BOLD, 14));
-        
 //        UNCOMMENT TO DISABLE BUTTONS
 //        editBtn.setVisible(false);
 //        deleteBtn.setVisible(false);
 //        lockBtn.setVisible(false);
 //        chgpassBtn.setVisible(false);
+    }
+    
+    public void setCurrentuser(User currentUser) {
+        this.currentUser = currentUser;
+    }
+    
+    public User getCurrentUser() {
+        return this.currentUser;
     }
     
     public void init(){
@@ -47,17 +55,31 @@ public class MgmtUser extends javax.swing.JPanel {
         }
         
 //      LOAD CONTENTS
+        loadContents();
+        
+        
+        // dialog box 
+        dialogBox = new Dialog();
+    }
+    
+    public void loadContents() {
         ArrayList<User> users = sqlite.getUsers();
         for(int nCtr = 0; nCtr < users.size(); nCtr++){
             tableModel.addRow(new Object[]{
                 users.get(nCtr).getUsername(), 
 //                users.get(nCtr).getPasswordHash(), 
                 users.get(nCtr).getRole(), 
-                users.get(nCtr).getLocked()});
+                users.get(nCtr).getLocked(),
+                users.get(nCtr).getDisabled()});
+            
         }
-        
-        // dialog box 
-        dialogBox = new Dialog();
+    }
+    
+    public void reloadContents() {
+        for(int nCtr = tableModel.getRowCount(); nCtr > 0; nCtr--){
+            tableModel.removeRow(0);
+        }
+        loadContents();
     }
 
     public void designer(JTextField component, String text){
@@ -83,21 +105,22 @@ public class MgmtUser extends javax.swing.JPanel {
         deleteBtn = new javax.swing.JButton();
         lockBtn = new javax.swing.JButton();
         chgpassBtn = new javax.swing.JButton();
+        enableDisableAccBtn = new javax.swing.JButton();
 
         table.setFont(new java.awt.Font("SansSerif", 0, 14)); // NOI18N
         table.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {null, null, null},
-                {null, null, null},
-                {null, null, null},
-                {null, null, null}
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null}
             },
             new String [] {
-                "Username", "Role", "Locked"
+                "Username", "Role", "Locked", "Disabled"
             }
         ) {
             boolean[] canEdit = new boolean [] {
-                false, false, false
+                false, false, false, false
             };
 
             public boolean isCellEditable(int rowIndex, int columnIndex) {
@@ -146,6 +169,14 @@ public class MgmtUser extends javax.swing.JPanel {
             }
         });
 
+        enableDisableAccBtn.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
+        enableDisableAccBtn.setText("ENABLE / DISABLE");
+        enableDisableAccBtn.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                enableDisableAccBtnActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
@@ -157,12 +188,14 @@ public class MgmtUser extends javax.swing.JPanel {
                         .addComponent(editRoleBtn, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addGap(0, 0, 0)
                         .addComponent(deleteBtn, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGap(0, 0, 0)
                         .addComponent(lockBtn)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGap(0, 0, 0)
+                        .addComponent(enableDisableAccBtn, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addGap(0, 0, 0)
                         .addComponent(chgpassBtn))
                     .addComponent(jScrollPane1))
-                .addContainerGap())
+                .addGap(0, 0, 0))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -174,28 +207,49 @@ public class MgmtUser extends javax.swing.JPanel {
                     .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                         .addComponent(lockBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 41, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addComponent(chgpassBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 41, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addComponent(deleteBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 41, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                        .addComponent(deleteBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 41, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(enableDisableAccBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 41, javax.swing.GroupLayout.PREFERRED_SIZE))))
         );
     }// </editor-fold>//GEN-END:initComponents
 
     private void editRoleBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_editRoleBtnActionPerformed
-        if(table.getSelectedRow() >= 0){
-            String[] options = {"1-DISABLED","2-CLIENT","3-STAFF","4-MANAGER","5-ADMIN"};
+        User currUser = getCurrentUser();
+        
+        if(table.getSelectedRow() >= 0  && currUser != null && currUser.getRole() == 5){
+            System.out.println("Current user username: " + currUser.getUsername() + ", role: " + currUser.getRole());
+            String[] options = {"2-CLIENT","3-STAFF","4-MANAGER","5-ADMIN"};
+//            String[] options = {"2-CLIENT","3-STAFF","4-MANAGER","5-ADMIN"};
             JComboBox optionList = new JComboBox(options);
-            
-            optionList.setSelectedIndex((int)tableModel.getValueAt(table.getSelectedRow(), 2) - 1);
-            
+            optionList.setSelectedIndex((int)tableModel.getValueAt(table.getSelectedRow(), 1) - 2);
             String result = (String) JOptionPane.showInputDialog(null, "USER: " + tableModel.getValueAt(table.getSelectedRow(), 0), 
-                "EDIT USER ROLE", JOptionPane.QUESTION_MESSAGE, null, options, options[(int)tableModel.getValueAt(table.getSelectedRow(), 2) - 1]);
-            
+                "EDIT USER ROLE", JOptionPane.QUESTION_MESSAGE, null, options, options[(int)tableModel.getValueAt(table.getSelectedRow(), 1) - 2]);
+            System.out.println("result: " + result);
             if(result != null){
                 String username = tableModel.getValueAt(table.getSelectedRow(), 0).toString();
-                System.out.println(username);
-                User user = sqlite.getUser(username);
-//                user.setRole(ERROR);
-                System.out.println(result.charAt(0));
+                if (username.equalsIgnoreCase(currUser.getUsername())) {
+                    dialogBox.showErrorDialog("ERROR ROLE CHANGE", "You cannot set/update your own role.");
+                } else {
+                    User user = sqlite.getUser(username);
+                    int oldRole = user.getRole();
+
+                    int role = Character.getNumericValue(result.charAt(0));
+                    user.setRole(role);
+                    //Log old role to new role
+
+
+                    // If role is 1 somehow, default to 2 set disable to 1, separated from role to not overwrite old role
+                    if (role == 1) {
+                        user.setRole(2);
+                        // Log
+                    }
+
+                    // Update user in DB
+                    sqlite.updateUser(user);
+                    reloadContents();
+                }
             }
         }
+        
     }//GEN-LAST:event_editRoleBtnActionPerformed
 
     private void deleteBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_deleteBtnActionPerformed
@@ -210,17 +264,41 @@ public class MgmtUser extends javax.swing.JPanel {
     }//GEN-LAST:event_deleteBtnActionPerformed
 
     private void lockBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_lockBtnActionPerformed
-        if(table.getSelectedRow() >= 0){
+        
+        User currUser = getCurrentUser();
+        
+        if(table.getSelectedRow() >= 0  && currUser != null && currUser.getRole() == 5){
             String state = "lock";
-            if("1".equals(tableModel.getValueAt(table.getSelectedRow(), 3) + "")){
+            if("1".equals(tableModel.getValueAt(table.getSelectedRow(), 2) + "")){
                 state = "unlock";
-            }
-            
-            int result = JOptionPane.showConfirmDialog(null, "Are you sure you want to " + state + " " + tableModel.getValueAt(table.getSelectedRow(), 0) + "?", "DELETE USER", JOptionPane.YES_NO_OPTION);
+            } 
+            int result = JOptionPane.showConfirmDialog(null, "Are you sure you want to " + state + " " + tableModel.getValueAt(table.getSelectedRow(), 0) + "?", state.toUpperCase() + " USER", JOptionPane.YES_NO_OPTION);
             
             if (result == JOptionPane.YES_OPTION) {
-                System.out.println(tableModel.getValueAt(table.getSelectedRow(), 0));
+                String username = tableModel.getValueAt(table.getSelectedRow(), 0).toString();
+                System.out.println(username);
+                if (username.equalsIgnoreCase(currUser.getUsername())) {
+                     dialogBox.showErrorDialog("ERROR LOCKING ACCOUNT", "You cannot lock your own account.");
+                } else {
+                    User user = sqlite.getUser(username);
+                
+                    if (user.getLocked() == 1 && state.equals("unlock")) 
+                        user.setLocked(0);
+
+                    // Else if user is indeed unlocked and you want to lock them
+                    else if (user.getLocked() == 0 && state.equals("lock"))
+                        user.setLocked(1);
+
+                    sqlite.updateUser(user);
+                    reloadContents();
+//                System.out.println("Clicked yes");
+                }
+                
+            } else {
+                System.out.println("Canceled");
             }
+            
+            
         }
     }//GEN-LAST:event_lockBtnActionPerformed
 
@@ -261,6 +339,7 @@ public class MgmtUser extends javax.swing.JPanel {
 //        }
 
     private void chgpassBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_chgpassBtnActionPerformed
+        
         if(table.getSelectedRow() >= 0){
             JPasswordField oldPassword = new JPasswordField();
             JPasswordField password = new JPasswordField();
@@ -276,7 +355,7 @@ public class MgmtUser extends javax.swing.JPanel {
             int result = JOptionPane.showConfirmDialog(null, message, "Change Password for " + username , JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE, null);
 
             if (result == JOptionPane.OK_OPTION) {
-                //String username = tableModel.getValueAt(table.getSelectedRow(), 0).toString();
+//                String username = tableModel.getValueAt(table.getSelectedRow(), 0).toString();
 //                System.out.println(username);
                 User user = sqlite.getUser(username);
                 if (user.validate(username, oldPassword.getPassword())) {
@@ -303,11 +382,52 @@ public class MgmtUser extends javax.swing.JPanel {
         }
     }//GEN-LAST:event_chgpassBtnActionPerformed
 
+    private void enableDisableAccBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_enableDisableAccBtnActionPerformed
+        User currUser = getCurrentUser();
+        
+        // If there is selected row, current user not null and the role is 5
+        if(table.getSelectedRow() >= 0 && currUser != null && currUser.getRole() == 5) {
+            System.out.println("Current user username: " + currUser.getUsername() + ", role: " + currUser.getRole());
+            String state = "disable";
+            System.out.println("value: " + tableModel.getValueAt(table.getSelectedRow(), 3));
+            if("1".equals(tableModel.getValueAt(table.getSelectedRow(), 3) + "")){
+                state = "enable";
+            } 
+            int result = JOptionPane.showConfirmDialog(null, "Are you sure you want to " + state + " " + tableModel.getValueAt(table.getSelectedRow(), 0) + "?", state.toUpperCase() + " USER", JOptionPane.YES_NO_OPTION);
+            
+            if (result == JOptionPane.YES_OPTION) {
+                String username = tableModel.getValueAt(table.getSelectedRow(), 0).toString();
+                System.out.println(username);
+                
+                if (username.equalsIgnoreCase(currUser.getUsername())) {
+                    dialogBox.showErrorDialog("ERROR DISABLING ACCOUNT", "You cannot disable your own account.");
+                } else {
+                    User user = sqlite.getUser(username);
+                    if (user.getDisabled() == 1 && state.equals("enable")) 
+                        user.setDisabled(0);
+
+                    // Else if user is not disabled and admin wants to enable them
+                    else if (user.getDisabled() == 0 && state.equals("disable"))
+                        user.setDisabled(1);
+
+                    sqlite.updateUser(user);
+                    reloadContents();
+    //                System.out.println("Clicked yes");
+                    }
+                
+            } else {
+                System.out.println("Canceled");
+            }
+            
+        }
+    }//GEN-LAST:event_enableDisableAccBtnActionPerformed
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton chgpassBtn;
     private javax.swing.JButton deleteBtn;
     private javax.swing.JButton editRoleBtn;
+    private javax.swing.JButton enableDisableAccBtn;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JButton lockBtn;
     private javax.swing.JTable table;

@@ -59,6 +59,10 @@ public class ManagerHome extends javax.swing.JPanel {
             this.currentUser = null;
     }
     
+    public User getCurrentUser() {
+        return this.currentUser;
+    }
+    
     public void showPnl(String panelName){
         contentView.show(Content, panelName);
     }

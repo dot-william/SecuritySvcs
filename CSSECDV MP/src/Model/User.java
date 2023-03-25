@@ -22,7 +22,7 @@ public class User {
     private int failedAttempts = 0;
     private String lastFailed = null;
     private String lastLogin = null;
-    
+    private int disabled = 0;
     
     // Use this constructor for registration
     public User(String username, String password){
@@ -33,13 +33,14 @@ public class User {
     }
     
     // Use this constructor when getting existing user
-    public User(int id, String username, String passwordhash, String salt, int role, int locked, int failedAttempts, String lastFailed, String lastLogin){
+    public User(int id, String username, String passwordhash, String salt, int role, int locked, int disabled, int failedAttempts, String lastFailed, String lastLogin){
         this.id = id;
         this.username = username;
         this.passwordhash = passwordhash;
         this.salt = salt;
         this.role = role;
         this.locked = locked;
+        this.disabled = disabled;
         this.failedAttempts  = failedAttempts;
         this.lastFailed = lastFailed;
         this.lastLogin = lastLogin;
@@ -135,6 +136,14 @@ public class User {
 
     public void setLocked(int locked) {
         this.locked = locked;
+    }
+    
+    public int getDisabled() {
+        return disabled;
+    }
+    
+    public void setDisabled(int disabled) {
+        this.disabled = disabled;
     }
     
     public int getFailedAttempts() {

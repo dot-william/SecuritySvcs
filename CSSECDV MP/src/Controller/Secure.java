@@ -86,8 +86,8 @@ public class Secure {
         if (user != null) {
             int isLocked = user.getLocked();
             if (isLocked == 1) {
-                
-                checkIfUnlock(user);
+                DialogBox.showErrorDialog("Account Locked", "The account you are trying to access is currently locked. Please communicate with the Admin in-person in order to re-enable the account.");
+//                checkIfUnlock(user);
             } else if (isLocked == 0) {
                 checkIfResetFailedCounter(user);
             }
@@ -96,7 +96,7 @@ public class Secure {
         }
     }
     
-    // Check if 15 minutes has passed to unlock account
+    // Check if 15 minutes has passed to unlock account  (feature disabled for CS2)
     public void checkIfUnlock(User user) {
         // 15 minutes
         long timeToResetLocked = (long) 900000;
@@ -143,21 +143,21 @@ public class Secure {
         user.setLocked(0);
         user.setFailedAttempts(0);
         user.setLastFailed(null);
-        String uname = user.getUsername();
-        switch (uname) {
-                  case "admin":
-                      user.setRole(5);
-                      break;
-                  case "manager":
-                      user.setRole(4);
-                      break;
-                  case "staff":
-                      user.setRole(3);
-                      break;
-                  default:
-                      user.setRole(2);
-                      break;
-              }
+//        String uname = user.getUsername();
+//        switch (uname) {
+//                  case "admin":
+//                      user.setRole(5);
+//                      break;
+//                  case "manager":
+//                      user.setRole(4);
+//                      break;
+//                  case "staff":
+//                      user.setRole(3);
+//                      break;
+//                  default:
+//                      user.setRole(2);
+//                      break;
+//              }
     }
     
     
@@ -173,7 +173,8 @@ public class Secure {
             failedAttempts++;
             
             if (failedAttempts >= getMaxLoginAttempts()) {
-                System.out.println("You have reached amount of login attempts. Try again later.");
+//                System.out.println("You have reached amount of login attempts. Try again later.");
+                System.out.println("Account has been locked.");
                 user.setLocked(1);
                 user.setRole(1);
             } 

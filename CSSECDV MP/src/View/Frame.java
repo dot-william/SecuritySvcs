@@ -267,40 +267,45 @@ public class Frame extends javax.swing.JFrame {
                 user.setLastLogin(currTimestamp);
                 this.currentUser = user;
                 main.sqlite.updateUser(user); 
+                int disabled = user.getDisabled();
                 int role = user.getRole();
                 // log the successful login to db
                 String formattedDateTime = datetimeformatter.format(LocalDateTime.now());
                 main.sqlite.addLogs("loginSuccess", lowercase_username, "User logged in successfully.", formattedDateTime);
-                switch (role) {
-                    case 2:
-                        clientHomePnl.showPnl("home");
-                        clientHomePnl.setCurrentUser(this.currentUser);
-                        clientHomePnl.setButtonsBlack(); //reset button colors
-                        contentView.show(Content, "clientHomePnl");
-                        break;
-                    case 3:
-                        staffHomePnl.showPnl("home");
-                        staffHomePnl.setCurrentUser(this.currentUser);
-                        staffHomePnl.setButtonsBlack();
-                        contentView.show(Content, "staffHomePnl");
-                        break;
-                    case 4:
-                        managerHomePnl.showPnl("home");
-                        managerHomePnl.setCurrentUser(this.currentUser);
-                        managerHomePnl.setButtonsBlack();
-                        contentView.show(Content, "managerHomePnl");
-                        break;
-                    case 5:
-                        adminHomePnl.showPnl("home");
-                        adminHomePnl.setCurrentUser(this.currentUser);
-                        adminHomePnl.setButtonsBlack();
-                        contentView.show(Content, "adminHomePnl");
-                        break;
-                    default:
-                        dialogBox.showErrorDialog("Account disabled", "Account disabled due to multiple failed login attempts, wait 5 minutes before logging in again.");
-                        break;
+                if (disabled != 1) {
+                    switch (role) {
+                        case 2:
+                            clientHomePnl.showPnl("home");
+                            clientHomePnl.setCurrentUser(this.currentUser);
+                            clientHomePnl.setButtonsBlack(); //reset button colors
+                            contentView.show(Content, "clientHomePnl");
+                            break;
+                        case 3:
+                            staffHomePnl.showPnl("home");
+                            staffHomePnl.setCurrentUser(this.currentUser);
+                            staffHomePnl.setButtonsBlack();
+                            contentView.show(Content, "staffHomePnl");
+                            break;
+                        case 4:
+                            managerHomePnl.showPnl("home");
+                            managerHomePnl.setCurrentUser(this.currentUser);
+                            System.out.println("Current user: " + this.currentUser.getUsername() + ", role: " + this.currentUser.getRole());
+                            managerHomePnl.setButtonsBlack();
+                            contentView.show(Content, "managerHomePnl");
+                            break;
+                        case 5:
+                            adminHomePnl.showPnl("home");
+                            adminHomePnl.setCurrentUser(this.currentUser);
+                            System.out.println("Current user: " + this.currentUser.getUsername() + ", role: " + this.currentUser.getRole());
+                            adminHomePnl.setButtonsBlack();
+                            contentView.show(Content, "adminHomePnl");
+                            break;
+                    }
+                    frameView.show(Container, "homePnl");
+                } else {
+                    dialogBox.showErrorDialog("ACCOUNT DISABLED", "Account is currently disabled. Please communicate with the Admin in-person in order to re-enable the account.");
                 }
-                frameView.show(Container, "homePnl");
+                
             }
             else if (!user.validate(lowercase_username, password)) {
                 // If user is not yet locked

@@ -94,6 +94,7 @@ public class SQLite {
             + " salt TEXT NOT NULL, \n"
             + " role INTEGER DEFAULT 2,\n"
             + " locked INTEGER DEFAULT 0,\n"
+            + " disabled INTEGER DEFAULT 0,\n"
             + " failedAttempts INTEGER DEFAULT 0,\n"
             + " lastFailed TEXT DEFAULT NULL,\n"
             + " lastLogin TEXT DEFAULT NULL\n"
@@ -350,7 +351,7 @@ public class SQLite {
     }
     
     public ArrayList<User> getUsers(){
-        String sql = "SELECT id, username, passwordhash, salt, role, locked, failedAttempts, lastFailed, lastLogin FROM users";
+        String sql = "SELECT id, username, passwordhash, salt, role, locked, disabled, failedAttempts, lastFailed, lastLogin FROM users";
         ArrayList<User> users = new ArrayList<>();
         
         try (Connection conn = DriverManager.getConnection(driverURL);
@@ -364,6 +365,7 @@ public class SQLite {
                                    rs.getString("salt"),
                                    rs.getInt("role"),
                                    rs.getInt("locked"),
+                                   rs.getInt("disabled"),
                                    rs.getInt("failedAttempts"),
                                    rs.getString("lastFailed"),
                                    rs.getString("lastLogin")));
@@ -375,7 +377,7 @@ public class SQLite {
     }
     
     public User getUser(String username) {
-        String sql = "SELECT id, username, passwordhash, salt, role, locked, failedAttempts, lastFailed, lastLogin FROM users WHERE username = ?";
+        String sql = "SELECT id, username, passwordhash, salt, role, locked, disabled, failedAttempts, lastFailed, lastLogin FROM users WHERE username = ?";
         User user = null;
         
         try(Connection conn = DriverManager.getConnection(driverURL);
@@ -390,6 +392,7 @@ public class SQLite {
                                 rs.getString("salt"),
                                 rs.getInt("role"),
                                 rs.getInt("locked"),
+                                rs.getInt("disabled"),
                                 rs.getInt("failedAttempts"),
                                 rs.getString("lastFailed"),
                                 rs.getString("lastLogin"));
@@ -423,7 +426,7 @@ public class SQLite {
     
     // Updates all fields from user
     public void updateUser(User updatedUser) {
-         String sql = "UPDATE users SET username = ?, passwordhash = ?, salt = ?, role = ?, locked = ?, failedAttempts = ?, lastFailed = ?, lastLogin = ? WHERE username = ?";
+         String sql = "UPDATE users SET username = ?, passwordhash = ?, salt = ?, role = ?, locked = ?, disabled = ?, failedAttempts = ?, lastFailed = ?, lastLogin = ? WHERE username = ?";
         
         try (Connection conn = DriverManager.getConnection(driverURL);
             PreparedStatement pstmt = conn.prepareStatement(sql)){
@@ -431,11 +434,12 @@ public class SQLite {
             pstmt.setString(2, updatedUser.getPasswordHash());
             pstmt.setString(3, updatedUser.getSalt());
             pstmt.setInt(4, updatedUser.getRole());
-            pstmt.setInt(5, updatedUser.getLocked()); 
-            pstmt.setInt(6, updatedUser.getFailedAttempts());
-            pstmt.setString(7, updatedUser.getLastFailed());
-            pstmt.setString(8, updatedUser.getLastLogin());
-            pstmt.setString(9, updatedUser.getUsername());
+            pstmt.setInt(5, updatedUser.getLocked());
+            pstmt.setInt(6, updatedUser.getDisabled()); 
+            pstmt.setInt(7, updatedUser.getFailedAttempts());
+            pstmt.setString(8, updatedUser.getLastFailed());
+            pstmt.setString(9, updatedUser.getLastLogin());
+            pstmt.setString(10, updatedUser.getUsername());
             pstmt.execute();
         } catch (Exception ex) {
             ex.printStackTrace();
