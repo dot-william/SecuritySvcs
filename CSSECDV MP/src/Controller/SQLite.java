@@ -41,7 +41,7 @@ public class SQLite {
             + " timestamp TEXT NOT NULL\n"
             + ");";
            
-//        PreparedStatement pstmt = conn.prepareStatement(sql)
+        // PreparedStatement pstmt = conn.prepareStatement(sql)
         try (Connection conn = DriverManager.getConnection(driverURL);
             PreparedStatement pstmt = conn.prepareStatement(sql)) 
         {
@@ -187,7 +187,7 @@ public class SQLite {
             pstmt.setString(2, history.getName());
             pstmt.setInt(3, history.getStock());
             pstmt.setFloat(4, history.getPrice());
-//            System.out.println(history.getTimestamp().toLocalDateTime().toString());
+        // System.out.println(history.getTimestamp().toLocalDateTime().toString());
             pstmt.setString(5, History.dateformat.format(new Date(history.getTimestamp().getTime())));
             pstmt.execute();
         } catch (Exception ex) {
@@ -196,7 +196,7 @@ public class SQLite {
     }
     
     public void addLogs(String event, String username, String desc, String timestamp) {
-//        String sql = "INSERT INTO logs(event,username,desc,timestamp) VALUES('" + event + "','" + username + "','" + desc + "','" + timestamp + "')";
+        //String sql = "INSERT INTO logs(event,username,desc,timestamp) VALUES('" + event + "','" + username + "','" + desc + "','" + timestamp + "')";
         String sql = "INSERT INTO logs(event,username,desc,timestamp) VALUES(?, ?, ?, ?)";
         
         try (Connection conn = DriverManager.getConnection(driverURL);
@@ -213,13 +213,13 @@ public class SQLite {
     
     public void addProduct(String name, int stock, double price) {
         Product existingProduct = this.getProduct(name);
-//        append existing stock if product exists
+        // append existing stock if product exists
         if (existingProduct != null) {
             existingProduct.addStock(stock);
             this.updateProduct(existingProduct);
         }
         else {
-            //        String sql = "INSERT INTO product(name,stock,price) VALUES('" + name + "','" + stock + "','" + price + "')";
+            // String sql = "INSERT INTO product(name,stock,price) VALUES('" + name + "','" + stock + "','" + price + "')";
             String sql = "INSERT INTO product(name,stock,price) VALUES(?, ?, ?)";
 
             try (Connection conn = DriverManager.getConnection(driverURL);
@@ -235,7 +235,7 @@ public class SQLite {
     }
     
     public void addUser(String username, String passwordhash, String salt) {
-//        String sql = "INSERT INTO users(username,passwordhash,salt) VALUES('" + username + "','" + passwordhash + "','" + salt + "')";
+        // String sql = "INSERT INTO users(username,passwordhash,salt) VALUES('" + username + "','" + passwordhash + "','" + salt + "')";
         String sql = "INSERT INTO users(username,passwordhash,salt) VALUES(?, ?, ?)";
         
         try (Connection conn = DriverManager.getConnection(driverURL);
@@ -245,12 +245,12 @@ public class SQLite {
             pstmt.setString(3, salt);
             pstmt.execute();
             
-//      PREPARED STATEMENT EXAMPLE
-//      String sql = "INSERT INTO users(username,password) VALUES(?,?)";
-//      PreparedStatement pstmt = conn.prepareStatement(sql)) {
-//      pstmt.setString(1, username);
-//      pstmt.setString(2, password);
-//      pstmt.executeUpdate();
+        //      PREPARED STATEMENT EXAMPLE
+        //      String sql = "INSERT INTO users(username,password) VALUES(?,?)";
+        //      PreparedStatement pstmt = conn.prepareStatement(sql)) {
+        //      pstmt.setString(1, username);
+        //      pstmt.setString(2, password);
+        //      pstmt.executeUpdate();
         } catch (Exception ex) {
             System.out.print(ex);
         }
@@ -457,11 +457,11 @@ public class SQLite {
     }
     
     public void addUser(String username, String passwordhash, String salt, int role, int failedAttempts) {
-//        String salt = User.generateSalt();
-//        String passwordhash = User.hashPassword(password, salt);
-//        String sql = "INSERT INTO users(username,passwordhash,salt,role) VALUES('" + username + "','" + passwordhash + "','" + salt + "','" + role + "')";
+        //String salt = User.generateSalt();
+        //String passwordhash = User.hashPassword(password, salt);
+        //String sql = "INSERT INTO users(username,passwordhash,salt,role) VALUES('" + username + "','" + passwordhash + "','" + salt + "','" + role + "')";
         String sql = "INSERT INTO users(username,passwordhash,salt,role, failedAttempts) VALUES(?,?,?,?,?)";
-//        System.out.println("Date being passed: " + date);
+        //System.out.println("Date being passed: " + date);
         
         try (Connection conn = DriverManager.getConnection(driverURL);
             PreparedStatement pstmt = conn.prepareStatement(sql)){
@@ -470,16 +470,14 @@ public class SQLite {
             pstmt.setString(3, salt);
             pstmt.setInt(4, role);
             pstmt.setInt(5, failedAttempts);
-//            pstmt.setObject(6, date);
             pstmt.execute();
-            
         } catch (Exception ex) {
             ex.printStackTrace();
         }
     }
     
     public void removeUser(String username) {
-//        String sql = "DELETE FROM users WHERE username='" + username + "';";
+        // String sql = "DELETE FROM users WHERE username='" + username + "';";
         String sql = "DELETE FROM users WHERE username= ? ;";
 
         try (Connection conn = DriverManager.getConnection(driverURL);
@@ -493,7 +491,7 @@ public class SQLite {
     }
     
     public Product getProduct(String name){
-//        String sql = "SELECT name, stock, price FROM product WHERE name='" + name + "';";
+        // String sql = "SELECT name, stock, price FROM product WHERE name='" + name + "';";
         String sql = "SELECT name, stock, price FROM product WHERE LOWER(name) = ? ;";
         Product product = null;
         try (Connection conn = DriverManager.getConnection(driverURL);

@@ -247,12 +247,11 @@ public class MgmtUser extends javax.swing.JPanel {
                     String timestamp = helper.getCurrentTimestamp();
                     sqlite.addLogs("editRoleSuccess", currUser.getUsername(), desc, timestamp);
                     
-//                    sqlite.addLogs(result, username, result, username);
+                    //sqlite.addLogs(result, username, result, username);
 
                     // If role is 1 somehow, default to 2 set disable to 1, separated from role to not overwrite old role
                     if (role == 1) {
                         user.setRole(2);
-                        // Log
                     }
 
                     // Update user in DB
@@ -283,13 +282,11 @@ public class MgmtUser extends javax.swing.JPanel {
                     System.out.println(tableModel.getValueAt(table.getSelectedRow(), 0));
                     reloadContents();
                 }
-               
             }
         }
     }//GEN-LAST:event_deleteBtnActionPerformed
 
     private void lockBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_lockBtnActionPerformed
-        
         User currUser = getCurrentUser();
         
         if(table.getSelectedRow() >= 0  && currUser != null && currUser.getRole() == 5){

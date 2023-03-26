@@ -110,9 +110,9 @@ public class User {
                 SecretKey key = factory.generateSecret(spec);
                 byte[] hash = key.getEncoded();
                 String hashStr = Hex.encodeHexString(hash);
-//                System.out.println(hashStr);
+                //System.out.println(hashStr);
                 return hashStr;
-    //            System.out.println(hash.equals(this.passwordhash.getBytes()));
+                //System.out.println(hash.equals(this.passwordhash.getBytes()));
             } catch (NoSuchAlgorithmException | InvalidKeySpecException e) {
                 throw new RuntimeException(e);
             }

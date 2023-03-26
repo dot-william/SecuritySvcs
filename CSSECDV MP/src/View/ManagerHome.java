@@ -148,17 +148,17 @@ public class ManagerHome extends javax.swing.JPanel {
         mgmtProduct.init(this.currentUser);
         productsBtn.setForeground(Color.red);
         historyBtn.setForeground(Color.black);
-//        logsBtn.setForeground(Color.black);
+        //        logsBtn.setForeground(Color.black);
         contentView.show(Content, "mgmtProduct");
     }//GEN-LAST:event_productsBtnActionPerformed
 
     private void historyBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_historyBtnActionPerformed
-        // TODO add your handling code here:
+        
         mgmtHistory.init(this.currentUser);
-//        usersBtn.setForeground(Color.black);
+        //        usersBtn.setForeground(Color.black);
         productsBtn.setForeground(Color.black);
         historyBtn.setForeground(Color.red);
-//        logsBtn.setForeground(Color.black);
+        //        logsBtn.setForeground(Color.black);
         contentView.show(Content, "mgmtHistory");
     }//GEN-LAST:event_historyBtnActionPerformed
     

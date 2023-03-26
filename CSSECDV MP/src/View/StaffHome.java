@@ -125,7 +125,7 @@ public class StaffHome extends javax.swing.JPanel {
 
     private void productsBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_productsBtnActionPerformed
         mgmtProduct.init(this.currentUser);
-//        usersBtn.setForeground(Color.black);
+        //        usersBtn.setForeground(Color.black);
         productsBtn.setForeground(Color.red);
         contentView.show(Content, "mgmtProduct");
     }//GEN-LAST:event_productsBtnActionPerformed

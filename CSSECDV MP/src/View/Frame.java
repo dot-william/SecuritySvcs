@@ -180,9 +180,6 @@ public class Frame extends javax.swing.JFrame {
         int result = JOptionPane.showConfirmDialog(null, message, "Change Password for " + username , JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE, null);
 
         if (result == JOptionPane.OK_OPTION) {
-            //String username = tableModel.getValueAt(table.getSelectedRow(), 0).toString();
-//                System.out.println(username);
-//            User user = sqlite.getUser(username);
             if (currentUser.validate(username, oldPassword.getPassword())) {
                 String newpassStr = new String(password.getPassword());
                 String confpassStr = new String(confpass.getPassword());
@@ -197,7 +194,6 @@ public class Frame extends javax.swing.JFrame {
                 else {
                     String passCriteria = Secure.getPassCriteria();
                     dialogBox.showErrorDialog("Error changing password", "Both passwords do not match or password does not follow the required criteria. " + passCriteria);
-
                 }
             }
             else {
@@ -318,7 +314,6 @@ public class Frame extends javax.swing.JFrame {
                 // If user is not yet locked
                 if(user.getLocked() == 0) {
                     secure.recordFailAttempt(user);
-//                    String formattedDateTime = datetimeformatter.format(LocalDateTime.now());
                     String formattedDateTime = helper.getCurrentTimestamp();                    
                     main.sqlite.addLogs("authenticationError", lowercase_username, "Incorrect username or password entered during login.", formattedDateTime);
                    if (user.getLocked() == 1) {
@@ -368,6 +363,7 @@ public class Frame extends javax.swing.JFrame {
             if (!isValidUsername) {
                 DialogBox.showErrorDialog("Registration Error", "Username should be 5-30 characters long and contain only alphanumeric characters, periods, or underscores.");
             }
+            
             // If there are no empty fields and username and password are valid
             if (!isEmptyField && isValidUsername && isValidPassword) {
                 

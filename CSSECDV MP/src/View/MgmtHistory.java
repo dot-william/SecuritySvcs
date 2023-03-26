@@ -46,21 +46,21 @@ public class MgmtHistory extends javax.swing.JPanel {
 
     public void init(User currentUser){ 
         this.currentUser = currentUser;
-        System.out.println("Code is now in init.");
+        
         this.role = this.currentUser.getRole(); 
         switch (this.role) {
-//         client can only view own history
+            // client can only view own history
             case (2):
-//                searchBtn.setVisible(false);
+                //searchBtn.setVisible(false);
                 searchBtn.setText("SEARCH PRODUCT");
-                //      LOAD CONTENTS
+                // LOAD CONTENTS
                 histories = sqlite.getSelfHistory(currentUser);
                 break; 
-//          staff and manager can view all history
+            //  manager can view all history
             case (4):
-//                searchBtn.setVisible(true);
+                // searchBtn.setVisible(true);
                 searchBtn.setText("SEARCH USERNAME OR PRODUCT");
-                //      LOAD CONTENTS
+                // LOAD CONTENTS
                 histories = sqlite.getHistory();
                 break;
             default:
@@ -73,13 +73,6 @@ public class MgmtHistory extends javax.swing.JPanel {
         }
         
         for(int nCtr = 0; nCtr < histories.size(); nCtr++){
-//            Product product = sqlite.getProduct(histories.get(nCtr).getName());
-//             System.out.println("username: " + histories.get(nCtr).getUsername());
-//            System.out.println("itemname: " + histories.get(nCtr).getName());
-//            System.out.println("stock: " + histories.get(nCtr).getStock());
-//            System.out.println("Price: " + histories.get(nCtr).getPrice());
-//            System.out.println("price*stock: " + histories.get(nCtr).getPrice() * histories.get(nCtr).getStock());
-//            System.out.println("timestampe: " + histories.get(nCtr).getTimestamp());
             try {
                 tableModel.addRow(new Object[]{
                     histories.get(nCtr).getUsername(), 
@@ -208,12 +201,12 @@ public class MgmtHistory extends javax.swing.JPanel {
         int result = JOptionPane.showConfirmDialog(null, message, "Search History", JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE, null);
 
         if (result == JOptionPane.OK_OPTION) {
-//          CLEAR TABLE
+            // CLEAR TABLE
             for(int nCtr = tableModel.getRowCount(); nCtr > 0; nCtr--){
                 tableModel.removeRow(0);
             }
 
-//          LOAD CONTENTS
+            // LOAD CONTENTS
             switch (this.role) {
                 case (2):
                     histories = sqlite.getSelfHistory(currentUser);
@@ -229,7 +222,7 @@ public class MgmtHistory extends javax.swing.JPanel {
                    searchFld.getText().toLowerCase().contains(histories.get(nCtr).getName().toLowerCase()) || 
                    histories.get(nCtr).getName().toLowerCase().contains(searchFld.getText().toLowerCase())){
                 
-//                    Product product = sqlite.getProduct(histories.get(nCtr).getName());
+                    //Product product = sqlite.getProduct(histories.get(nCtr).getName());
                     tableModel.addRow(new Object[]{
                         histories.get(nCtr).getUsername(), 
                         histories.get(nCtr).getName(), 
