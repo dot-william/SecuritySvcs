@@ -5,6 +5,7 @@
  */
 package View;
 
+import Controller.Helper;
 import Controller.SQLite;
 import Controller.Secure;
 import static Controller.Secure.DialogBox;
@@ -28,7 +29,7 @@ public class MgmtProduct extends javax.swing.JPanel {
     public DefaultTableModel tableModel;
     private User currentUser; 
     public Secure secure = new Secure();
-    
+    public Helper helper = new Helper();
     public MgmtProduct(SQLite sqlite) {
         initComponents();
         this.sqlite = sqlite;
@@ -50,14 +51,14 @@ public class MgmtProduct extends javax.swing.JPanel {
         }
         int role = this.currentUser.getRole(); 
         switch (role) {
-//         client can only buy products 
+            // client can only buy products 
             case (2):
                 purchaseBtn.setVisible(true);
                 addBtn.setVisible(false);
                 editBtn.setVisible(false);
                 deleteBtn.setVisible(false);
                 break; 
-//          staff and manager can add, edit, or delete products
+            // staff and manager can add, edit, or delete products
             case (3):
                 purchaseBtn.setVisible(false);
                 addBtn.setVisible(true);
@@ -74,7 +75,7 @@ public class MgmtProduct extends javax.swing.JPanel {
                 System.out.println("Error, wrong privileges");
         }
                 
-//      LOAD CONTENTS
+        //LOAD CONTENTS
         loadContents(); 
     }
     
@@ -247,9 +248,8 @@ public class MgmtProduct extends javax.swing.JPanel {
                         boolean successful = sqlite.updateProduct(item);
                         
                         if(successful) {
-//                            create history of purchased product 
-                            History history = new History(this.currentUser.getUsername(), item.getName(), numWant, new Date());
-                            this.sqlite.addHistory(history);
+                            String timestamp = helper.getCurrentTimestamp();
+                            this.sqlite.addHistory(this.currentUser.getUsername(), item.getName(), numWant, timestamp);
                             System.out.println("Purchase successful");
                             DialogBox.showSuccessDialog("Successful Purchase!", "The product has been purchased.");
                         }
