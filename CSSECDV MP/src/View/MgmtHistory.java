@@ -74,12 +74,12 @@ public class MgmtHistory extends javax.swing.JPanel {
         
         for(int nCtr = 0; nCtr < histories.size(); nCtr++){
 //            Product product = sqlite.getProduct(histories.get(nCtr).getName());
-             System.out.println("username: " + histories.get(nCtr).getUsername());
-            System.out.println("itemname: " + histories.get(nCtr).getName());
-            System.out.println("stock: " + histories.get(nCtr).getStock());
-            System.out.println("Price: " + histories.get(nCtr).getPrice());
-            System.out.println("price*stock: " + histories.get(nCtr).getPrice() * histories.get(nCtr).getStock());
-            System.out.println("timestampe: " + histories.get(nCtr).getTimestamp());
+//             System.out.println("username: " + histories.get(nCtr).getUsername());
+//            System.out.println("itemname: " + histories.get(nCtr).getName());
+//            System.out.println("stock: " + histories.get(nCtr).getStock());
+//            System.out.println("Price: " + histories.get(nCtr).getPrice());
+//            System.out.println("price*stock: " + histories.get(nCtr).getPrice() * histories.get(nCtr).getStock());
+//            System.out.println("timestampe: " + histories.get(nCtr).getTimestamp());
             try {
                 tableModel.addRow(new Object[]{
                     histories.get(nCtr).getUsername(), 
@@ -229,13 +229,13 @@ public class MgmtHistory extends javax.swing.JPanel {
                    searchFld.getText().toLowerCase().contains(histories.get(nCtr).getName().toLowerCase()) || 
                    histories.get(nCtr).getName().toLowerCase().contains(searchFld.getText().toLowerCase())){
                 
-                    Product product = sqlite.getProduct(histories.get(nCtr).getName());
+//                    Product product = sqlite.getProduct(histories.get(nCtr).getName());
                     tableModel.addRow(new Object[]{
                         histories.get(nCtr).getUsername(), 
                         histories.get(nCtr).getName(), 
                         histories.get(nCtr).getStock(), 
-                        product.getPrice(), 
-                        product.getPrice() * histories.get(nCtr).getStock(), 
+                        histories.get(nCtr).getPrice(), 
+                        histories.get(nCtr).getPrice() * histories.get(nCtr).getStock(), 
                         histories.get(nCtr).getTimestamp()
                     });
                 }
