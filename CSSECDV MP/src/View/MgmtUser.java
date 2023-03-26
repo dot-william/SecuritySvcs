@@ -316,7 +316,7 @@ public class MgmtUser extends javax.swing.JPanel {
                     String timestamp = helper.getCurrentTimestamp();
                     sqlite.addLogs("lockUserSuccess", currUser.getUsername(), desc, timestamp);
                     reloadContents();
-//                System.out.println("Clicked yes");
+                    //                System.out.println("Clicked yes");
                 }
                 
             } else {
@@ -380,8 +380,8 @@ public class MgmtUser extends javax.swing.JPanel {
             int result = JOptionPane.showConfirmDialog(null, message, "Change Password for " + username , JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE, null);
 
             if (result == JOptionPane.OK_OPTION) {
-//                String username = tableModel.getValueAt(table.getSelectedRow(), 0).toString();
-//                System.out.println(username);
+                //                String username = tableModel.getValueAt(table.getSelectedRow(), 0).toString();
+                //                System.out.println(username);
                 User user = sqlite.getUser(username);
                 if (user.validate(username, oldPassword.getPassword())) {
                     String newpassStr = new String(password.getPassword());
