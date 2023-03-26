@@ -235,7 +235,7 @@ public class MgmtUser extends javax.swing.JPanel {
                 
                 // If admin is trying to change their role
                 if (username.equalsIgnoreCase(currUser.getUsername())) {
-                    dialogBox.showErrorDialog("ERROR ROLE CHANGE", "You cannot set/update your own role.");
+                    dialogBox.showErrorDialog("Error Role Change", "You cannot set/update your own role.");
                 } else {
                     User user = sqlite.getUser(username);
                     int oldRole = user.getRole();
@@ -295,7 +295,7 @@ public class MgmtUser extends javax.swing.JPanel {
                 String username = tableModel.getValueAt(table.getSelectedRow(), 0).toString();
                 System.out.println(username);
                 if (username.equalsIgnoreCase(currUser.getUsername())) {
-                     dialogBox.showErrorDialog("ERROR LOCKING ACCOUNT", "You cannot lock your own account.");
+                     dialogBox.showErrorDialog("Error Locking Account", "You cannot lock your own account.");
                 } else {
                     User user = sqlite.getUser(username);
                 
@@ -421,12 +421,13 @@ public class MgmtUser extends javax.swing.JPanel {
             } 
             int result = JOptionPane.showConfirmDialog(null, "Are you sure you want to " + state + " " + tableModel.getValueAt(table.getSelectedRow(), 0) + "?", state.toUpperCase() + " USER", JOptionPane.YES_NO_OPTION);
             
+            // If user clicks yes
             if (result == JOptionPane.YES_OPTION) {
                 String username = tableModel.getValueAt(table.getSelectedRow(), 0).toString();
                 System.out.println(username);
                 
                 if (username.equalsIgnoreCase(currUser.getUsername())) {
-                    dialogBox.showErrorDialog("ERROR DISABLING ACCOUNT", "You cannot disable your own account.");
+                    dialogBox.showErrorDialog("Error Disabling Account", "You cannot disable your own account.");
                     String desc = "User " + "\"" + currUser.getUsername() + "\"" + " tried to " + state + " \"" + username + "\"" + " but failed."; 
                     String timestamp = helper.getCurrentTimestamp();
                     sqlite.addLogs("disableUserFailed", currUser.getUsername(), desc, timestamp);
@@ -444,7 +445,6 @@ public class MgmtUser extends javax.swing.JPanel {
                     String desc = "User " + "\"" + username + "\"" + " successfully " + state + "d."; 
                     String timestamp = helper.getCurrentTimestamp();
                     sqlite.addLogs(state+"UserSuccess", currUser.getUsername(), desc, timestamp);
-    //                System.out.println("Clicked yes");
                     }
                 
             } else {

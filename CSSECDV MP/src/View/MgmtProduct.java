@@ -255,11 +255,11 @@ public class MgmtProduct extends javax.swing.JPanel {
                         }
                         reloadContents();
                     } else {
-                        DialogBox.showErrorDialog("Invalid purchase.", "The amount you want to purchase exceeds the available stock. Please try again.");
+                        DialogBox.showErrorDialog("Invalid purchase", "The amount you want to purchase exceeds the available stock. Please try again.");
                     }
                     
                 } else {
-                    DialogBox.showErrorDialog("Invalid input.", "The amount you entered is invalid. Please try again.");
+                    DialogBox.showErrorDialog("Invalid input", "The amount you entered is invalid. Please try again.");
                 }
             }
         }
