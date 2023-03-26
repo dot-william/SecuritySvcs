@@ -22,7 +22,7 @@ public class History {
     private int stock;
     private Timestamp timestamp;
 
-    public static SimpleDateFormat dateformat = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss.SSS");
+    public static SimpleDateFormat dateformat = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
     
     public History(String username, String name, int stock, Date date){
         this.username = username;
