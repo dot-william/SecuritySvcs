@@ -5,11 +5,14 @@
  */
 package View;
 
+import Controller.Helper;
 import Controller.SQLite;
 import Model.Logs;
+import Model.User;
 import java.util.ArrayList;
 import javax.swing.table.DefaultTableModel;
 import View.Dialog;
+import javax.swing.JOptionPane;
 
 /**
  *
@@ -20,6 +23,8 @@ public class MgmtLogs extends javax.swing.JPanel {
     public SQLite sqlite;
     public DefaultTableModel tableModel;
     public Dialog dialog; 
+    public Helper helper = new Helper();
+    private User currentUser; 
     
     public MgmtLogs(SQLite sqlite) {
         initComponents();
@@ -39,7 +44,26 @@ public class MgmtLogs extends javax.swing.JPanel {
             tableModel.removeRow(0);
         }
         
-//      LOAD CONTENTS
+        //      LOAD CONTENTS
+        ArrayList<Logs> logs = sqlite.getLogs();
+        for(int nCtr = 0; nCtr < logs.size(); nCtr++){
+            tableModel.addRow(new Object[]{
+                logs.get(nCtr).getEvent(), 
+                logs.get(nCtr).getUsername(), 
+                logs.get(nCtr).getDesc(), 
+                logs.get(nCtr).getTimestamp()});
+        }
+    }
+    
+    public void init(User currUser){
+        this.currentUser = currUser;
+        this.dialog = new Dialog();
+        //      CLEAR TABLE
+        for(int nCtr = tableModel.getRowCount(); nCtr > 0; nCtr--){
+            tableModel.removeRow(0);
+        }
+        
+        //      LOAD CONTENTS
         ArrayList<Logs> logs = sqlite.getLogs();
         for(int nCtr = 0; nCtr < logs.size(); nCtr++){
             tableModel.addRow(new Object[]{
@@ -138,8 +162,15 @@ public class MgmtLogs extends javax.swing.JPanel {
     }// </editor-fold>//GEN-END:initComponents
 
     private void clearBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_clearBtnActionPerformed
-        sqlite.clearLogs(); 
-        this.init();
+        int result = JOptionPane.showConfirmDialog(null, "Are you sure you want to permanently delete the logs?", "Clear Logs", JOptionPane.YES_NO_OPTION);
+        if (result == JOptionPane.YES_OPTION) {
+            sqlite.clearLogs();
+            User currUser = getCurrentUser();
+            String timestamp = helper.getCurrentTimestamp();
+            sqlite.addLogs("clearedLogs", currUser.getUsername(), "User cleared the logs.", timestamp);
+            this.init();
+        }
+        
     }//GEN-LAST:event_clearBtnActionPerformed
 
     private void debugBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_debugBtnActionPerformed
@@ -152,7 +183,10 @@ public class MgmtLogs extends javax.swing.JPanel {
             dialog.showSuccessDialog("Debug mode", "Debug mode enabled.");
         }
     }//GEN-LAST:event_debugBtnActionPerformed
-
+    
+    public User getCurrentUser() {
+        return this.currentUser;
+    }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton clearBtn;
