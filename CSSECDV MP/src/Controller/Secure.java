@@ -31,7 +31,7 @@ public class Secure {
         // Check for length
         boolean result=false;
         String username = checkUsername.trim(); 
-        String regex = "^[\\w|.]{5,15}$";
+        String regex = "^[\\w|.]{5,30}$";
         
         if(username.matches(regex))
             result = true;
@@ -88,7 +88,7 @@ public class Secure {
             int isLocked = user.getLocked();
             if (isLocked == 1) {
                 DialogBox.showErrorDialog("Account Locked", "The account you are trying to access is currently locked. Please communicate with the Admin in-person in order to re-enable the account.");
-//                checkIfUnlock(user);
+                //checkIfUnlock(user);
             } else if (isLocked == 0) {
                 checkIfResetFailedCounter(user);
             }
