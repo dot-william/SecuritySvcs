@@ -189,14 +189,16 @@ public class MgmtHistory extends javax.swing.JPanel {
     }// </editor-fold>//GEN-END:initComponents
 
     private void searchBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_searchBtnActionPerformed
-        JTextField searchFld = new JTextField("0");
-        designer(searchFld, "SEARCH USERNAME OR PRODUCT");
-
+        JTextField searchFld = new JTextField("");
+        if (this.role == 2)
+            designer(searchFld, "SEARCH PRODUCT");
+        if (this.role == 4)
+            designer(searchFld, "SEARCH USERNAME OR PRODUCT");
         Object[] message = {
             searchFld
         };
 
-        int result = JOptionPane.showConfirmDialog(null, message, "SEARCH HISTORY", JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE, null);
+        int result = JOptionPane.showConfirmDialog(null, message, "Search History", JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE, null);
 
         if (result == JOptionPane.OK_OPTION) {
 //          CLEAR TABLE
