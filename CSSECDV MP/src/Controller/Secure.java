@@ -27,49 +27,50 @@ public class Secure {
             return false;
                 
     }
-    public static boolean  validUsername (String checkUsername) {
+    public static boolean validUsername (String checkUsername) {
         // Check for length
-        String username = checkUsername.trim();
-        if(username.length() < 5 || username.length() > 15 || username.contains(" ")) {
-            DialogBox.showErrorDialog("Registration error", "Username should not be less than 5 characters, more than 15 characters long, or contain spaces.");
-            return false;
-        }
-        else
-            return true;
+        boolean result=false;
+        String username = checkUsername.trim(); 
+        String regex = "^[\\w|.]{5,15}$";
+        
+        if(username.matches(regex))
+            result = true;
+        return result;
     }
     
     public static boolean isValidPassword (String password) {
-        boolean isValid = true;
-            if (password.length() < 8)
-            {
-                    System.out.println("Password must be less than 20 and more than 8 characters in length.");
-                    isValid = false;
-            }
-            String upperCaseChars = "(.*[A-Z].*)";
-            if (!password.matches(upperCaseChars ))
-            {
-                    System.out.println("Password must have atleast one uppercase character");
-                    isValid = false;
-            }
-            String lowerCaseChars = "(.*[a-z].*)";
-            if (!password.matches(lowerCaseChars ))
-            {
-                    System.out.println("Password must have atleast one lowercase character");
-                    isValid = false;
-            }
-            String numbers = "(.*[0-9].*)";
-            if (!password.matches(numbers ))
-            {
-                    System.out.println("Password must have atleast one number");
-                    isValid = false;
-            }
-            String specialChars = "(.*[-._!\"`'#%&,:;<>=@{}~\\$\\(\\)\\*\\+\\/\\\\\\?\\[\\]\\^\\|].*$)";
-            if (!password.matches(specialChars ))
-            {
-                    System.out.println("Password must have atleast one special character.");
-                    isValid = false;
-            }
-            return isValid;
+        boolean result=false;
+        String regex = "^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[.!@#$%^&*()_\\-=+\\[\\]\\{}|;:,?]).{8,20}$";
+        
+        if(password.matches(regex))
+            result = true;
+//        else {
+//            if (password.length() < 8)
+//            {
+//                    System.out.println("Password must be less than 20 and more than 8 characters in length.");
+//            }
+//            String upperCaseChars = "(.*[A-Z].*)";
+//            if (!password.matches(upperCaseChars ))
+//            {
+//                    System.out.println("Password must have atleast one uppercase character");
+//            }
+//            String lowerCaseChars = "(.*[a-z].*)";
+//            if (!password.matches(lowerCaseChars ))
+//            {
+//                    System.out.println("Password must have atleast one lowercase character");
+//            }
+//            String numbers = "(.*[0-9].*)";
+//            if (!password.matches(numbers ))
+//            {
+//                    System.out.println("Password must have atleast one number");
+//            }
+//            String specialChars = "(.*[-._!\"`'#%&,:;<>=@{}~\\$\\(\\)\\*\\+\\/\\\\\\?\\[\\]\\^\\|].*$)";
+//            if (!password.matches(specialChars ))
+//            {
+//                    System.out.println("Password must have atleast one special character.");
+//            }
+//        }
+        return result; 
     }
     
     public static String getPassCriteria () {
@@ -190,7 +191,7 @@ public class Secure {
     }
     
     // stock must be positive integer up to 10 digits
-    public boolean checkIfValidPurchase(String input) {
+    public static boolean checkIfValidPurchase(String input) {
         boolean result = false;
         String intValues = "^[1-9]\\d{0,10}$";
         
@@ -200,7 +201,7 @@ public class Secure {
     }
     
 //  product names can only contain alphanumeric with max length 30 chars
-    public boolean checkIfValidProductName(String input) {
+    public static boolean checkIfValidProductName(String input) {
         boolean result = false;
         String regex = "^[\\w|\\ ]{1,30}$";
         
@@ -210,7 +211,7 @@ public class Secure {
     }
     
 // prices can only be a maximum of 6 digits and 2 decimal places
-    public boolean checkIfValidPrice(String input) {
+    public static boolean checkIfValidPrice(String input) {
         boolean result = false;
         String regex = "^[1-9]\\d{0,10}\\.?\\d{0,2}$";
         
