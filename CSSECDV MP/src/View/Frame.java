@@ -322,7 +322,7 @@ public class Frame extends javax.swing.JFrame {
                     String formattedDateTime = helper.getCurrentTimestamp();                    
                     main.sqlite.addLogs("authenticationError", lowercase_username, "Incorrect username or password entered during login.", formattedDateTime);
                    if (user.getLocked() == 1) {
-                       formattedDateTime = datetimeformatter.format(LocalDateTime.now());
+                       formattedDateTime = helper.getCurrentTimestamp();
                        main.sqlite.addLogs("loginFail", user.getUsername(), "User has been locked out.", formattedDateTime);
                       
                    }
