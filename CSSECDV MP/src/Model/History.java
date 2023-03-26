@@ -21,20 +21,22 @@ public class History {
     private String name;
     private int stock;
     private Timestamp timestamp;
-
+    private float price;
     public static SimpleDateFormat dateformat = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
     
-    public History(String username, String name, int stock, Date date){
+    public History(String username, String name, int stock, float price, Date date){
         this.username = username;
         this.name = name;
         this.stock = stock;
+        this.price = price;
 //        this.timestamp = new Timestamp(new Date().getTime());
         this.timestamp = new Timestamp(date.getTime());
     }
     
-    public History(int id, String username, String name, int stock, String timestamp){
+    public History(int id, String username, String name, int stock, float price, String timestamp){
         this.id = id;
         this.username = username;
+        this.price = price;
         this.name = name;
         this.stock = stock;
         try {
@@ -50,6 +52,14 @@ public class History {
 
     public void setId(int id) {
         this.id = id;
+    }
+    
+    public void setPrice(float price) {
+        this.price = price;
+    }
+    
+    public float getPrice() {
+        return this.price;
     }
 
     public String getUsername() {

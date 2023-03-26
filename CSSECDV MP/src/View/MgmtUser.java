@@ -455,12 +455,7 @@ public class MgmtUser extends javax.swing.JPanel {
                     sqlite.addLogs(state+"UserSuccess", currUser.getUsername(), desc, timestamp);
                     }
                 
-            } else {
-                String desc = "Canceled enable/disable."; 
-                String timestamp = helper.getCurrentTimestamp();
-                sqlite.addLogs(state+"UserCanceled", currUser.getUsername(), desc, timestamp);
-                System.out.println("Canceled");
-            }
+            } 
             
         }
     }//GEN-LAST:event_enableDisableAccBtnActionPerformed

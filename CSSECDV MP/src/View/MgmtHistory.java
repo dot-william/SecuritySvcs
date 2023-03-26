@@ -28,6 +28,7 @@ public class MgmtHistory extends javax.swing.JPanel {
     
     public MgmtHistory(SQLite sqlite) {
         initComponents();
+        System.out.println("Code is here at constructor");
         this.sqlite = sqlite;
         tableModel = (DefaultTableModel)table.getModel();
         table.getTableHeader().setFont(new java.awt.Font("SansSerif", java.awt.Font.BOLD, 14));
@@ -45,7 +46,7 @@ public class MgmtHistory extends javax.swing.JPanel {
 
     public void init(User currentUser){ 
         this.currentUser = currentUser;
-        
+        System.out.println("Code is now in init.");
         this.role = this.currentUser.getRole(); 
         switch (this.role) {
 //         client can only view own history
@@ -66,25 +67,31 @@ public class MgmtHistory extends javax.swing.JPanel {
                 System.out.println("Error, wrong privileges");
         }
         
-//      CLEAR TABLE
+        // CLEAR TABLE
         for(int nCtr = tableModel.getRowCount(); nCtr > 0; nCtr--){
             tableModel.removeRow(0);
         }
         
         for(int nCtr = 0; nCtr < histories.size(); nCtr++){
-            Product product = sqlite.getProduct(histories.get(nCtr).getName());
+//            Product product = sqlite.getProduct(histories.get(nCtr).getName());
+             System.out.println("username: " + histories.get(nCtr).getUsername());
+            System.out.println("itemname: " + histories.get(nCtr).getName());
+            System.out.println("stock: " + histories.get(nCtr).getStock());
+            System.out.println("Price: " + histories.get(nCtr).getPrice());
+            System.out.println("price*stock: " + histories.get(nCtr).getPrice() * histories.get(nCtr).getStock());
+            System.out.println("timestampe: " + histories.get(nCtr).getTimestamp());
             try {
                 tableModel.addRow(new Object[]{
                     histories.get(nCtr).getUsername(), 
                     histories.get(nCtr).getName(), 
                     histories.get(nCtr).getStock(), 
-                    product.getPrice(), 
-                    product.getPrice() * histories.get(nCtr).getStock(), 
+                    histories.get(nCtr).getPrice(), 
+                    histories.get(nCtr).getPrice() * histories.get(nCtr).getStock(), 
                     histories.get(nCtr).getTimestamp()
                 });
             }
             catch (Exception e) {
-                
+                System.out.println("Product could no longer be found in the inventory. Using price fro");
             }
             
         }

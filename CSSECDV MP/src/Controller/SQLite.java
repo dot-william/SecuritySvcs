@@ -37,6 +37,7 @@ public class SQLite {
             + " username TEXT NOT NULL,\n"
             + " name TEXT NOT NULL,\n"
             + " stock INTEGER DEFAULT 0,\n"
+            + " price FLOAT DEFAULT 0.00, \n"
             + " timestamp TEXT NOT NULL\n"
             + ");";
            
@@ -157,31 +158,37 @@ public class SQLite {
         }
     }
     
-    public void addHistory(String username, String name, int stock, String timestamp) {
-        String sql = "INSERT INTO history(username,name,stock,timestamp) VALUES(?, ?, ?, ?)";
-        
+    public void addHistory(String username, String name, int stock, float price, String timestamp) {
+        String sql = "INSERT INTO history(username,name,stock, price, timestamp) VALUES(?, ?, ?, ?, ?)";
+        System.out.println(username);
+        System.out.println(name);
+        System.out.println(stock);
+        System.out.println(price);
+        System.out.println(timestamp);
         try (Connection conn = DriverManager.getConnection(driverURL);
             PreparedStatement pstmt = conn.prepareStatement(sql)){
             pstmt.setString(1, username);
             pstmt.setString(2, name);
             pstmt.setInt(3, stock);
-            pstmt.setString(4, timestamp);
+            pstmt.setFloat(4, price);
+            pstmt.setString(5, timestamp);
             pstmt.execute();
         } catch (Exception ex) {
-            System.out.print(ex);
+            ex.printStackTrace();
         }
     }
     
     public void addHistory(History history) {
-        String sql = "INSERT INTO history(username,name,stock,timestamp) VALUES(?, ?, ?, ?)";
+        String sql = "INSERT INTO history(username,name,stock, price, timestamp) VALUES(?, ?, ?, ?, ?)";
          
         try (Connection conn = DriverManager.getConnection(driverURL);
             PreparedStatement pstmt = conn.prepareStatement(sql)){
             pstmt.setString(1, history.getUsername());
             pstmt.setString(2, history.getName());
             pstmt.setInt(3, history.getStock());
+            pstmt.setFloat(4, history.getPrice());
 //            System.out.println(history.getTimestamp().toLocalDateTime().toString());
-            pstmt.setString(4, History.dateformat.format(new Date(history.getTimestamp().getTime())));
+            pstmt.setString(5, History.dateformat.format(new Date(history.getTimestamp().getTime())));
             pstmt.execute();
         } catch (Exception ex) {
             System.out.print(ex);
@@ -251,7 +258,7 @@ public class SQLite {
     
     
     public ArrayList<History> getHistory(){
-        String sql = "SELECT id, username, name, stock, timestamp FROM history";
+        String sql = "SELECT id, username, name, stock, price, timestamp FROM history";
         ArrayList<History> histories = new ArrayList<History>();
         
         try (Connection conn = DriverManager.getConnection(driverURL);
@@ -263,6 +270,7 @@ public class SQLite {
                                    rs.getString("username"),
                                    rs.getString("name"),
                                    rs.getInt("stock"),
+                                   rs.getFloat("price"),
                                    rs.getString("timestamp")));
             }
         } catch (Exception ex) {
@@ -272,7 +280,7 @@ public class SQLite {
     }
         
     public ArrayList<History> getSelfHistory(User currentUser){
-        String sql = "SELECT id, username, name, stock, timestamp FROM history WHERE username = ?";
+        String sql = "SELECT id, username, name, stock, price, timestamp FROM history WHERE username = ?";
         ArrayList<History> histories = new ArrayList<>();
         String username = currentUser.getUsername();
         System.out.println(username);
@@ -286,6 +294,7 @@ public class SQLite {
                                    rs.getString("username"),
                                    rs.getString("name"),
                                    rs.getInt("stock"),
+                                   rs.getFloat("price"),
                                    rs.getString("timestamp")));
             }
         } 
@@ -490,7 +499,7 @@ public class SQLite {
         try (Connection conn = DriverManager.getConnection(driverURL);
             PreparedStatement pstmt = conn.prepareStatement(sql))
         {
-            pstmt.setString(1, name);
+            pstmt.setString(1, name.toLowerCase());
             ResultSet rs = pstmt.executeQuery();
             product = new Product(rs.getString("name"),
                                    rs.getInt("stock"),

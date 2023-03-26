@@ -4,16 +4,13 @@
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
             <file>file:/C:/Users/willi/Desktop/_DLSU/4th%20Year%20Term%202/CSSECDV/Case%20Study%202/SecuritySvcs/CSSECDV%20MP/src/Controller/SQLite.java</file>
-            <file>file:/C:/Users/willi/Desktop/_DLSU/4th%20Year%20Term%202/CSSECDV/Case%20Study%202/SecuritySvcs/CSSECDV%20MP/src/View/ManagerHome.java</file>
+            <file>file:/C:/Users/willi/Desktop/_DLSU/4th%20Year%20Term%202/CSSECDV/Case%20Study%202/SecuritySvcs/CSSECDV%20MP/src/View/MgmtLogs.java</file>
             <file>file:/C:/Users/willi/Desktop/_DLSU/4th%20Year%20Term%202/CSSECDV/Case%20Study%202/SecuritySvcs/CSSECDV%20MP/src/Controller/Secure.java</file>
             <file>file:/C:/Users/willi/Desktop/_DLSU/4th%20Year%20Term%202/CSSECDV/Case%20Study%202/SecuritySvcs/CSSECDV%20MP/src/View/Frame.java</file>
-            <file>file:/C:/Users/willi/Desktop/_DLSU/4th%20Year%20Term%202/CSSECDV/Case%20Study%202/SecuritySvcs/CSSECDV%20MP/src/Controller/Helper.java</file>
-            <file>file:/C:/Users/willi/Desktop/_DLSU/4th%20Year%20Term%202/CSSECDV/Case%20Study%202/SecuritySvcs/CSSECDV%20MP/src/View/Login.java</file>
-            <file>file:/C:/Users/willi/Desktop/_DLSU/4th%20Year%20Term%202/CSSECDV/Case%20Study%202/SecuritySvcs/CSSECDV%20MP/src/View/Register.java</file>
-            <file>file:/C:/Users/willi/Desktop/_DLSU/4th%20Year%20Term%202/CSSECDV/Case%20Study%202/SecuritySvcs/CSSECDV%20MP/src/Controller/Main.java</file>
-            <file>file:/C:/Users/willi/Desktop/_DLSU/4th%20Year%20Term%202/CSSECDV/Case%20Study%202/SecuritySvcs/CSSECDV%20MP/src/View/StaffHome.java</file>
             <file>file:/C:/Users/willi/Desktop/_DLSU/4th%20Year%20Term%202/CSSECDV/Case%20Study%202/SecuritySvcs/CSSECDV%20MP/src/View/MgmtUser.java</file>
-            <file>file:/C:/Users/willi/Desktop/_DLSU/4th%20Year%20Term%202/CSSECDV/Case%20Study%202/SecuritySvcs/CSSECDV%20MP/src/Model/Logs.java</file>
+            <file>file:/C:/Users/willi/Desktop/_DLSU/4th%20Year%20Term%202/CSSECDV/Case%20Study%202/SecuritySvcs/CSSECDV%20MP/src/View/AdminHome.java</file>
+            <file>file:/C:/Users/willi/Desktop/_DLSU/4th%20Year%20Term%202/CSSECDV/Case%20Study%202/SecuritySvcs/CSSECDV%20MP/src/View/MgmtProduct.java</file>
+            <file>file:/C:/Users/willi/Desktop/_DLSU/4th%20Year%20Term%202/CSSECDV/Case%20Study%202/SecuritySvcs/CSSECDV%20MP/src/View/MgmtHistory.java</file>
         </group>
     </open-files>
 </project-private>
