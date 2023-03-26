@@ -267,7 +267,7 @@ public class MgmtUser extends javax.swing.JPanel {
         User currUser = getCurrentUser();
         
         if(table.getSelectedRow() >= 0){
-            int result = JOptionPane.showConfirmDialog(null, "Are you sure you want to delete " + tableModel.getValueAt(table.getSelectedRow(), 0) + "?", "DELETE USER", JOptionPane.YES_NO_OPTION);
+            int result = JOptionPane.showConfirmDialog(null, "Are you sure you want to delete " + tableModel.getValueAt(table.getSelectedRow(), 0) + "?", "Delete User", JOptionPane.YES_NO_OPTION);
             String username = tableModel.getValueAt(table.getSelectedRow(), 0).toString();
             if (result == JOptionPane.YES_OPTION) {
                 if (username.equalsIgnoreCase(currUser.getUsername())) {

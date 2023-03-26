@@ -57,7 +57,6 @@ public class Dialog extends javax.swing.JFrame {
     public void showSuccessDialog(String title, String message) {
         JOptionPane.showMessageDialog(this, message, title, JOptionPane.PLAIN_MESSAGE);
     }
-    
     /**
      * @param args the command line arguments
      */
