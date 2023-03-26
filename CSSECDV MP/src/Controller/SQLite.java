@@ -485,7 +485,7 @@ public class SQLite {
     
     public Product getProduct(String name){
 //        String sql = "SELECT name, stock, price FROM product WHERE name='" + name + "';";
-        String sql = "SELECT name, stock, price FROM product WHERE name= ? ;";
+        String sql = "SELECT name, stock, price FROM product WHERE LOWER(name) = ? ;";
         Product product = null;
         try (Connection conn = DriverManager.getConnection(driverURL);
             PreparedStatement pstmt = conn.prepareStatement(sql))
