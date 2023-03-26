@@ -177,7 +177,7 @@ public class Secure {
 //                System.out.println("You have reached amount of login attempts. Try again later.");
                 System.out.println("Account has been locked.");
                 user.setLocked(1);
-                user.setRole(1);
+                user.setDisabled(1);
             } 
             System.out.println("attempts: " + failedAttempts);
             user.setFailedAttempts(failedAttempts);

@@ -270,12 +270,20 @@ public class MgmtUser extends javax.swing.JPanel {
             int result = JOptionPane.showConfirmDialog(null, "Are you sure you want to delete " + tableModel.getValueAt(table.getSelectedRow(), 0) + "?", "DELETE USER", JOptionPane.YES_NO_OPTION);
             String username = tableModel.getValueAt(table.getSelectedRow(), 0).toString();
             if (result == JOptionPane.YES_OPTION) {
-                sqlite.removeUser(username);
-                String desc = "User " + "\"" + username + "\"" + " deleted."; 
-                String timestamp = helper.getCurrentTimestamp();
-                sqlite.addLogs("deletedUserSuccess", currUser.getUsername(), desc, timestamp);
-                System.out.println(tableModel.getValueAt(table.getSelectedRow(), 0));
-                reloadContents();
+                if (username.equalsIgnoreCase(currUser.getUsername())) {
+                    dialogBox.showErrorDialog("Error Role Change", "You cannot delete your own account.");
+                    String desc = currUser.getUsername() + " attempted to delete user " + "\"" + username + "\"" + " but failed.";
+                    String timestamp = helper.getCurrentTimestamp();
+                    sqlite.addLogs("deletedUserFailed", currUser.getUsername(), desc, timestamp);
+                } else {
+                     sqlite.removeUser(username);
+                    String desc = "User " + "\"" + username + "\"" + " deleted."; 
+                    String timestamp = helper.getCurrentTimestamp();
+                    sqlite.addLogs("deletedUserSuccess", currUser.getUsername(), desc, timestamp);
+                    System.out.println(tableModel.getValueAt(table.getSelectedRow(), 0));
+                    reloadContents();
+                }
+               
             }
         }
     }//GEN-LAST:event_deleteBtnActionPerformed
