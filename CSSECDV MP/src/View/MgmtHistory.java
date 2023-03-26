@@ -24,6 +24,8 @@ public class MgmtHistory extends javax.swing.JPanel {
     public DefaultTableModel tableModel;
     private User currentUser; 
     private ArrayList<History> histories;
+    public int role; 
+    
     public MgmtHistory(SQLite sqlite) {
         initComponents();
         this.sqlite = sqlite;
@@ -44,17 +46,19 @@ public class MgmtHistory extends javax.swing.JPanel {
     public void init(User currentUser){ 
         this.currentUser = currentUser;
         
-        int role = this.currentUser.getRole(); 
-        switch (role) {
+        this.role = this.currentUser.getRole(); 
+        switch (this.role) {
 //         client can only view own history
             case (2):
-                searchBtn.setVisible(false);
+//                searchBtn.setVisible(false);
+                searchBtn.setText("SEARCH PRODUCT");
                 //      LOAD CONTENTS
                 histories = sqlite.getSelfHistory(currentUser);
                 break; 
 //          staff and manager can view all history
             case (4):
-                searchBtn.setVisible(true); 
+//                searchBtn.setVisible(true);
+                searchBtn.setText("SEARCH USERNAME OR PRODUCT");
                 //      LOAD CONTENTS
                 histories = sqlite.getHistory();
                 break;
@@ -201,12 +205,20 @@ public class MgmtHistory extends javax.swing.JPanel {
             }
 
 //          LOAD CONTENTS
-            ArrayList<History> histories = sqlite.getHistory();
+            switch (this.role) {
+                case (2):
+                    histories = sqlite.getSelfHistory(currentUser);
+                    break;
+                case (4):
+                    histories = sqlite.getHistory();
+                    break;
+            }
+            
             for(int nCtr = 0; nCtr < histories.size(); nCtr++){
-                if(searchFld.getText().contains(histories.get(nCtr).getUsername()) || 
-                   histories.get(nCtr).getUsername().contains(searchFld.getText()) || 
-                   searchFld.getText().contains(histories.get(nCtr).getName()) || 
-                   histories.get(nCtr).getName().contains(searchFld.getText())){
+                if(searchFld.getText().toLowerCase().contains(histories.get(nCtr).getUsername().toLowerCase()) || 
+                   histories.get(nCtr).getUsername().toLowerCase().contains(searchFld.getText().toLowerCase()) || 
+                   searchFld.getText().toLowerCase().contains(histories.get(nCtr).getName().toLowerCase()) || 
+                   histories.get(nCtr).getName().toLowerCase().contains(searchFld.getText().toLowerCase())){
                 
                     Product product = sqlite.getProduct(histories.get(nCtr).getName());
                     tableModel.addRow(new Object[]{
