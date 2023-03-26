@@ -134,28 +134,28 @@ public class Login extends javax.swing.JPanel {
     }//GEN-LAST:event_registerBtnActionPerformed
 
     private void forgetPassBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_forgetPassBtnActionPerformed
-            
-        JTextField usernameFld = new JTextField();
-        designer(usernameFld, "USERNAME");
-
-        Object[] message = {
-            "Enter your username:", usernameFld
-        };
-        
-        int result = JOptionPane.showConfirmDialog(null, message, "RESET PASSWORD", JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE, null);
-        if (result == JOptionPane.OK_OPTION) { 
-            String temp_username = usernameFld.getText();
-            String lowercase_username = temp_username.toLowerCase();
-            String username = lowercase_username.trim();
-            User user =  this.sqlite.getUser(username); 
-            
-            if (user != null) {
-                dialogBox.showSuccessDialog("Reset password", "Reset password request sent, you will be contacted by your administrator soon.");
-            }
-            else {           
-                dialogBox.showErrorDialog("Reset password", "User account not found.");
-            }
-        }
+          dialogBox.showSuccessDialog("Forgot Password", "Please communicate with the Admin in-person to reset your account's password.");
+//        JTextField usernameFld = new JTextField();
+//        designer(usernameFld, "USERNAME");
+//
+//        Object[] message = {
+//            "Enter your username:", usernameFld
+//        };
+//        
+//        int result = JOptionPane.showConfirmDialog(null, message, "RESET PASSWORD", JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE, null);
+//        if (result == JOptionPane.OK_OPTION) { 
+//            String temp_username = usernameFld.getText();
+//            String lowercase_username = temp_username.toLowerCase();
+//            String username = lowercase_username.trim();
+//            User user =  this.sqlite.getUser(username); 
+//            
+//            if (user != null) {
+//                dialogBox.showSuccessDialog("Reset password", "Reset password request sent, you will be contacted by your administrator soon.");
+//            }
+//            else {           
+//                dialogBox.showErrorDialog("Reset password", "User account not found.");
+//            }
+//        }
     }//GEN-LAST:event_forgetPassBtnActionPerformed
     
     public void clear() {
