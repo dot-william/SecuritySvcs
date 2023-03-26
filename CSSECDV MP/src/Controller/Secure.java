@@ -191,7 +191,7 @@ public class Secure {
     }
     
     // stock must be positive integer up to 10 digits
-    public boolean checkIfValidPurchase(String input) {
+    public static boolean checkIfValidPurchase(String input) {
         boolean result = false;
         String intValues = "^[1-9]\\d{0,10}$";
         
@@ -201,7 +201,7 @@ public class Secure {
     }
     
 //  product names can only contain alphanumeric with max length 30 chars
-    public boolean checkIfValidProductName(String input) {
+    public static boolean checkIfValidProductName(String input) {
         boolean result = false;
         String regex = "^[\\w|\\ ]{1,30}$";
         
@@ -211,7 +211,7 @@ public class Secure {
     }
     
 // prices can only be a maximum of 6 digits and 2 decimal places
-    public boolean checkIfValidPrice(String input) {
+    public static boolean checkIfValidPrice(String input) {
         boolean result = false;
         String regex = "^[1-9]\\d{0,10}\\.?\\d{0,2}$";
         
