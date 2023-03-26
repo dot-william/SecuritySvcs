@@ -215,8 +215,16 @@ public class MgmtProduct extends javax.swing.JPanel {
         );
     }// </editor-fold>//GEN-END:initComponents
 
+    
+    public User getCurrentUser() {
+        return this.currentUser;
+    }
+    
     private void purchaseBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_purchaseBtnActionPerformed
-        if(table.getSelectedRow() >= 0){
+        User currUser = getCurrentUser();
+        
+        // Checks if there is row selected and actual role is 2 (client)
+        if(table.getSelectedRow() >= 0 && currUser.getRole() == 2){
             JTextField stockFld = new JTextField("");
             designer(stockFld, "PRODUCT STOCK");
             String itemName = tableModel.getValueAt(table.getSelectedRow(), 0).toString();
