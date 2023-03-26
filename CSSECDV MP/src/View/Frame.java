@@ -259,21 +259,24 @@ public class Frame extends javax.swing.JFrame {
         String username = loginPnl.getLoginUsername().trim();
         String lowercase_username = username.toLowerCase();
         char[] password = loginPnl.getLoginPassword();
+        
         try {
             User user = main.sqlite.getUser(lowercase_username); 
             secure.checkUserStatus(user);
+            
             if (user.validate(lowercase_username, password) && user.getLocked() != 1) {
+                
+                // Set last user log in
                 String currTimestamp = helper.getCurrentTimestamp();
                 secure.unlockUser(user);
                 user.setLastLogin(currTimestamp);
                 this.currentUser = user;
-                main.sqlite.updateUser(user); 
+                main.sqlite.updateUser(user);
+                
+                //Check if user is disabled and role
                 int disabled = user.getDisabled();
                 int role = user.getRole();
-                // log the successful login to db
-//                String formattedDateTime = datetimeformatter.format(LocalDateTime.now());
-                String formattedDateTime = helper.getCurrentTimestamp();
-                main.sqlite.addLogs("loginSuccess", lowercase_username, "User logged in successfully.", formattedDateTime);
+                
                 if (disabled != 1) {
                     switch (role) {
                         case 2:
@@ -304,8 +307,10 @@ public class Frame extends javax.swing.JFrame {
                             break;
                     }
                     frameView.show(Container, "homePnl");
+                    String formattedDateTime = helper.getCurrentTimestamp();
+                    main.sqlite.addLogs("loginSuccess", lowercase_username, "User logged in successfully.", formattedDateTime);
                 } else {
-                    dialogBox.showErrorDialog("ACCOUNT DISABLED", "Account is currently disabled. Please communicate with the Admin in-person in order to re-enable the account.");
+                    dialogBox.showErrorDialog("Account Disabled", "Account is currently disabled. Please communicate with the Admin in-person in order to re-enable the account.");
                 }
                 
             }
@@ -333,8 +338,6 @@ public class Frame extends javax.swing.JFrame {
         
     }
     
-    
-    
     public void loginNav(){
         loginPnl.clear();
         frameView.show(Container, "loginPnl");
@@ -344,8 +347,6 @@ public class Frame extends javax.swing.JFrame {
         registerPnl.clear();
         frameView.show(Container, "registerPnl");
     }
-    
-    
     
     public boolean registerAction(String username, String password, String confpass){
         
@@ -365,7 +366,7 @@ public class Frame extends javax.swing.JFrame {
             boolean isValidUsername = Secure.validUsername(lowercase_username);
             
             if (!isValidUsername) {
-                DialogBox.showErrorDialog("Registration error", "Username should contain only alphanumeric characters, periods, and underscores.");
+                DialogBox.showErrorDialog("Registration Error", "Username should be 5-30 characters long and contain only alphanumeric characters, periods, or underscores.");
             }
             // If there are no empty fields and username and password are valid
             if (!isEmptyField && isValidUsername && isValidPassword) {
@@ -375,12 +376,11 @@ public class Frame extends javax.swing.JFrame {
                     dialogBox.showErrorDialog("Registration Error", "Username already taken, please enter a different username.");
                 } else {
                     if (password.equals(confpass)) {
-                        
                         user = new User(lowercase_username, password);
                         main.sqlite.addUser(user.getUsername(), user.getPasswordHash(), user.getSalt(), 2, 0);
                         dialogBox.showSuccessDialog("Registration Success", "User account registered successfully.");
+                        
                         // log the successful registration to db
-                        //  String formattedDateTime = datetimeformatter.format(LocalDateTime.now());
                         String formattedDateTime = helper.getCurrentTimestamp();                        
                         main.sqlite.addLogs("registrationSuccess", lowercase_username, "User registered successfully.", formattedDateTime);
                         result = true;
