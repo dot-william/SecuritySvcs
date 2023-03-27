@@ -15,14 +15,68 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import javax.swing.JOptionPane;
 import javax.swing.JPasswordField;
-import javax.swing.JTextField;
+import javax.swing.JTextField; 
+import java.awt.event.*;
+import java.util.Timer; 
+import java.util.TimerTask; 
 
-public class Frame extends javax.swing.JFrame {
-
+public class Frame extends javax.swing.JFrame implements MouseMotionListener {
+    public Main main;
+    public Secure secure = new Secure();
+    public Helper helper = new Helper();
+    public Login loginPnl = new Login();
+    public Register registerPnl = new Register();
+    public Dialog dialogBox = new Dialog();
+    
+    private AdminHome adminHomePnl = new AdminHome();
+    private ManagerHome managerHomePnl = new ManagerHome();
+    private StaffHome staffHomePnl = new StaffHome();
+    private ClientHome clientHomePnl = new ClientHome();
+    
+    private CardLayout contentView = new CardLayout();
+    private CardLayout frameView = new CardLayout();
+    private User currentUser = null;
+    
+    DateTimeFormatter datetimeformatter = DateTimeFormatter.ofPattern(Logs.datetimeformatstring);
+    private Timer inactivityTimeout = new Timer();
+    private final int TIMEOUT = 15*60*1000;
+            
     public Frame() {
         initComponents();
+        getContentPane().add(adminHomePnl);
+        getContentPane().add(managerHomePnl);
+        getContentPane().add(staffHomePnl);
+        getContentPane().add(clientHomePnl);
+        
+        // Add a MouseMotionAdapter to the content pane of the JFrame
+        getContentPane().addMouseMotionListener(this);
+        
+//        addMouseMotionListener(this); 
+//        adminHomePnl.addMouseMotionListener(this); 
+//        managerHomePnl.addMouseMotionListener(this); 
+//        staffHomePnl.addMouseMotionListener(this); 
+//        clientHomePnl.addMouseMotionListener(this); 
     }
-
+    
+    public void resetTimer() {
+        inactivityTimeout.cancel(); 
+        inactivityTimeout = new Timer(); 
+        inactivityTimeout.schedule(new TimeoutTask(), TIMEOUT);
+    }
+    
+    private class TimeoutTask extends TimerTask {
+        @Override
+        public void run() {
+            boolean timedOut = false;
+            if (currentUser != null) {
+               timedOut = true;
+            }
+            logout(); 
+            if (timedOut)
+                dialogBox.showErrorDialog("Timeout due to inactivity", "You have been logged out due to 15 minutes of inactivity.");
+        }
+    }
+    
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
@@ -155,15 +209,21 @@ public class Frame extends javax.swing.JFrame {
     }
     
     private void logoutBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_logoutBtnActionPerformed
-        loginPnl.clear();
-        // log the logout to db
-        String formattedDateTime= helper.getCurrentTimestamp();
-        //String formattedDateTime = datetimeformatter.format(LocalDateTime.now());
-        main.sqlite.addLogs("logout", this.currentUser.getUsername(), "User logged out", formattedDateTime);
-        this.currentUser = null;
-        frameView.show(Container, "loginPnl");
+        logout();
     }//GEN-LAST:event_logoutBtnActionPerformed
-
+    
+    private void logout() {
+        if (this.currentUser != null) {
+            loginPnl.clear();
+            // log the logout to db
+            String formattedDateTime= helper.getCurrentTimestamp();
+            //String formattedDateTime = datetimeformatter.format(LocalDateTime.now());
+            main.sqlite.addLogs("logout", this.currentUser.getUsername(), "User logged out", formattedDateTime);
+            this.currentUser = null;
+            frameView.show(Container, "loginPnl");
+        }
+    }
+    
     private void changePassBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_changePassBtnActionPerformed
         // TODO add your handling code here: 
         JPasswordField oldPassword = new JPasswordField();
@@ -201,24 +261,6 @@ public class Frame extends javax.swing.JFrame {
             }
         }
     }//GEN-LAST:event_changePassBtnActionPerformed
-
-    public Main main;
-    public Secure secure = new Secure();
-    public Helper helper = new Helper();
-    public Login loginPnl = new Login();
-    public Register registerPnl = new Register();
-    public Dialog dialogBox = new Dialog();
-    
-    private AdminHome adminHomePnl = new AdminHome();
-    private ManagerHome managerHomePnl = new ManagerHome();
-    private StaffHome staffHomePnl = new StaffHome();
-    private ClientHome clientHomePnl = new ClientHome();
-    
-    private CardLayout contentView = new CardLayout();
-    private CardLayout frameView = new CardLayout();
-    private User currentUser = null;
-    
-    DateTimeFormatter datetimeformatter = DateTimeFormatter.ofPattern(Logs.datetimeformatstring);
     
     public void init(Main controller){
         this.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
@@ -272,6 +314,8 @@ public class Frame extends javax.swing.JFrame {
                 //Check if user is disabled and role
                 int disabled = user.getDisabled();
                 int role = user.getRole();
+                
+                resetTimer();
                 
                 if (disabled != 1) {
                     switch (role) {
@@ -335,6 +379,7 @@ public class Frame extends javax.swing.JFrame {
     
     public void loginNav(){
         loginPnl.clear();
+        inactivityTimeout.cancel();
         frameView.show(Container, "loginPnl");
     }
     
@@ -403,4 +448,14 @@ public class Frame extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel1;
     private javax.swing.JButton logoutBtn;
     // End of variables declaration//GEN-END:variables
+
+    @Override
+    public void mouseDragged(MouseEvent me) {
+        resetTimer();
+    }
+
+    @Override
+    public void mouseMoved(MouseEvent me) {
+        resetTimer();
+    }
 }

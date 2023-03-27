@@ -40,6 +40,7 @@ public class ClientHome extends javax.swing.JPanel {
         Content.add(mgmtHistory, "mgmtHistory");
         Content.add(mgmtProduct, "mgmtProduct");
         
+        
 //        UNCOMMENT TO DISABLE BUTTONS
 //        historyBtn.setVisible(false);
 //        usersBtn.setVisible(false);
@@ -139,7 +140,8 @@ public class ClientHome extends javax.swing.JPanel {
         productsBtn.setForeground(Color.red);
         historyBtn.setForeground(Color.black);
         //        logsBtn.setForeground(Color.black);
-        contentView.show(Content, "mgmtProduct");
+        contentView.show(Content, "mgmtProduct"); 
+        mgmtProduct.addMouseMotionListener(this.getMouseMotionListeners()[0]);
     }//GEN-LAST:event_productsBtnActionPerformed
 
     private void historyBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_historyBtnActionPerformed
@@ -149,6 +151,7 @@ public class ClientHome extends javax.swing.JPanel {
         historyBtn.setForeground(Color.red);
         //        logsBtn.setForeground(Color.black);
         contentView.show(Content, "mgmtHistory");
+        mgmtHistory.addMouseMotionListener(this.getMouseMotionListeners()[0]);
     }//GEN-LAST:event_historyBtnActionPerformed
     
     public void setButtonsBlack () {
