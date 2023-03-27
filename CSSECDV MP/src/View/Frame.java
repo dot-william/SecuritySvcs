@@ -49,7 +49,7 @@ public class Frame extends javax.swing.JFrame implements MouseMotionListener {
         getContentPane().add(clientHomePnl);
         
         // Add a MouseMotionAdapter to the content pane of the JFrame
-        getContentPane().addMouseMotionListener(this);
+        
         
 //        addMouseMotionListener(this); 
 //        adminHomePnl.addMouseMotionListener(this); 
@@ -315,6 +315,7 @@ public class Frame extends javax.swing.JFrame implements MouseMotionListener {
                 int disabled = user.getDisabled();
                 int role = user.getRole();
                 
+                getContentPane().addMouseMotionListener(this);
                 resetTimer();
                 
                 if (disabled != 1) {
