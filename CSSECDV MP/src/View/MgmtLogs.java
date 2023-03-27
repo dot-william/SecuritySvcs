@@ -176,11 +176,11 @@ public class MgmtLogs extends javax.swing.JPanel {
     private void debugBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_debugBtnActionPerformed
         if(sqlite.DEBUG_MODE == 1) {
             sqlite.DEBUG_MODE = 0;
-            dialog.showSuccessDialog("Debug mode", "Debug mode disabled.");
+            dialog.showSuccessDialog("Debug mode", "(Database) Debug mode disabled.");
         }
         else {
             sqlite.DEBUG_MODE = 1;
-            dialog.showSuccessDialog("Debug mode", "Debug mode enabled.");
+            dialog.showSuccessDialog("Debug mode", "(Database) Debug mode enabled.");
         }
     }//GEN-LAST:event_debugBtnActionPerformed
     

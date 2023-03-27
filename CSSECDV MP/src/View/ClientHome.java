@@ -50,7 +50,7 @@ public class ClientHome extends javax.swing.JPanel {
     public void setCurrentUser(User currentUser) {
         if (currentUser != null) {
             this.currentUser = currentUser; 
-            System.out.println(this.currentUser.getUsername());
+//            System.out.println(this.currentUser.getUsername());
         }
             
         else

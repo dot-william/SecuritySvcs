@@ -258,11 +258,11 @@ public class MgmtProduct extends javax.swing.JPanel {
                         
                         if(successful) {
                             String timestamp = helper.getCurrentTimestamp();
-                            System.out.println("Price: " + item.getPrice());
+                            //System.out.println("Price: " + item.getPrice());
                             this.sqlite.addHistory(this.currentUser.getUsername(), item.getName(), numWant, item.getPrice(), timestamp);
-                            System.out.println("Purchase successful");
+                            //System.out.println("Purchase successful");
                             DialogBox.showSuccessDialog("Successful Purchase!", "The product has been purchased.");
-                            sqlite.addLogs("purchaseSuccess", currUser.getUsername(), "Successfully purchased " + item.getName(), timestamp);
+                            sqlite.addLogs("purchaseSuccess", currUser.getUsername(), "Successfully purchased " + item.getName() +".", timestamp);
                         }
                         reloadContents();
                     } else {
