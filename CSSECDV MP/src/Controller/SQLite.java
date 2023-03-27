@@ -503,7 +503,7 @@ public class SQLite {
                                    rs.getInt("stock"),
                                    rs.getFloat("price"));
         } catch (Exception ex) {
-            System.out.print(ex);
+            System.out.print("Product does not exists.");
         }
         return product;
     }
