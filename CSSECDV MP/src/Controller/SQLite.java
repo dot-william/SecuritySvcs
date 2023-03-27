@@ -517,7 +517,8 @@ public class SQLite {
             PreparedStatement pstmt = conn.prepareStatement(sql)) {
             pstmt.setString(1, username);
             pstmt.execute();
-            System.out.println("User " + username + " has been deleted.");
+            if (DEBUG_MODE == 1)
+                System.out.println("User " + username + " has been deleted.");
         } catch (Exception ex) {
             if (DEBUG_MODE == 1)
                 System.out.print(ex);

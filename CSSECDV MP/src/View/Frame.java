@@ -249,15 +249,24 @@ public class Frame extends javax.swing.JFrame implements MouseMotionListener {
                     boolean status = main.sqlite.updateUser(username, currentUser);
                     if (status) {
                         dialogBox.showSuccessDialog("Change password success", "User password changed successfully.");
+                        String desc = "User password successfully changed."; 
+                        String timestamp = helper.getCurrentTimestamp();
+                        main.sqlite.addLogs("passwordUserSuccess", currentUser.getUsername(), desc, timestamp);
                     }
                 }
                 else {
                     String passCriteria = Secure.getPassCriteria();
                     dialogBox.showErrorDialog("Error changing password", "Both passwords do not match or password does not follow the required criteria. " + passCriteria);
+                    String desc = "User password change unsuccessful."; 
+                    String timestamp = helper.getCurrentTimestamp();
+                    main.sqlite.addLogs("passwordUserSuccess", currentUser.getUsername(), desc, timestamp);
                 }
             }
             else {
                 dialogBox.showErrorDialog("Error changing password", "Current password is incorrect.");
+                String desc = "User password change unsuccessful."; 
+                String timestamp = helper.getCurrentTimestamp();
+                main.sqlite.addLogs("passwordUserSuccess", currentUser.getUsername(), desc, timestamp);
             }
         }
     }//GEN-LAST:event_changePassBtnActionPerformed
