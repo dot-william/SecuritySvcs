@@ -28,7 +28,7 @@ public class MgmtHistory extends javax.swing.JPanel {
     
     public MgmtHistory(SQLite sqlite) {
         initComponents();
-        System.out.println("Code is here at constructor");
+        
         this.sqlite = sqlite;
         tableModel = (DefaultTableModel)table.getModel();
         table.getTableHeader().setFont(new java.awt.Font("SansSerif", java.awt.Font.BOLD, 14));
@@ -64,7 +64,7 @@ public class MgmtHistory extends javax.swing.JPanel {
                 histories = sqlite.getHistory();
                 break;
             default:
-                System.out.println("Error, wrong privileges");
+                //System.out.println("Error, wrong privileges");
         }
         
         // CLEAR TABLE
@@ -84,7 +84,8 @@ public class MgmtHistory extends javax.swing.JPanel {
                 });
             }
             catch (Exception e) {
-                System.out.println("Product could no longer be found in the inventory. Using price fro");
+                System.out.println("");
+//                System.out.println("Product could no longer be found in the inventory. Using price fro");
             }
             
         }

@@ -334,14 +334,14 @@ public class Frame extends javax.swing.JFrame implements MouseMotionListener {
                         case 4:
                             managerHomePnl.showPnl("home");
                             managerHomePnl.setCurrentUser(this.currentUser);
-                            System.out.println("Current user: " + this.currentUser.getUsername() + ", role: " + this.currentUser.getRole());
+//                            System.out.println("Current user: " + this.currentUser.getUsername() + ", role: " + this.currentUser.getRole());
                             managerHomePnl.setButtonsBlack();
                             contentView.show(Content, "managerHomePnl");
                             break;
                         case 5:
                             adminHomePnl.showPnl("home");
                             adminHomePnl.setCurrentUser(this.currentUser);
-                            System.out.println("Current user: " + this.currentUser.getUsername() + ", role: " + this.currentUser.getRole());
+//                            System.out.println("Current user: " + this.currentUser.getUsername() + ", role: " + this.currentUser.getRole());
                             adminHomePnl.setButtonsBlack();
                             contentView.show(Content, "adminHomePnl");
                             break;

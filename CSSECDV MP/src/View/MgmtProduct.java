@@ -258,17 +258,17 @@ public class MgmtProduct extends javax.swing.JPanel {
                         
                         if(successful) {
                             String timestamp = helper.getCurrentTimestamp();
-                            System.out.println("Price: " + item.getPrice());
+                            //System.out.println("Price: " + item.getPrice());
                             this.sqlite.addHistory(this.currentUser.getUsername(), item.getName(), numWant, item.getPrice(), timestamp);
-                            System.out.println("Purchase successful");
+                            //System.out.println("Purchase successful");
                             DialogBox.showSuccessDialog("Successful Purchase!", "The product has been purchased.");
-                            sqlite.addLogs("purchaseSuccess", currUser.getUsername(), "Successfully purchased " + item.getName(), timestamp);
+                            sqlite.addLogs("purchaseSuccess", currUser.getUsername(), "Successfully purchased " + item.getName() +".", timestamp);
                         }
                         reloadContents();
                     } else {
                         DialogBox.showErrorDialog("Invalid purchase", "The amount you want to purchase exceeds the available stock. Please try again.");
                         String timestamp = helper.getCurrentTimestamp();
-                        sqlite.addLogs("purchaseFailed", currUser.getUsername(), "Failed to purchase " + item.getName(), timestamp);
+                        sqlite.addLogs("purchaseFailed", currUser.getUsername(), "Failed to purchase " + item.getName() + ".", timestamp);
                     }
                     
                 } else {
@@ -298,21 +298,21 @@ public class MgmtProduct extends javax.swing.JPanel {
         
         // Additional check if role is 3 or 4 (staff or manager)
         if (result == JOptionPane.OK_OPTION && (currUser.getRole() == 3 || currUser.getRole() == 4)) {
-            String strName = nameFld.getText().toLowerCase();
-            String strStock = stockFld.getText();
-            String strPrice = priceFld.getText();
+            String strName = nameFld.getText().toLowerCase().trim();
+            String strStock = stockFld.getText().trim();
+            String strPrice = priceFld.getText().trim();
             if (!secure.checkIfValidProductName(strName)) {
-                DialogBox.showErrorDialog("Invalid name", "Name must be alphanumeric only between 1 and 30 characters. ");
+                DialogBox.showErrorDialog("Invalid name", "Name must be alphanumeric and between 1 and 30 characters.");
                 String timestamp = helper.getCurrentTimestamp();
                 sqlite.addLogs("addProductFailed", currUser.getUsername(), "User entered invalid product name.", timestamp);
             }
             else if (!secure.checkIfValidPurchase(strStock)) {
-                DialogBox.showErrorDialog("Invalid stock", "Stock must be a positive integer with a maximum of 10 digits. ");
+                DialogBox.showErrorDialog("Invalid stock", "Stock must be a positive integer with a maximum of 10 digits.");
                 String timestamp = helper.getCurrentTimestamp();
                 sqlite.addLogs("addProductFailed", currUser.getUsername(), "User entered invalid stock for product.", timestamp);
             } 
             else if (!secure.checkIfValidPrice(strPrice)) {
-                DialogBox.showErrorDialog("Invalid price", "Price must be a positive decimal number with a maximum of 10 digits.");
+                DialogBox.showErrorDialog("Invalid price", "Price must be a positive decimal number with a maximum of 10 digits and 2 decimal places.");
                 String timestamp = helper.getCurrentTimestamp();
                 sqlite.addLogs("addProductFailed", currUser.getUsername(), "User entered invalid price for product.", timestamp);
             }
@@ -323,7 +323,7 @@ public class MgmtProduct extends javax.swing.JPanel {
                 this.reloadContents();
                 DialogBox.showSuccessDialog("Product successfully added", "The product has been added successfully."); 
                 String timestamp = helper.getCurrentTimestamp();
-                sqlite.addLogs("addProductSuccess", currUser.getUsername(), "User added product successfully.", timestamp);
+                sqlite.addLogs("addProductSuccess", currUser.getUsername(), "User added product (" + strName + ") successfully.", timestamp);
             }
         }
     }//GEN-LAST:event_addBtnActionPerformed
@@ -347,15 +347,15 @@ public class MgmtProduct extends javax.swing.JPanel {
             int result = JOptionPane.showConfirmDialog(null, message, "EDIT PRODUCT", JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE, null);
 
             if (result == JOptionPane.OK_OPTION) { 
-                String strName = nameFld.getText().toLowerCase();
-                String strStock = stockFld.getText();
-                String strPrice = priceFld.getText();
+                String strName = nameFld.getText().toLowerCase().trim();
+                String strStock = stockFld.getText().trim();
+                String strPrice = priceFld.getText().trim();
                 if (!secure.checkIfValidProductName(strName)) {
-                    DialogBox.showErrorDialog("Invalid name", "Name must be alphanumeric only between 1 and 30 characters. ");
+                    DialogBox.showErrorDialog("Invalid name", "Name must be alphanumeric and between 1 and 30 characters. ");
                     String timestamp = helper.getCurrentTimestamp();
-                    sqlite.addLogs("editProductFailed", currUser.getUsername(), "User edit product failed.", timestamp);
+                    sqlite.addLogs("editProductFailed", currUser.getUsername(), "User edit product name invalid.", timestamp);
                 }
-                else if (!secure.checkIfValidPurchase(strStock)) {
+                else if (!secure.checkIfValidEditStock(strStock)) {
                     DialogBox.showErrorDialog("Invalid stock", "Stock must be a positive integer with a maximum of 10 digits. ");
                     String timestamp = helper.getCurrentTimestamp();
                     sqlite.addLogs("editProductFailed", currUser.getUsername(), "User edit product stock failed.", timestamp);
@@ -373,7 +373,7 @@ public class MgmtProduct extends javax.swing.JPanel {
                      this.reloadContents();
                      DialogBox.showSuccessDialog("Product successfully edited", "The product has been edited successfully."); 
                      String timestamp = helper.getCurrentTimestamp();
-                     sqlite.addLogs("editProductSuccess", currUser.getUsername(), "User successfully edit product.", timestamp);
+                     sqlite.addLogs("editProductSuccess", currUser.getUsername(), "User successfully edited product " + strName + ".", timestamp);
                 }
                 
             }
@@ -381,14 +381,14 @@ public class MgmtProduct extends javax.swing.JPanel {
     }//GEN-LAST:event_editBtnActionPerformed
 
     private void deleteBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_deleteBtnActionPerformed
-        User currUser = getCurrentUser();
+         User currUser = getCurrentUser();
         
         if(table.getSelectedRow() >= 0 && (currUser.getRole() == 3 || currUser.getRole() == 4)){
             int result = JOptionPane.showConfirmDialog(null, "Are you sure you want to delete " + tableModel.getValueAt(table.getSelectedRow(), 0) + "?", "DELETE PRODUCT", JOptionPane.YES_NO_OPTION);
             
             if (result == JOptionPane.YES_OPTION) {
                 String productName = tableModel.getValueAt(table.getSelectedRow(), 0).toString();
-                System.out.println("Product to be deleted: " + productName);
+                //System.out.println("Product to be deleted: " + productName);
                 sqlite.deleteProduct(productName);
                 this.reloadContents();
                 DialogBox.showSuccessDialog("Product successfully deleted", "The product has been deleted successfully."); 

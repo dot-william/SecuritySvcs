@@ -220,7 +220,7 @@ public class MgmtUser extends javax.swing.JPanel {
         
         // Ensures the role is admin
         if(table.getSelectedRow() >= 0  && currUser != null && currUser.getRole() == 5){
-            System.out.println("Current user username: " + currUser.getUsername() + ", role: " + currUser.getRole());
+            //System.out.println("Current user username: " + currUser.getUsername() + ", role: " + currUser.getRole());
             String[] options = {"2-CLIENT","3-STAFF","4-MANAGER","5-ADMIN"};
             
             JComboBox optionList = new JComboBox(options);
@@ -228,7 +228,7 @@ public class MgmtUser extends javax.swing.JPanel {
             String result = (String) JOptionPane.showInputDialog(null, "USER: " + tableModel.getValueAt(table.getSelectedRow(), 0), 
                 "EDIT USER ROLE", JOptionPane.QUESTION_MESSAGE, null, options, options[(int)tableModel.getValueAt(table.getSelectedRow(), 1) - 2]);
             
-            System.out.println("result: " + result);
+            //System.out.println("result: " + result);
             
             if(result != null){
                 String username = tableModel.getValueAt(table.getSelectedRow(), 0).toString();
@@ -279,7 +279,7 @@ public class MgmtUser extends javax.swing.JPanel {
                     String desc = "User " + "\"" + username + "\"" + " deleted."; 
                     String timestamp = helper.getCurrentTimestamp();
                     sqlite.addLogs("deletedUserSuccess", currUser.getUsername(), desc, timestamp);
-                    System.out.println(tableModel.getValueAt(table.getSelectedRow(), 0));
+                    //System.out.println(tableModel.getValueAt(table.getSelectedRow(), 0));
                     reloadContents();
                 }
             }
@@ -298,7 +298,7 @@ public class MgmtUser extends javax.swing.JPanel {
             
             if (result == JOptionPane.YES_OPTION) {
                 String username = tableModel.getValueAt(table.getSelectedRow(), 0).toString();
-                System.out.println(username);
+                //System.out.println(username);
                 if (username.equalsIgnoreCase(currUser.getUsername())) {
                      dialogBox.showErrorDialog("Error Locking Account", "You cannot lock your own account.");
                 } else {
@@ -319,11 +319,7 @@ public class MgmtUser extends javax.swing.JPanel {
                     //                System.out.println("Clicked yes");
                 }
                 
-            } else {
-                System.out.println("Canceled");
             }
-            
-            
         }
     }//GEN-LAST:event_lockBtnActionPerformed
 
@@ -418,9 +414,9 @@ public class MgmtUser extends javax.swing.JPanel {
         
         // If there is selected row, current user not null and the role is 5
         if(table.getSelectedRow() >= 0 && currUser != null && currUser.getRole() == 5) {
-            System.out.println("Current user username: " + currUser.getUsername() + ", role: " + currUser.getRole());
+//            System.out.println("Current user username: " + currUser.getUsername() + ", role: " + currUser.getRole());
             String state = "disable";
-            System.out.println("value: " + tableModel.getValueAt(table.getSelectedRow(), 3));
+//            System.out.println("value: " + tableModel.getValueAt(table.getSelectedRow(), 3));
             if("1".equals(tableModel.getValueAt(table.getSelectedRow(), 3) + "")){
                 state = "enable";
             } 
@@ -429,8 +425,6 @@ public class MgmtUser extends javax.swing.JPanel {
             // If user clicks yes
             if (result == JOptionPane.YES_OPTION) {
                 String username = tableModel.getValueAt(table.getSelectedRow(), 0).toString();
-                System.out.println(username);
-                
                 if (username.equalsIgnoreCase(currUser.getUsername())) {
                     dialogBox.showErrorDialog("Error Disabling Account", "You cannot disable your own account.");
                     String desc = "User " + "\"" + currUser.getUsername() + "\"" + " tried to " + state + " \"" + username + "\"" + " but failed."; 

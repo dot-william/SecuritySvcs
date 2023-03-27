@@ -24,10 +24,12 @@ public class SQLite {
         try (Connection conn = DriverManager.getConnection(driverURL)) {
             if (conn != null) {
                 DatabaseMetaData meta = conn.getMetaData();
-                System.out.println("Database database.db created.");
+                if (DEBUG_MODE == 1)
+                    System.out.println("Database database.db created.");
             }
         } catch (Exception ex) {
-            System.out.print(ex);
+            if (DEBUG_MODE == 1)
+                System.out.print(ex);
         }
     }
     
@@ -46,9 +48,11 @@ public class SQLite {
             PreparedStatement pstmt = conn.prepareStatement(sql)) 
         {
             pstmt.execute();
-            System.out.println("Table history in database.db created.");
+            if (DEBUG_MODE == 1)
+                System.out.println("Table history in database.db created.");
         } catch (Exception ex) {
-            System.out.print(ex);
+            if (DEBUG_MODE == 1)
+                System.out.print(ex);
         }
     }
     
@@ -64,9 +68,11 @@ public class SQLite {
         try (Connection conn = DriverManager.getConnection(driverURL);
             PreparedStatement pstmt = conn.prepareStatement(sql)) {
             pstmt.execute();
-            System.out.println("Table logs in database.db created.");
+            if (DEBUG_MODE == 1)
+                System.out.println("Table logs in database.db created.");
         } catch (Exception ex) {
-            System.out.print(ex);
+            if (DEBUG_MODE == 1)
+                System.out.print(ex);
         }
     }
      
@@ -81,9 +87,11 @@ public class SQLite {
         try (Connection conn = DriverManager.getConnection(driverURL);
             PreparedStatement pstmt = conn.prepareStatement(sql)) {
             pstmt.execute();
-            System.out.println("Table product in database.db created.");
+            if (DEBUG_MODE == 1)
+                System.out.println("Table product in database.db created.");
         } catch (Exception ex) {
-            System.out.print(ex);
+            if (DEBUG_MODE == 1)
+                System.out.print(ex);
         }
     }
      
@@ -104,9 +112,11 @@ public class SQLite {
         try (Connection conn = DriverManager.getConnection(driverURL);
             PreparedStatement pstmt = conn.prepareStatement(sql)) {
             pstmt.execute();
-            System.out.println("Table users in database.db created.");
+            if (DEBUG_MODE == 1)
+                System.out.println("Table users in database.db created.");
         } catch (Exception ex) {
-            System.out.print(ex);
+            if (DEBUG_MODE == 1)
+                System.out.print(ex);
         }
     }
     
@@ -116,9 +126,11 @@ public class SQLite {
         try (Connection conn = DriverManager.getConnection(driverURL);
             PreparedStatement pstmt = conn.prepareStatement(sql)) {
             pstmt.execute();
-            System.out.println("Table history in database.db dropped.");
+            if (DEBUG_MODE == 1)
+                System.out.println("Table history in database.db dropped.");
         } catch (Exception ex) {
-            System.out.print(ex);
+            if (DEBUG_MODE == 1)
+                System.out.print(ex);
         }
     }
     
@@ -128,9 +140,11 @@ public class SQLite {
         try (Connection conn = DriverManager.getConnection(driverURL);
             PreparedStatement pstmt = conn.prepareStatement(sql)) {
             pstmt.execute();
-            System.out.println("Table logs in database.db dropped.");
+            if (DEBUG_MODE == 1)
+                System.out.println("Table logs in database.db dropped.");
         } catch (Exception ex) {
-            System.out.print(ex);
+            if (DEBUG_MODE == 1)
+                System.out.print(ex);
         }
     }
     
@@ -140,9 +154,11 @@ public class SQLite {
         try (Connection conn = DriverManager.getConnection(driverURL);
             PreparedStatement pstmt = conn.prepareStatement(sql)) {
             pstmt.execute();
-            System.out.println("Table product in database.db dropped.");
+            if (DEBUG_MODE == 1)
+                System.out.println("Table product in database.db dropped.");
         } catch (Exception ex) {
-            System.out.print(ex);
+            if (DEBUG_MODE == 1)
+                System.out.print(ex);
         }
     }
     
@@ -152,9 +168,11 @@ public class SQLite {
         try (Connection conn = DriverManager.getConnection(driverURL);
             PreparedStatement pstmt = conn.prepareStatement(sql)) {
             pstmt.execute();
-            System.out.println("Table users in database.db dropped.");
+            if (DEBUG_MODE == 1)
+                System.out.println("Table users in database.db dropped.");
         } catch (Exception ex) {
-            System.out.print(ex);
+            if (DEBUG_MODE == 1)
+                System.out.print(ex);
         }
     }
     
@@ -174,7 +192,8 @@ public class SQLite {
             pstmt.setString(5, timestamp);
             pstmt.execute();
         } catch (Exception ex) {
-            ex.printStackTrace();
+            if (DEBUG_MODE == 1)
+                ex.printStackTrace();
         }
     }
     
@@ -191,7 +210,8 @@ public class SQLite {
             pstmt.setString(5, History.dateformat.format(new Date(history.getTimestamp().getTime())));
             pstmt.execute();
         } catch (Exception ex) {
-            System.out.print(ex);
+            if (DEBUG_MODE == 1)
+                System.out.print(ex);
         }
     }
     
@@ -207,7 +227,8 @@ public class SQLite {
             pstmt.setString(4, timestamp); 
             pstmt.execute();
         } catch (Exception ex) {
-            System.out.print(ex);
+            if (DEBUG_MODE == 1)
+                System.out.print(ex);
         }
     }
     
@@ -229,7 +250,8 @@ public class SQLite {
                 pstmt.setDouble(3, price);
                 pstmt.execute();
             } catch (Exception ex) {
-                System.out.print(ex);
+                if (DEBUG_MODE == 1)
+                    System.out.print(ex);
             }
         }
     }
@@ -252,7 +274,8 @@ public class SQLite {
         //      pstmt.setString(2, password);
         //      pstmt.executeUpdate();
         } catch (Exception ex) {
-            System.out.print(ex);
+            if (DEBUG_MODE == 1)
+                System.out.print(ex);
         }
     }
     
@@ -274,7 +297,8 @@ public class SQLite {
                                    rs.getString("timestamp")));
             }
         } catch (Exception ex) {
-            System.out.print(ex);
+            if (DEBUG_MODE == 1)
+                System.out.print(ex);
         }
         return histories;
     }
@@ -299,7 +323,8 @@ public class SQLite {
             }
         } 
         catch (Exception ex) {
-            System.out.print(ex);
+            if (DEBUG_MODE == 1)
+                System.out.print(ex);
         }
         return histories;
     }
@@ -313,7 +338,8 @@ public class SQLite {
             int i = pstmt.executeUpdate();
             return true;
         } catch (Exception ex) {
-            System.out.print(ex);
+            if (DEBUG_MODE == 1)
+                System.out.print(ex);
             return false;
         }
     }
@@ -334,7 +360,8 @@ public class SQLite {
                                    rs.getString("timestamp")));
             }
         } catch (Exception ex) {
-            ex.printStackTrace();
+            if (DEBUG_MODE == 1)
+                ex.printStackTrace();
         }
         return logs;
     }
@@ -354,7 +381,8 @@ public class SQLite {
                                    rs.getFloat("price")));
             }
         } catch (Exception ex) {
-            System.out.print(ex);
+            if (DEBUG_MODE == 1)
+                System.out.print(ex);
         }
         return products;
     }
@@ -380,7 +408,8 @@ public class SQLite {
                                    rs.getString("lastLogin")));
             }
         } catch (Exception ex) {
-            ex.printStackTrace();
+            if (DEBUG_MODE == 1)
+                ex.printStackTrace();
         }
         return users;
     }
@@ -408,7 +437,8 @@ public class SQLite {
             return user;
         }
         catch (Exception ex) {
-            ex.printStackTrace();
+            if (DEBUG_MODE == 1)
+                ex.printStackTrace();
         }
         return user;
     }
@@ -427,7 +457,8 @@ public class SQLite {
             pstmt.execute();
             
         } catch (Exception ex) {
-            System.out.print(ex);
+            if (DEBUG_MODE == 1)
+                System.out.print(ex);
             return false;
         }
         return true;
@@ -451,7 +482,8 @@ public class SQLite {
             pstmt.setString(10, updatedUser.getUsername());
             pstmt.execute();
         } catch (Exception ex) {
-            ex.printStackTrace();
+            if (DEBUG_MODE == 1)
+                ex.printStackTrace();
         }
         
     }
@@ -472,7 +504,8 @@ public class SQLite {
             pstmt.setInt(5, failedAttempts);
             pstmt.execute();
         } catch (Exception ex) {
-            ex.printStackTrace();
+            if (DEBUG_MODE == 1)
+                ex.printStackTrace();
         }
     }
     
@@ -486,7 +519,8 @@ public class SQLite {
             pstmt.execute();
             System.out.println("User " + username + " has been deleted.");
         } catch (Exception ex) {
-            System.out.print(ex);
+            if (DEBUG_MODE == 1)
+                System.out.print(ex);
         }
     }
     
@@ -503,7 +537,8 @@ public class SQLite {
                                    rs.getInt("stock"),
                                    rs.getFloat("price"));
         } catch (Exception ex) {
-            System.out.print(ex);
+            if (DEBUG_MODE == 1)
+                System.out.print("Product does not exists.");
         }
         return product;
     }
@@ -518,8 +553,9 @@ public class SQLite {
             pstmt.setString(3, username);
             pstmt.execute();
         } catch (Exception ex) {
-            ex.printStackTrace();
-        }
+            if (DEBUG_MODE == 1)
+                ex.printStackTrace();
+        }   
     }
     
     public boolean updateProduct(Product product){
@@ -533,7 +569,8 @@ public class SQLite {
             pstmt.execute();
             successful = true;
         } catch (Exception ex) {
-            ex.printStackTrace();
+            if (DEBUG_MODE == 1)
+                ex.printStackTrace();
         }
         
         return successful;
@@ -548,7 +585,8 @@ public class SQLite {
             pstmt.execute();
             return true;
         } catch (Exception ex) {
-            System.out.print(ex);
+            if (DEBUG_MODE == 1)
+                System.out.print(ex);
             return false;
         }
     }

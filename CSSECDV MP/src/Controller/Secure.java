@@ -92,9 +92,7 @@ public class Secure {
             } else if (isLocked == 0) {
                 checkIfResetFailedCounter(user);
             }
-        } else {
-            System.out.println("User does not exist");
-        }
+        } 
     }
     
     // Check if 15 minutes has passed to unlock account  (feature disabled for CS2)
@@ -111,7 +109,7 @@ public class Secure {
             long minutes = ((timeToResetLocked - difference)/1000)/60;
 
             if (difference >= timeToResetLocked) {
-                System.out.println("Difference: " + difference);
+                //System.out.println("Difference: " + difference);
                 unlockUser(user);
             } else {
                  DialogBox.showErrorDialog("Authentication failed", "Account currently locked. Please try again in " + minutes +" minutes.");
@@ -175,11 +173,12 @@ public class Secure {
             
             if (failedAttempts >= getMaxLoginAttempts()) {
 //                System.out.println("You have reached amount of login attempts. Try again later.");
-                System.out.println("Account has been locked.");
+                //System.out.println("Account has been locked.");
                 user.setLocked(1);
                 user.setDisabled(1);
             } 
-            System.out.println("attempts: " + failedAttempts);
+            
+            //System.out.println("attempts: " + failedAttempts);
             user.setFailedAttempts(failedAttempts);
             // Update timestamp
             user.setLastFailed(ts);
@@ -194,6 +193,18 @@ public class Secure {
     public static boolean checkIfValidPurchase(String input) {
         boolean result = false;
         String intValues = "^[1-9]\\d{0,10}$";
+        
+        if(input.matches(intValues))
+            result = true;
+        return result;
+    }
+    
+    
+      
+    // Allow 0 stock when editing in case for example products get destroyed but not boughts
+    public static boolean checkIfValidEditStock(String input) {
+        boolean result = false;
+        String intValues = "^[0-9]\\d{0,10}$";
         
         if(input.matches(intValues))
             result = true;
