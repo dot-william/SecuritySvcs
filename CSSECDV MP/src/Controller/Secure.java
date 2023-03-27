@@ -200,6 +200,18 @@ public class Secure {
         return result;
     }
     
+    
+      
+    // Allow 0 stock when editing in case for example products get destroyed but not boughts
+    public static boolean checkIfValidEditStock(String input) {
+        boolean result = false;
+        String intValues = "^[0-9]\\d{0,10}$";
+        
+        if(input.matches(intValues))
+            result = true;
+        return result;
+    }
+    
 //  product names can only contain alphanumeric with max length 30 chars
     public static boolean checkIfValidProductName(String input) {
         boolean result = false;

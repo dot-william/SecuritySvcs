@@ -159,7 +159,7 @@ public class Frame extends javax.swing.JFrame {
         // log the logout to db
         String formattedDateTime= helper.getCurrentTimestamp();
         //String formattedDateTime = datetimeformatter.format(LocalDateTime.now());
-        main.sqlite.addLogs("logout", this.currentUser.getUsername(), "User logged out", formattedDateTime);
+        main.sqlite.addLogs("logout", this.currentUser.getUsername(), "User logged out.", formattedDateTime);
         this.currentUser = null;
         frameView.show(Container, "loginPnl");
     }//GEN-LAST:event_logoutBtnActionPerformed
